@@ -1,0 +1,11 @@
+FROM openjdk:8
+EXPOSE 11031
+
+MAINTAINER wuyiccc
+
+
+
+VOLUME /mydata
+COPY target/tianxuan-gateway.jar /
+
+ENTRYPOINT ["java", "-jar", "/tianxuan-gateway.jar"]

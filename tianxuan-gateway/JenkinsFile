@@ -1,0 +1,65 @@
+pipeline {
+  agent {
+    node {
+      label 'maven'
+    }
+
+  }
+  stages {
+    stage('拉取git代码') {
+      agent none
+      steps {
+        git(url: 'https://gitee.com/wuyiccc/tianxuan.git', credentialsId: 'gitee-account', branch: 'main', changelog: true, poll: false)
+      }
+    }
+
+    stage('构建并推送镜像') {
+      agent none
+      steps {
+        container('maven') {
+          sh 'mvn -Dmaven.test.skip=true -gs `pwd`/mvn-settings.xml clean package'
+          sh 'cd  $SERVICE_NAME &&  docker build -f DockerFile -t $REGISTRY/$DOCKERHUB_NAMESPACE/$SERVICE_NAME:$PROJECT_VERSION .'
+          sh 'docker push $REGISTRY/$DOCKERHUB_NAMESPACE/$SERVICE_NAME:$PROJECT_VERSION'
+        }
+
+      }
+    }
+
+    stage('推送最新镜像'){
+           steps{
+                container ('maven') {
+                  sh 'docker tag  $REGISTRY/$DOCKERHUB_NAMESPACE/$SERVICE_NAME:$PROJECT_VERSION $REGISTRY/$DOCKERHUB_NAMESPACE/$SERVICE_NAME:latest '
+                  sh 'docker push $REGISTRY/$DOCKERHUB_NAMESPACE/$SERVICE_NAME:latest '
+                }
+           }
+    }
+    stage('deploy to dev') {
+          steps {
+            input(id: 'deploy-service-$SERVICE_NAME:$PROJECT_VERSION', message: '确认部署: $PROJECT_NAME:$SERVICE_NAME:$PROJECT_VERSION')
+            container ('maven') {
+                withCredentials([
+                    kubeconfigFile(
+                    credentialsId: env.KUBECONFIG_CREDENTIAL_ID,
+                    variable: 'KUBECONFIG')
+                    ]) {
+                    sh 'envsubst < $SERVICE_NAME/deploy/devops-tianxuan-gateway.yml | kubectl apply -f -'
+                }
+            }
+          }
+    }
+
+  }
+  environment {
+    DOCKER_CREDENTIAL_ID = 'docker-hub-account'
+    GITEE_CREDENTIAL_ID = 'gitee-account'
+    KUBECONFIG_CREDENTIAL_ID = 'demo-kubeconfig'
+    REGISTRY = '192.168.43.105:30906'
+    DOCKERHUB_NAMESPACE = 'wuyiccc'
+    GITEE_ACCOUNT = 'wuyiccc'
+  }
+  parameters {
+    string(name: 'PROJECT_NAME', defaultValue: '天璇微服务平台', description: '请填写项目名称')
+    string(name: 'PROJECT_VERSION', defaultValue: 'v0.0.0', description: '请填写项目版本')
+    choice(name: 'SERVICE_NAME', choices: ['tianxuan-gateway', 'tianxuan-auth'], description: '请填写将要发布的微服务')
+  }
+}
