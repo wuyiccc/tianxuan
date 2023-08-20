@@ -18,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.server.ServerWebExchange;
@@ -33,7 +34,7 @@ import static com.wuyiccc.tianxuan.common.base.BaseInfoProperties.*;
  * @date 2023/7/1 16:47
  */
 @Slf4j
-//@Component
+@Component
 public class SecurityJWTFilter implements GlobalFilter, Ordered {
 
     @Autowired
@@ -52,6 +53,7 @@ public class SecurityJWTFilter implements GlobalFilter, Ordered {
 
         String url = exchange.getRequest().getURI().getPath();
 
+        excludeUrls.add("/tianxuan-auth/adminPassport/login");
         if (CollectionUtils.isNotEmpty(excludeUrls)) {
             for (String excludeUrl : excludeUrls) {
                 if (antPathMatcher.matchStart(excludeUrl, url)) {
