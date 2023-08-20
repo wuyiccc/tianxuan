@@ -6,7 +6,7 @@ package com.wuyiccc.tianxuan.common.result;
  */
 public enum ResponseStatusEnum {
 
-    SUCCESS(200, true, "操作成功！"),
+    SUCCESS(0, true, "操作成功！"),
     FAILED(500, false, "操作失败！"),
 
     // 50x
