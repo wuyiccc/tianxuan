@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author wuyiccc
@@ -47,5 +48,32 @@ public class AdminPassportController extends BaseInfoProperties {
 
         adminService.createAdmin(admin);
         return CommonResult.ok("创建成功");
+    }
+
+    @GetMapping("/getAdminById")
+    public CommonResult<Admin> getAdminById(@RequestParam String id) {
+
+        Admin byId = adminService.getById(id);
+        return CommonResult.ok(byId);
+    }
+
+
+    @PostMapping("/updateAdmin")
+    public CommonResult<String> updateAdmin(@RequestBody Admin admin) {
+
+        adminService.updateAdmin(admin);
+        return CommonResult.ok();
+    }
+
+    @PostMapping("/list")
+    public CommonResult<List<Admin>> list(@RequestBody Admin admin) {
+        List<Admin> res = adminService.findAll(admin);
+        return CommonResult.ok(res);
+    }
+
+    @PostMapping("/deleteAdmin")
+    public CommonResult<String> deleteAdmin(@RequestParam String id) {
+        adminService.removeById(id);
+        return CommonResult.ok();
     }
 }

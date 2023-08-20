@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.gson.Gson;
 import com.wuyiccc.tianxuan.auth.mapper.AdminMapper;
@@ -15,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 
 import static com.wuyiccc.tianxuan.common.base.BaseInfoProperties.TOKEN_ADMIN_PREFIX;
 
@@ -65,10 +68,27 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         admin.setPassword(BCrypt.hashpw(admin.getPassword(), BCrypt.gensalt()));
         admin.setSlat("");
         admin.setFace("");
-        admin.setRemark("");
+//        admin.setRemark("");
         admin.setCreateTime(LocalDateTime.now());
         admin.setUpdatedTime(LocalDateTime.now());
 
         adminMapper.insert(admin);
+    }
+
+    @Override
+    public List<Admin> findAll(Admin admin) {
+
+        LambdaQueryWrapper<Admin> wrapper = Wrappers.lambdaQuery();
+        if (Objects.nonNull(admin) && Objects.nonNull(admin.getUsername())) {
+            wrapper.like(Admin::getUsername, admin.getUsername());
+        }
+        List<Admin> admins = adminMapper.selectList(wrapper);
+        return admins;
+    }
+
+    @Override
+    public void updateAdmin(Admin admin) {
+        admin.setUpdatedTime(LocalDateTime.now());
+        adminMapper.updateById(admin);
     }
 }
