@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -29,11 +30,13 @@ public class Admin{
     /**
      * 密码
      */
+    @JsonIgnore
     private String password;
 
     /**
      * 用户混合加密的盐
      */
+    @JsonIgnore
     private String slat;
 
     /**
