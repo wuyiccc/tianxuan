@@ -1,18 +1,18 @@
 package com.wuyiccc.tianxuan.auth.controller;
 
 import com.google.gson.Gson;
+import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.auth.service.AdminService;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.common.util.JWTUtils;
 import com.wuyiccc.tianxuan.pojo.Admin;
 import com.wuyiccc.tianxuan.pojo.bo.AdminBO;
+import com.wuyiccc.tianxuan.pojo.vo.AdminVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -42,4 +42,15 @@ public class AdminController extends BaseInfoProperties {
 
         return CommonResult.ok(token);
     }
+
+
+    @GetMapping("/info")
+    public CommonResult<AdminVO> info() {
+
+        Admin admin = JWTCurrentUserInterceptor.adminUser.get();
+        AdminVO adminVO = new AdminVO();
+        BeanUtils.copyProperties(admin, adminVO);
+        return CommonResult.ok(adminVO);
+    }
+
 }
