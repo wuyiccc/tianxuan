@@ -53,4 +53,10 @@ public class AdminController extends BaseInfoProperties {
         return CommonResult.ok(adminVO);
     }
 
+    @PostMapping("/logout")
+    public CommonResult<String> logout() {
+//        redisUtils.del(REDIS_USER_TOKEN + ":" + userId);
+        return CommonResult.ok();
+    }
+
 }
