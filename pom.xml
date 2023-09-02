@@ -16,6 +16,7 @@
         <module>tianxuan-company</module>
         <module>tianxuan-gateway</module>
         <module>tianxuan-auth</module>
+        <module>tianxuan-search</module>
     </modules>
 
     <properties>
