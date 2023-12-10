@@ -4,6 +4,7 @@ import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.bo.CreateAdminBO;
+import com.wuyiccc.tianxuan.pojo.bo.ResetPwdBO;
 import com.wuyiccc.tianxuan.user.service.AdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,14 @@ public class AdminInfoController extends BaseInfoProperties {
 
 
         adminService.delete(username);
+        return CommonResult.ok();
+    }
+
+    @PostMapping("/resetPassword")
+    public CommonResult<String> resetPassword(@RequestBody ResetPwdBO resetPwdBO) {
+
+        adminService.resetPassword(resetPwdBO);
+
         return CommonResult.ok();
     }
 

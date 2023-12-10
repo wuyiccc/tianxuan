@@ -10,8 +10,10 @@ import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.common.util.MD5Utils;
 import com.wuyiccc.tianxuan.pojo.Admin;
 import com.wuyiccc.tianxuan.pojo.bo.CreateAdminBO;
+import com.wuyiccc.tianxuan.pojo.bo.ResetPwdBO;
 import com.wuyiccc.tianxuan.user.mapper.AdminMapper;
 import com.wuyiccc.tianxuan.user.service.AdminService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,6 +82,35 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
 
         if (res != 1) {
             throw new CustomException("无法删除用户");
+        }
+    }
+
+    @Override
+    public void resetPassword(ResetPwdBO resetPwdBO) {
+
+        Admin admin = adminMapper.selectById(resetPwdBO.getAdminId());
+        if (Objects.isNull(admin)) {
+            throw new CustomException("管理员不存在");
+        }
+
+        if (StringUtils.isBlank(resetPwdBO.getPassword()) || StringUtils.isBlank(resetPwdBO.getRePassword())) {
+            throw new CustomException(ResponseStatusEnum.ADMIN_PASSWORD_ERROR);
+        }
+
+        if (!Objects.equals(resetPwdBO.getPassword(), resetPwdBO.getRePassword())) {
+            throw new CustomException(ResponseStatusEnum.ADMIN_PASSWORD_ERROR);
+        }
+
+        String pwd = MD5Utils.encrypt(resetPwdBO.getPassword(), admin.getSlat());
+
+        Admin newAdmin = new Admin();
+        newAdmin.setId(resetPwdBO.getAdminId());
+        newAdmin.setPassword(pwd);
+        newAdmin.setUpdatedTime(LocalDateTime.now());
+
+        int res = adminMapper.updateById(newAdmin);
+        if (res != 1) {
+            throw new CustomException(ResponseStatusEnum.USER_NOT_EXIST_ERROR);
         }
     }
 

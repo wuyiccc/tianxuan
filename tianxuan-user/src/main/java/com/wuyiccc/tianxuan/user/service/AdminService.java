@@ -2,6 +2,7 @@ package com.wuyiccc.tianxuan.user.service;
 
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.bo.CreateAdminBO;
+import com.wuyiccc.tianxuan.pojo.bo.ResetPwdBO;
 
 /**
  * @author wuyiccc
@@ -14,4 +15,6 @@ public interface AdminService {
     PagedGridResult getAdminList(String accountName, Integer page, Integer limit);
 
     void delete(String username);
+
+    void resetPassword(ResetPwdBO resetPwdBO);
 }
