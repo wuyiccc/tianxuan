@@ -3,7 +3,9 @@ package com.wuyiccc.tianxuan.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.common.util.MD5Utils;
 import com.wuyiccc.tianxuan.pojo.Admin;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -52,4 +55,19 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         newAdmin.setUpdatedTime(LocalDateTime.now());
         adminMapper.insert(newAdmin);
     }
+
+    @Override
+    public PagedGridResult getAdminList(String accountName, Integer page, Integer limit) {
+
+        PageHelper.startPage(page, limit);
+
+        LambdaQueryWrapper<Admin> wrapper = Wrappers.lambdaQuery();
+        wrapper.like(Admin::getUsername, accountName);
+
+        List<Admin> dataList = adminMapper.selectList(wrapper);
+
+        return PagedGridResult.build(dataList, page);
+    }
+
+
 }

@@ -53,7 +53,7 @@ pipeline {
     DOCKER_CREDENTIAL_ID = 'docker-hub-account'
     GITEE_CREDENTIAL_ID = 'gitee-account'
     KUBECONFIG_CREDENTIAL_ID = 'demo-kubeconfig'
-    REGISTRY = '192.168.43.105:30906'
+    REGISTRY = 'nacos.local.wuyiccc.com:30906'
     DOCKERHUB_NAMESPACE = 'wuyiccc'
     GITEE_ACCOUNT = 'wuyiccc'
   }
