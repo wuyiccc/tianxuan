@@ -51,4 +51,13 @@ public class AdminInfoController extends BaseInfoProperties {
 
         return CommonResult.ok(res);
     }
+
+    @PostMapping("/delete")
+    public CommonResult<String> delete(String username) {
+
+
+        adminService.delete(username);
+        return CommonResult.ok();
+    }
+
 }

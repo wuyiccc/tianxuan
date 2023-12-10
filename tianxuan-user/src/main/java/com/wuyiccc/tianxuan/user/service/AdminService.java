@@ -13,4 +13,5 @@ public interface AdminService {
 
     PagedGridResult getAdminList(String accountName, Integer page, Integer limit);
 
+    void delete(String username);
 }

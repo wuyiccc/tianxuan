@@ -69,5 +69,19 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         return PagedGridResult.build(dataList, page);
     }
 
+    @Override
+    public void delete(String username) {
+
+        LambdaQueryWrapper<Admin> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Admin::getUsername, username);
+        wrapper.ne(Admin::getUsername, "admin");
+
+        int res = adminMapper.delete(wrapper);
+
+        if (res != 1) {
+            throw new CustomException("无法删除用户");
+        }
+    }
+
 
 }
