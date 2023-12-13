@@ -1,6 +1,8 @@
 package com.wuyiccc.tianxuan.auth;
 
 import com.google.gson.Gson;
+import com.wuyiccc.tianxuan.common.util.DingDingMsgUtils;
+import com.wuyiccc.tianxuan.common.util.SmsUtils;
 import com.wuyiccc.tianxuan.pojo.test.Stu;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import sun.misc.BASE64Encoder;
 
+import javax.annotation.Resource;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
@@ -25,6 +28,9 @@ public class TianxuanApplicationTest {
 
 
     private static final String USER_KEY = "qwheoqweuo12oi3h1ohdakj";
+
+    @Resource
+    private DingDingMsgUtils dingDingMsgUtils;
 
     @Test
     public void createJWT() {
@@ -65,6 +71,12 @@ public class TianxuanApplicationTest {
 
         log.info("stu: {}", stu);
 
+    }
+
+    @Test
+    public void smsCodeRetryTest() {
+
+        dingDingMsgUtils.sendSMSCode("111");
     }
 
 }
