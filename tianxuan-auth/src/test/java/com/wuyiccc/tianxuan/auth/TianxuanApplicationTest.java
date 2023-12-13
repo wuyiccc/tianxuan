@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.auth;
 
 import com.google.gson.Gson;
+import com.wuyiccc.tianxuan.api.task.AsyncTask;
 import com.wuyiccc.tianxuan.common.util.DingDingMsgUtils;
 import com.wuyiccc.tianxuan.common.util.SmsUtils;
 import com.wuyiccc.tianxuan.pojo.test.Stu;
@@ -31,6 +32,9 @@ public class TianxuanApplicationTest {
 
     @Resource
     private DingDingMsgUtils dingDingMsgUtils;
+
+    @Resource
+    private AsyncTask asyncTask;
 
     @Test
     public void createJWT() {
@@ -77,6 +81,13 @@ public class TianxuanApplicationTest {
     public void smsCodeRetryTest() {
 
         dingDingMsgUtils.sendSMSCode("111");
+    }
+
+    @Test
+    public void asyncTest() {
+
+        asyncTask.sendSMSCode("111");
+        log.info("调用结束");
     }
 
 }
