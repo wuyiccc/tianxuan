@@ -41,6 +41,7 @@ public class AdminInfoController extends BaseInfoProperties {
                                     , Integer page
                                     , Integer limit) {
 
+
         if (Objects.isNull(page)) {
             page = 1;
         }
