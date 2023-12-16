@@ -1,33 +1,57 @@
 package com.wuyiccc.tianxuan.auth.service.impl;
 
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuyiccc.tianxuan.auth.mapper.UserMapper;
 import com.wuyiccc.tianxuan.auth.service.UserService;
+import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
+import com.wuyiccc.tianxuan.common.constant.MQConstants;
 import com.wuyiccc.tianxuan.common.enumeration.SexEnum;
 import com.wuyiccc.tianxuan.common.enumeration.ShowWhichNameEnum;
 import com.wuyiccc.tianxuan.common.enumeration.UserRoleEnum;
-import com.wuyiccc.tianxuan.common.util.DesensitizationUtils;
-import com.wuyiccc.tianxuan.common.util.LocalDateUtils;
+import com.wuyiccc.tianxuan.common.exception.CustomException;
+import com.wuyiccc.tianxuan.common.util.*;
 import com.wuyiccc.tianxuan.pojo.User;
+import com.wuyiccc.tianxuan.pojo.dto.SmsCodeDTO;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.common.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author wuyiccc
  * @date 2023/6/27 22:43
  */
+@Slf4j
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Autowired
     private UserMapper userMapper;
 
+    @Resource
+    public RedisUtils redisUtils;
+
+
+    @Resource
+    private DingDingMsgUtils dingDingMsgUtils;
+
     private String defaultFaceImgUrl = "http://www.wuyiccc.com/imgs/avatar2.jpg";
+
+    @Resource
+    private DefaultMQProducer defaultMQProducer;
 
     @Override
     public User queryUserByMobile(String mobile) {
@@ -68,5 +92,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userMapper.insert(user);
 
         return user;
+    }
+
+    @Override
+    public void getSMSCode(String mobile, HttpServletRequest request) {
+        // 限制用户只能在60s以内获得一次验证码
+        String requestIp = IPUtils.getRequestIp(request);
+        redisUtils.setnx60s(BaseInfoProperties.MOBILE_SMSCODE + ":" + requestIp, mobile);
+
+        String code = (int) ((Math.random() * 9 + 1) * 100000) + "";
+        log.info("手机号: {}, 当前验证码为: {}", mobile, code);
+
+
+        SmsCodeDTO smsCodeDTO = new SmsCodeDTO(mobile, code);
+
+
+        List<Message> messageList = new ArrayList<>(1);
+        Message message = new Message(MQConstants.TOPIC_SMS_CODE
+                , CharSequenceUtil.EMPTY
+                , CharSequenceUtil.EMPTY
+                , JSONUtil.toJsonStr(smsCodeDTO).getBytes());
+        messageList.add(message);
+        SendResult send = null;
+        try {
+            send = defaultMQProducer.send(messageList);
+        } catch (Exception e) {
+            throw new CustomException("短信验证码发送失败");
+        }
+        log.info("SendResult: {}", JSONUtil.toJsonStr(send));
+
+        // 设置验证码过期时间为30min
+        redisUtils.set(BaseInfoProperties.MOBILE_SMSCODE + ":" + mobile, code, 30 * 60);
+
+        dingDingMsgUtils.sendSMSCode(code);
     }
 }

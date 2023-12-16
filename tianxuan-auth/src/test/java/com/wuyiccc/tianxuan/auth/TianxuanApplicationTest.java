@@ -3,6 +3,7 @@ package com.wuyiccc.tianxuan.auth;
 import com.google.gson.Gson;
 import com.wuyiccc.tianxuan.api.config.TianxuanRocketMQConfig;
 import com.wuyiccc.tianxuan.api.task.AsyncTask;
+import com.wuyiccc.tianxuan.auth.service.UserService;
 import com.wuyiccc.tianxuan.common.util.DingDingMsgUtils;
 import com.wuyiccc.tianxuan.pojo.test.Stu;
 import io.jsonwebtoken.Claims;
@@ -42,6 +43,9 @@ public class TianxuanApplicationTest {
 
     @Resource
     private TianxuanRocketMQConfig tianxuanRocketMQConfig;
+
+    @Resource
+    private UserService userService;
 
     @Test
     public void createJWT() {
@@ -99,23 +103,6 @@ public class TianxuanApplicationTest {
 
     @Test
     public void testSendMqMessage() throws MQClientException {
-        DefaultMQProducer producer = new DefaultMQProducer("wy_test_producer_group1");
-        producer.setNamesrvAddr(tianxuanRocketMQConfig.getNameServer());
-        producer.setUnitName("unit1");
-        producer.start();
-        String clientId1 = producer.buildMQClientId();
-        System.out.println(clientId1);
-
-
-        //
-        try {
-            SendResult result1 = producer.send(new Message("test20203080501", "hello localhost:9876".getBytes()));
-            System.out.printf("%s%n", result1);
-        } catch (Throwable e) {
-            System.out.println("--------------------------first--------------------");
-            e.printStackTrace();
-            System.out.println("--------------------------first--------------------");
-        }
 
     }
 
