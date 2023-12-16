@@ -1,6 +1,6 @@
 package com.wuyiccc.tianxuan.common.util;
 
-import com.wuyiccc.tianxuan.common.config.JWTConfig;
+import com.wuyiccc.tianxuan.common.config.TianxuanJWTConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtParser;
@@ -24,7 +24,7 @@ import java.util.Objects;
 public class JWTUtils {
 
     @Autowired
-    private JWTConfig jwtConfig;
+    private TianxuanJWTConfig tianxuanJwtConfig;
 
     public static final String AT = "@";
 
@@ -48,7 +48,7 @@ public class JWTUtils {
     }
 
     private String dealJWT(String body, Long expireTimes) {
-        String userKey = jwtConfig.getKey();
+        String userKey = tianxuanJwtConfig.getKey();
 
         log.info("jwt key: {}", userKey);
         String base64 = new BASE64Encoder().encode(userKey.getBytes());
@@ -88,7 +88,7 @@ public class JWTUtils {
 
 
     public String checkJWT(String jwt) {
-        String userKey = jwtConfig.getKey();
+        String userKey = tianxuanJwtConfig.getKey();
         log.info("jwt key: {}", userKey);
 
         String base64 = new BASE64Encoder().encode(userKey.getBytes());

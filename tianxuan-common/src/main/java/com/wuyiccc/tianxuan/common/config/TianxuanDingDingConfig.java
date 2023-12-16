@@ -6,13 +6,14 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author wuyiccc
- * @date 2023/6/24 16:27
+ * @date 2023/7/2 08:13
  */
 @Component
 @Data
-@ConfigurationProperties(prefix = "tianxuan.tencent.cloud")
-public class TencentCloudConfig {
+@ConfigurationProperties("tianxuan.dingding")
+public class TianxuanDingDingConfig {
 
-    private String secretId;
-    private String secretKey;
+    private String robotAccessUrl;
+
+    private String secret;
 }

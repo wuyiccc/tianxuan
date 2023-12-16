@@ -3,10 +3,9 @@ package com.wuyiccc.tianxuan.search.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.jvm123.minio.service.MinioFileService;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
-import com.wuyiccc.tianxuan.search.config.MinioConfig;
+import com.wuyiccc.tianxuan.search.config.TianxuanMinioConfig;
 import com.wuyiccc.tianxuan.search.service.FileService;
 import io.minio.MinioClient;
-import io.minio.ObjectWriteResponse;
 import io.minio.PutObjectArgs;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class MinioFileServiceImpl implements FileService {
 
 
     @Autowired
-    private MinioConfig minioConfig;
+    private TianxuanMinioConfig tianxuanMinioConfig;
 
 
     @Autowired
@@ -40,7 +39,7 @@ public class MinioFileServiceImpl implements FileService {
         String fileName = UUID.randomUUID().toString().replace("-", "") + file.getOriginalFilename();
         MinioClient minioClient = getMinioClient();
         PutObjectArgs build = PutObjectArgs.builder()
-                .bucket(minioConfig.getBucket())
+                .bucket(tianxuanMinioConfig.getBucket())
                 .object(fileName)
                 .stream(file.getInputStream(), file.getSize(), -1)
                 .contentType("image/jpeg")
@@ -48,7 +47,7 @@ public class MinioFileServiceImpl implements FileService {
         try {
 
             minioClient.putObject(build);
-            return minioConfig.getEndpoint() + "/" + minioConfig.getBucket() + "/" + fileName;
+            return tianxuanMinioConfig.getEndpoint() + "/" + tianxuanMinioConfig.getBucket() + "/" + fileName;
         } catch (Exception e) {
             log.error("文件上传失败", e);
             throw new CustomException("文件上传失败");
@@ -57,8 +56,8 @@ public class MinioFileServiceImpl implements FileService {
 
     private MinioClient getMinioClient() {
         return MinioClient.builder()
-                .endpoint(minioConfig.getEndpoint())
-                .credentials(minioConfig.getAccessKey(), minioConfig.getSecretKey())
+                .endpoint(tianxuanMinioConfig.getEndpoint())
+                .credentials(tianxuanMinioConfig.getAccessKey(), tianxuanMinioConfig.getSecretKey())
                 .build();
     }
 }

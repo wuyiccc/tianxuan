@@ -8,7 +8,6 @@ import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.common.util.DingDingMsgUtils;
 import com.wuyiccc.tianxuan.common.util.IPUtils;
 import com.wuyiccc.tianxuan.common.util.JWTUtils;
-import com.wuyiccc.tianxuan.common.util.SmsUtils;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.bo.RegisterLoginBO;
 import com.wuyiccc.tianxuan.pojo.vo.UserVO;
@@ -31,8 +30,6 @@ import java.util.Objects;
 @Slf4j
 public class PassportController extends BaseInfoProperties {
 
-    @Autowired
-    private SmsUtils smsUtils;
 
 
     @Autowired

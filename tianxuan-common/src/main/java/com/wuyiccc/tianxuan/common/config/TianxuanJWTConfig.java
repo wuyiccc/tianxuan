@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Data
-@ConfigurationProperties("tianxuan.jwt.auth")
-public class JWTConfig {
+@ConfigurationProperties("tianxuan.jwt")
+public class TianxuanJWTConfig {
 
     private String key;
 }

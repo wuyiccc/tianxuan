@@ -4,11 +4,10 @@ import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiRobotSendRequest;
 import com.dingtalk.api.response.OapiRobotSendResponse;
-import com.wuyiccc.tianxuan.common.config.DingDingConfig;
+import com.wuyiccc.tianxuan.common.config.TianxuanDingDingConfig;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
@@ -28,7 +27,7 @@ import java.net.URLEncoder;
 public class DingDingMsgUtils {
 
     @Autowired
-    private DingDingConfig dingDingConfig;
+    private TianxuanDingDingConfig tianxuanDingDingConfig;
 
     @Retryable(
             // 指定触发重试的异常
@@ -51,7 +50,7 @@ public class DingDingMsgUtils {
 
         try {
             long timestamp = System.currentTimeMillis();
-            String secret = dingDingConfig.getSecret();
+            String secret = tianxuanDingDingConfig.getSecret();
             String stringToSign = timestamp + "\n" + secret;
             Mac mac;
             mac = Mac.getInstance("HmacSHA256");
@@ -60,7 +59,7 @@ public class DingDingMsgUtils {
             String sign = URLEncoder.encode(new String(Base64.encodeBase64(signData)), "UTF-8");
 
 
-            String url = dingDingConfig.getRobotAccessUrl();
+            String url = tianxuanDingDingConfig.getRobotAccessUrl();
             url = url + "&timestamp=" + timestamp + "&sign=" + sign;
 
             DingTalkClient client = new DefaultDingTalkClient(url);

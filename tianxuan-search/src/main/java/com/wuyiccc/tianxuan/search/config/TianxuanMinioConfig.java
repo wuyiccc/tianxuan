@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Data
 @ConfigurationProperties(prefix = "tianxuan.minio")
-public class MinioConfig {
+public class TianxuanMinioConfig {
 
     private String endpoint;
 
