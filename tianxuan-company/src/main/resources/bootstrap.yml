@@ -10,3 +10,5 @@ spring:
         shared-configs:
           - data-id: tianxuan-company.yml
             refresh: true
+          - data-id: db.yml
+            refresh: true

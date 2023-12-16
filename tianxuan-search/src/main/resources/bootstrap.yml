@@ -10,3 +10,7 @@ spring:
         shared-configs:
           - data-id: tianxuan-search.yml
             refresh: true
+          - data-id: minio.yml
+            refresh: true
+          - data-id: db.yml
+            refresh: true

@@ -10,9 +10,11 @@ spring:
         shared-configs:
           - data-id: tianxuan-auth.yml
             refresh: true
-          - data-id: tencent-cloud.yml
-            refresh: true
           - data-id: jwt.yml
             refresh: true
           - data-id: dingding.yml
+            refresh: true
+          - data-id: db.yml
+            refresh: true
+          - data-id: redis.yml
             refresh: true
