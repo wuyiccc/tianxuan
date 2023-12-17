@@ -37,6 +37,7 @@ public class SendSMSCodeConsumerListener implements MessageListenerConcurrently 
                 SmsCodeDTO smsCodeDTO = JSONUtil.toBean(new String(body), SmsCodeDTO.class);
                 dingDingMsgUtils.sendSMSCode(smsCodeDTO.getSmsCode());
             }
+
         } catch (Exception e) {
             log.error("rent_sync_redo_binlog 消费失败", e);
             return ConsumeConcurrentlyStatus.RECONSUME_LATER;

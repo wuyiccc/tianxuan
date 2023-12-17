@@ -21,3 +21,11 @@ mybatis-plus:
       id-type: assign_id
     # 去掉mybatis-plus banner图片
     banner: false
+
+
+jasypt:
+  encryptor:
+    # 加密算法
+    algorithm: PBEWithMD5AndDES
+    # 加密的秘钥(盐)
+    password: wuyiccc

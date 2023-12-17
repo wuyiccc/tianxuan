@@ -13,9 +13,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.client.producer.DefaultMQProducer;
-import org.apache.rocketmq.client.producer.SendResult;
-import org.apache.rocketmq.common.message.Message;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import sun.misc.BASE64Encoder;
@@ -30,7 +27,7 @@ import java.util.Date;
  */
 @SpringBootTest
 @Slf4j
-public class TianxuanApplicationTest {
+public class TianxuanAuthApplicationTest {
 
 
     private static final String USER_KEY = "qwheoqweuo12oi3h1ohdakj";
