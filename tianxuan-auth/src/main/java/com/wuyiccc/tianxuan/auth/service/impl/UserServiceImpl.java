@@ -124,6 +124,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 设置验证码过期时间为30min
         redisUtils.set(BaseInfoProperties.MOBILE_SMSCODE + ":" + mobile, code, 30 * 60);
 
-        dingDingMsgUtils.sendSMSCode(code);
+        //dingDingMsgUtils.sendSMSCode(code);
     }
 }

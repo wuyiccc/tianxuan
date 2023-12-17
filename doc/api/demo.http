@@ -1,0 +1,5 @@
+### 短信发送
+POST http://localhost:11031/tianxuan-auth/passport/getSMSCode
+Content-Type: application/x-www-form-urlencoded
+
+mobile = 13333333333

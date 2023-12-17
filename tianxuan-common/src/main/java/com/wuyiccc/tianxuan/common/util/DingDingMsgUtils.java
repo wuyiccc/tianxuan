@@ -29,15 +29,15 @@ public class DingDingMsgUtils {
     @Autowired
     private TianxuanDingDingConfig tianxuanDingDingConfig;
 
-    @Retryable(
-            // 指定触发重试的异常
-            value = CustomException.class,
-            // 最大重试次数
-            maxAttempts = 5,
-            // 重试间隔为1s, 后续重试为次数的两倍
-            // 1s, 2s, 4s, 8s ...
-            backoff = @Backoff(delay = 1000L, multiplier = 2)
-    )
+    //@Retryable(
+    //        // 指定触发重试的异常
+    //        value = CustomException.class,
+    //        // 最大重试次数
+    //        maxAttempts = 5,
+    //        // 重试间隔为1s, 后续重试为次数的两倍
+    //        // 1s, 2s, 4s, 8s ...
+    //        backoff = @Backoff(delay = 1000L, multiplier = 2)
+    //)
     public void sendSMSCode(String smsCode) {
 
 //        int i = RandomUtils.nextInt(1, 5);
@@ -82,8 +82,8 @@ public class DingDingMsgUtils {
     // 达到最大重试次数, 或者抛出一个没有被设置 (进行重试) 的异常
     // 可以作为方法的最终兜底处理, 如果不处理也可以
     // 自动被@Retryable调用
-    @Recover
-    public void recover() {
-        log.info("################ recover执行 ############");
-    }
+    //@Recover
+    //public void recover() {
+    //    log.info("################ recover执行 ############");
+    //}
 }
