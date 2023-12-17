@@ -1,5 +1,7 @@
 package com.wuyiccc.tianxuan.auth.service.impl;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -104,7 +106,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         log.info("手机号: {}, 当前验证码为: {}", mobile, code);
 
 
-        SmsCodeDTO smsCodeDTO = new SmsCodeDTO(mobile, code);
+        SmsCodeDTO smsCodeDTO = new SmsCodeDTO(mobile, code, DateUtil.date().getTime());
 
 
         List<Message> messageList = new ArrayList<>(1);

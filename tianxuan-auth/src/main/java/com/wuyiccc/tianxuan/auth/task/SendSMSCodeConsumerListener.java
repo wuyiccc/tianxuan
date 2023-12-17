@@ -1,5 +1,7 @@
 package com.wuyiccc.tianxuan.auth.task;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 import com.wuyiccc.tianxuan.common.constant.MQConstants;
 import com.wuyiccc.tianxuan.common.util.DingDingMsgUtils;
@@ -35,6 +37,13 @@ public class SendSMSCodeConsumerListener implements MessageListenerConcurrently 
             for (MessageExt messageExt : messageExtList) {
                 byte[] body = messageExt.getBody();
                 SmsCodeDTO smsCodeDTO = JSONUtil.toBean(new String(body), SmsCodeDTO.class);
+                Long ts = smsCodeDTO.getStartTimestamp();
+                DateTime date = DateUtil.date(ts + 30 * 60 * 1000);
+                log.info("date: {}", date);
+                if (date.before(DateUtil.date())) {
+                    log.info("短信消息过期, 不执行");
+                    continue;
+                }
                 dingDingMsgUtils.sendSMSCode(smsCodeDTO.getSmsCode());
             }
 

@@ -13,9 +13,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SmsCodeDTO {
 
+    /**
+     * 手机号
+     */
     private String mobile;
 
+    /**
+     * 短信验证码
+     */
     private String smsCode;
+
+    /**
+     * 短信发送时间戳
+     */
+    private Long startTimestamp;
 }
 
 
