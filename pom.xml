@@ -17,6 +17,7 @@
         <module>tianxuan-gateway</module>
         <module>tianxuan-auth</module>
         <module>tianxuan-search</module>
+        <module>tianxuan-work</module>
     </modules>
 
     <properties>

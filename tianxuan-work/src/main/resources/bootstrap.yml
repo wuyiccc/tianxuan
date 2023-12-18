@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: tianxuan-work
+  cloud:
+    nacos:
+      config:
+        server-addr: ${NACOS_HOST:nacos.local.wuyiccc.com}:${NACOS_PORT:12051}
+        namespace: ${NACOS_NAMESPACE:tianxuan_dev}
+        file-extension: yml
+        shared-configs:
+          - data-id: tianxuan-work.yml
+            refresh: true
+          - data-id: db.yml
+            refresh: true

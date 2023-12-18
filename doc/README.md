@@ -19,4 +19,5 @@ tianxuan-common -> tianxuan-pojo -> tianxuan-api
 11031: tianxuan-gateway
 11041: tianxuan-auth
 11051: tianxuan-search
+11061: tianxuan-work
 ```
