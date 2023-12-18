@@ -6,6 +6,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wuyiccc.tianxuan.api.feign.WorkMicroServiceFeign;
 import com.wuyiccc.tianxuan.auth.mapper.UserMapper;
 import com.wuyiccc.tianxuan.auth.service.UserService;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
@@ -45,6 +46,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     public RedisUtils redisUtils;
+
+    @Resource
+    private WorkMicroServiceFeign workMicroServiceFeign;
 
 
     @Resource
@@ -92,6 +96,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setUpdatedTime(LocalDateTime.now());
 
         userMapper.insert(user);
+
+        workMicroServiceFeign.init(user.getId());
 
         return user;
     }
