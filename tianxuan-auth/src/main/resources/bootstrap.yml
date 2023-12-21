@@ -20,3 +20,5 @@ spring:
             refresh: true
           - data-id: rocketmq.yml
             refresh: true
+          - data-id: seata.yml
+            refresh: true
