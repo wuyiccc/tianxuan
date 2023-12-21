@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.work.service.impl;
 
+import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.pojo.Resume;
 import com.wuyiccc.tianxuan.work.mapper.ResumeMapper;
 import com.wuyiccc.tianxuan.work.service.ResumeService;
@@ -31,6 +32,7 @@ public class ResumeServiceImpl implements ResumeService {
         resume.setCreateTime(LocalDateTime.now());
         resume.setUpdatedTime(LocalDateTime.now());
 
-        resumeMapper.insert(resume);
+        throw new CustomException("测试异常");
+        //resumeMapper.insert(resume);
     }
 }

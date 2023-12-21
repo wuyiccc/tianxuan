@@ -1,6 +1,5 @@
 package com.wuyiccc.tianxuan.auth.service.impl;
 
-import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
@@ -15,17 +14,20 @@ import com.wuyiccc.tianxuan.common.enumeration.SexEnum;
 import com.wuyiccc.tianxuan.common.enumeration.ShowWhichNameEnum;
 import com.wuyiccc.tianxuan.common.enumeration.UserRoleEnum;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
+import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.common.util.*;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.dto.SmsCodeDTO;
+import io.seata.core.context.RootContext;
 import io.seata.spring.annotation.GlobalTransactional;
+import io.seata.tm.api.GlobalTransactionContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -99,7 +101,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         userMapper.insert(user);
 
-        workMicroServiceFeign.init(user.getId());
+        CommonResult<String> httpRes = workMicroServiceFeign.init(user.getId());
+        if (httpRes.getStatus() != 200) {
+            // 如果调用状态不是200, 则手动回滚全局事务
+            // 从当前线程获得xid
+            String xid = RootContext.getXID();
+            if (CharSequenceUtil.isNotBlank(xid)) {
+                try {
+                    GlobalTransactionContext.reload(xid).rollback();
+                } catch (Exception e) {
+                    log.error("回滚全局事务失败", e);
+                } finally {
+                    throw new CustomException(ResponseStatusEnum.USER_REGISTER_FAILED);
+                }
+            }
+        }
 
 
         return user;
