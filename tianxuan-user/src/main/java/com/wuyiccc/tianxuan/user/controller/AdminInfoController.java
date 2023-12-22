@@ -19,6 +19,7 @@ import java.util.Objects;
 /**
  * @author wuyiccc
  * @date 2023/8/30 20:58
+ * 管理端接口
  */
 @RestController
 @RequestMapping("/adminInfo")

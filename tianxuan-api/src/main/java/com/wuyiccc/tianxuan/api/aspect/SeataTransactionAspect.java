@@ -37,7 +37,7 @@ public class SeataTransactionAspect {
     @AfterThrowing(throwing = "throwable"
             , pointcut = "execution(* com.wuyiccc.tianxuan.*.service.impl..*.*(..))")
     public void seataRollback(Throwable throwable) throws Throwable {
-        log.info("捕获到异常信息, 则回滚, 异常信息为: ", throwable.getMessage());
+        log.info("捕获到异常信息, 则回滚, 异常信息为: {}", throwable.getMessage());
         // 从当前线程获得xid
         String xid = RootContext.getXID();
         if (CharSequenceUtil.isNotBlank(xid)) {

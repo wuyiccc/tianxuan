@@ -19,6 +19,7 @@ import javax.validation.Valid;
 /**
  * @author wuyiccc
  * @date 2023/8/22 22:32
+ * 管理端接口
  */
 @RestController
 @RequestMapping("/admin")

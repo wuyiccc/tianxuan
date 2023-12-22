@@ -1,6 +1,6 @@
 package com.wuyiccc.tianxuan.api.interceptor;
 
-import com.google.gson.Gson;
+import cn.hutool.json.JSONUtil;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.pojo.Admin;
 import com.wuyiccc.tianxuan.pojo.User;
@@ -32,17 +32,17 @@ public class JWTCurrentUserInterceptor extends BaseInfoProperties implements Han
         String adminUserJson = request.getHeader(ADMIN_USER_JSON);
 
         if (StringUtils.isNotBlank(appUserJson)) {
-            User appUser = new Gson().fromJson(appUserJson, User.class);
+            User appUser = JSONUtil.toBean(appUserJson, User.class);
             currentUser.set(appUser);
         }
 
         if (StringUtils.isNotBlank(saasUserJson)) {
-            User saasUser = new Gson().fromJson(saasUserJson, User.class);
+            User saasUser = JSONUtil.toBean(saasUserJson, User.class);
             currentUser.set(saasUser);
         }
 
         if (StringUtils.isNotBlank(adminUserJson)) {
-            Admin admin = new Gson().fromJson(adminUserJson, Admin.class);
+            Admin admin = JSONUtil.toBean(adminUserJson, Admin.class);
             adminUser.set(admin);
         }
 

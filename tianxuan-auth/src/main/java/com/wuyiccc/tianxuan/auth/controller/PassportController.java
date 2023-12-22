@@ -23,6 +23,7 @@ import java.util.Objects;
 /**
  * @author wuyiccc
  * @date 2023/6/24 22:39
+ * 移动端接口
  */
 @RestController
 @RequestMapping("/passport")
