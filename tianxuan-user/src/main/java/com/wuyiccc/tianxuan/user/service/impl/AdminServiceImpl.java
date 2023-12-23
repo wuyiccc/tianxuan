@@ -11,9 +11,11 @@ import com.wuyiccc.tianxuan.common.util.MD5Utils;
 import com.wuyiccc.tianxuan.pojo.Admin;
 import com.wuyiccc.tianxuan.pojo.bo.CreateAdminBO;
 import com.wuyiccc.tianxuan.pojo.bo.ResetPwdBO;
+import com.wuyiccc.tianxuan.pojo.bo.UpdateAdminBO;
 import com.wuyiccc.tianxuan.user.mapper.AdminMapper;
 import com.wuyiccc.tianxuan.user.service.AdminService;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -118,6 +120,20 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     public Admin getById(String id) {
 
         return adminMapper.selectById(id);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateAdmin(UpdateAdminBO updateAdminBO) {
+
+
+        Admin admin = new Admin();
+
+        BeanUtils.copyProperties(updateAdminBO, admin);
+
+        admin.setUpdatedTime(LocalDateTime.now());
+
+        adminMapper.updateById(admin);
     }
 
 

@@ -8,10 +8,10 @@ import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Admin;
 import com.wuyiccc.tianxuan.pojo.bo.CreateAdminBO;
 import com.wuyiccc.tianxuan.pojo.bo.ResetPwdBO;
+import com.wuyiccc.tianxuan.pojo.bo.UpdateAdminBO;
 import com.wuyiccc.tianxuan.pojo.vo.AdminInfoVO;
 import com.wuyiccc.tianxuan.user.service.AdminService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +29,6 @@ import java.util.Objects;
 public class AdminInfoController extends BaseInfoProperties {
 
 
-
     @Autowired
     private AdminService adminService;
 
@@ -41,8 +40,8 @@ public class AdminInfoController extends BaseInfoProperties {
 
     @PostMapping("/list")
     public CommonResult<PagedGridResult> list(String accountName
-                                    , Integer page
-                                    , Integer limit) {
+            , Integer page
+            , Integer limit) {
 
 
         if (Objects.isNull(page)) {
@@ -82,6 +81,18 @@ public class AdminInfoController extends BaseInfoProperties {
 
         AdminInfoVO adminInfoVO = BeanUtil.copyProperties(newAdmin, AdminInfoVO.class);
         return CommonResult.ok(adminInfoVO);
+    }
+
+    @PostMapping("updateMyInfo")
+    public CommonResult<String> updateMyInfo(@RequestBody UpdateAdminBO updateAdminBO) {
+
+        Admin admin = JWTCurrentUserInterceptor.adminUser.get();
+
+
+        updateAdminBO.setId(admin.getId());
+        adminService.updateAdmin(updateAdminBO);
+
+        return CommonResult.ok();
     }
 
 }
