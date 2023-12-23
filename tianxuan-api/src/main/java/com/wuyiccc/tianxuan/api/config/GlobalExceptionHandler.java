@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
-import javax.naming.SizeLimitExceededException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class GlobalExceptionHandler {
         log.error("jwt异常", e);
         return CommonResult.errorCustom(ResponseStatusEnum.JWT_SIGNATURE_ERROR);
     }
-    
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public CommonResult<Map<String, String>> returnNotValidException(MethodArgumentNotValidException e) {
         BindingResult result = e.getBindingResult();

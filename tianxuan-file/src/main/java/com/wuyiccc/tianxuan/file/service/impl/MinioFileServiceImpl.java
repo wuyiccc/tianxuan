@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -28,8 +29,8 @@ public class MinioFileServiceImpl implements FileService {
     private TianxuanMinioConfig tianxuanMinioConfig;
 
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Resource
+    private MinioClient minioClient;
 
 
     @Override
@@ -38,7 +39,6 @@ public class MinioFileServiceImpl implements FileService {
         log.info("contentType: {}", file.getContentType());
 
         String fileName = userId + StrPool.SLASH + UUID.randomUUID().toString().replace("-", "") + file.getOriginalFilename();
-        MinioClient minioClient = getMinioClient();
         PutObjectArgs build = PutObjectArgs.builder()
                 .bucket(tianxuanMinioConfig.getBucket())
                 .object(fileName)
@@ -55,10 +55,4 @@ public class MinioFileServiceImpl implements FileService {
         }
     }
 
-    private MinioClient getMinioClient() {
-        return MinioClient.builder()
-                .endpoint(tianxuanMinioConfig.getEndpoint())
-                .credentials(tianxuanMinioConfig.getAccessKey(), tianxuanMinioConfig.getSecretKey())
-                .build();
-    }
 }
