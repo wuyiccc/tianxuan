@@ -12,3 +12,5 @@ spring:
             refresh: true
           - data-id: jwt.yml
             refresh: true
+          - data-id: minio.yml
+            refresh: true

@@ -1,7 +1,7 @@
-package com.wuyiccc.tianxuan.search.controller;
+package com.wuyiccc.tianxuan.file.controller;
 
 import com.wuyiccc.tianxuan.common.result.CommonResult;
-import com.wuyiccc.tianxuan.search.service.FileService;
+import com.wuyiccc.tianxuan.file.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,9 +26,9 @@ public class FileController {
     private FileService fileService;
 
     @PostMapping("/uploadFace")
-    public CommonResult<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+    public CommonResult<String> uploadFace(@RequestParam("file") MultipartFile file, @RequestParam("userId") String userId) throws IOException {
 
-        String url = fileService.uploadFile(file);
+        String url = fileService.uploadFile(file, userId);
         return CommonResult.ok(url);
     }
 

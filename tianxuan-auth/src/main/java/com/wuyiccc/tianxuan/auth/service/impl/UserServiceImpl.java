@@ -17,11 +17,8 @@ import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.common.util.*;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.dto.SmsCodeDTO;
-import io.seata.core.context.RootContext;
 import io.seata.spring.annotation.GlobalTransactional;
-import io.seata.tm.api.GlobalTransactionContext;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
@@ -36,7 +33,6 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author wuyiccc
@@ -105,18 +101,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         CommonResult<String> httpRes = workMicroServiceFeign.init(user.getId());
         if (httpRes.getStatus() != 200) {
+            throw new CustomException(ResponseStatusEnum.USER_REGISTER_FAILED);
             // 如果调用状态不是200, 则手动回滚全局事务
             // 从当前线程获得xid
-            String xid = RootContext.getXID();
-            if (StringUtils.isNotBlank(xid)) {
-                try {
-                    GlobalTransactionContext.reload(xid).rollback();
-                } catch (Exception e) {
-                    log.error("回滚全局事务失败", e);
-                } finally {
-                    throw new CustomException(ResponseStatusEnum.USER_REGISTER_FAILED);
-                }
-            }
+            //String xid = RootContext.getXID();
+            //if (StringUtils.isNotBlank(xid)) {
+            //    try {
+            //        GlobalTransactionContext.reload(xid).rollback();
+            //    } catch (Exception e) {
+            //        log.error("回滚全局事务失败", e);
+            //    } finally {
+            //        throw new CustomException(ResponseStatusEnum.USER_REGISTER_FAILED);
+            //    }
+            //}
         }
 
 
