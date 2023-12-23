@@ -14,7 +14,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
+import javax.naming.SizeLimitExceededException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +50,12 @@ public class GlobalExceptionHandler {
         BindingResult result = e.getBindingResult();
         Map<String, String> errors = getErrors(result);
         return CommonResult.errorData(errors);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public CommonResult<String> returnMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
+        log.error("文件上传大小超出限制", e);
+        return CommonResult.errorMsg("文件上传大小超出限制 50MB");
     }
 
     private Map<String, String> getErrors(BindingResult result) {
