@@ -27,6 +27,7 @@ public class ResumeController {
     @PostMapping("init")
     public CommonResult<String> init(@RequestParam("userId") String userId) {
 
+        // 远程调用接口重新try-catch
         try {
             resumeService.initResume(userId);
         } catch (Exception e) {
