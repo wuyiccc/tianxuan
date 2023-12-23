@@ -1,7 +1,5 @@
 package com.wuyiccc.tianxuan.auth.task;
 
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 import com.wuyiccc.tianxuan.common.constant.MQConstants;
 import com.wuyiccc.tianxuan.common.util.DingDingMsgUtils;
@@ -13,6 +11,9 @@ import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.common.message.MessageExt;
 
 import javax.annotation.Resource;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -38,9 +39,9 @@ public class SendSMSCodeConsumerListener implements MessageListenerConcurrently 
                 byte[] body = messageExt.getBody();
                 SmsCodeDTO smsCodeDTO = JSONUtil.toBean(new String(body), SmsCodeDTO.class);
                 Long ts = smsCodeDTO.getStartTimestamp();
-                DateTime date = DateUtil.date(ts + 30 * 60 * 1000);
-                log.info("date: {}", date);
-                if (date.before(DateUtil.date())) {
+                LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(ts + 30 * 60 * 1000), ZoneId.systemDefault());
+                log.info("date: {}", localDateTime);
+                if (localDateTime.isBefore(LocalDateTime.now())) {
                     log.info("短信消息过期, 不执行");
                     continue;
                 }
@@ -53,4 +54,5 @@ public class SendSMSCodeConsumerListener implements MessageListenerConcurrently 
         }
         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
     }
+
 }

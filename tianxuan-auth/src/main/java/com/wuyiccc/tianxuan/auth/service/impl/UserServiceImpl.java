@@ -1,7 +1,5 @@
 package com.wuyiccc.tianxuan.auth.service.impl;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -23,6 +21,7 @@ import io.seata.core.context.RootContext;
 import io.seata.spring.annotation.GlobalTransactional;
 import io.seata.tm.api.GlobalTransactionContext;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
@@ -33,8 +32,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author wuyiccc
@@ -106,7 +108,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             // 如果调用状态不是200, 则手动回滚全局事务
             // 从当前线程获得xid
             String xid = RootContext.getXID();
-            if (CharSequenceUtil.isNotBlank(xid)) {
+            if (StringUtils.isNotBlank(xid)) {
                 try {
                     GlobalTransactionContext.reload(xid).rollback();
                 } catch (Exception e) {
@@ -131,13 +133,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         log.info("手机号: {}, 当前验证码为: {}", mobile, code);
 
 
-        SmsCodeDTO smsCodeDTO = new SmsCodeDTO(mobile, code, DateUtil.date().getTime());
+        SmsCodeDTO smsCodeDTO = new SmsCodeDTO(mobile, code, LocalDateTime.now().toInstant(ZoneOffset.of(ZoneId.systemDefault().getRules().getOffset(LocalDateTime.now()).toString())).toEpochMilli());
 
 
         List<Message> messageList = new ArrayList<>(1);
         Message message = new Message(MQConstants.TOPIC_SMS_CODE
-                , CharSequenceUtil.EMPTY
-                , CharSequenceUtil.EMPTY
+                , StringPool.EMPTY
+                , StringPool.EMPTY
                 , JSONUtil.toJsonStr(smsCodeDTO).getBytes());
         messageList.add(message);
         SendResult send = null;
@@ -153,4 +155,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         //dingDingMsgUtils.sendSMSCode(code);
     }
+
+
 }

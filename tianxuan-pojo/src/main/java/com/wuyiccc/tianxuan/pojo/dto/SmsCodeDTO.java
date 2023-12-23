@@ -24,7 +24,7 @@ public class SmsCodeDTO {
     private String smsCode;
 
     /**
-     * 短信发送时间戳
+     * 短信发送时间戳 ms
      */
     private Long startTimestamp;
 }

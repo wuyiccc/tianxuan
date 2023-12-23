@@ -1,6 +1,6 @@
 package com.wuyiccc.tianxuan.auth.controller;
 
-import com.google.gson.Gson;
+import cn.hutool.json.JSONUtil;
 import com.wuyiccc.tianxuan.auth.service.UserService;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
@@ -31,7 +31,6 @@ import java.util.Objects;
 public class PassportController extends BaseInfoProperties {
 
 
-
     @Autowired
     private UserService userService;
 
@@ -56,7 +55,7 @@ public class PassportController extends BaseInfoProperties {
 
     @PostMapping("/login")
     public CommonResult<UserVO> login(@Valid @RequestBody RegisterLoginBO registerLoginBO
-    , HttpServletRequest request) {
+            , HttpServletRequest request) {
         String mobile = registerLoginBO.getMobile();
         String smsCode = registerLoginBO.getSmsCode();
 
@@ -72,7 +71,7 @@ public class PassportController extends BaseInfoProperties {
             user = userService.createUser(mobile);
         }
 
-        String uToken = jwtUtils.createJWTWithPrefix(new Gson().toJson(user), TOKEN_USER_PREFIX);
+        String uToken = jwtUtils.createJWTWithPrefix(JSONUtil.toJsonStr(user), TOKEN_USER_PREFIX);
 
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user, userVO);

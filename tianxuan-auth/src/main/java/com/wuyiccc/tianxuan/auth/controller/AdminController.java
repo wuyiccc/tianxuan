@@ -1,6 +1,6 @@
 package com.wuyiccc.tianxuan.auth.controller;
 
-import com.google.gson.Gson;
+import cn.hutool.json.JSONUtil;
 import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.auth.service.AdminService;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
@@ -39,7 +39,7 @@ public class AdminController extends BaseInfoProperties {
         Admin admin = adminService.adminLogin(adminBO);
 
 
-        String token = jwtUtils.createJWTWithPrefix(new Gson().toJson(admin), TOKEN_ADMIN_PREFIX);
+        String token = jwtUtils.createJWTWithPrefix(JSONUtil.toJsonStr(admin), TOKEN_ADMIN_PREFIX);
 
         return CommonResult.ok(token);
     }

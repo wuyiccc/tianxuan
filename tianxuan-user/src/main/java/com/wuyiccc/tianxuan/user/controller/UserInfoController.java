@@ -1,6 +1,5 @@
 package com.wuyiccc.tianxuan.user.controller;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
@@ -10,7 +9,11 @@ import com.wuyiccc.tianxuan.pojo.bo.ModifyUserBO;
 import com.wuyiccc.tianxuan.pojo.vo.UserVO;
 import com.wuyiccc.tianxuan.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.BeanUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
@@ -42,7 +45,8 @@ public class UserInfoController {
         // re-generate old token
         String uToken = jwtUtils.createJWTWithPrefix(JSONUtil.toJsonStr(user), BaseInfoProperties.TOKEN_USER_PREFIX);
 
-        UserVO userVO = BeanUtil.copyProperties(user, UserVO.class);
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
 
         userVO.setUserToken(uToken);
 

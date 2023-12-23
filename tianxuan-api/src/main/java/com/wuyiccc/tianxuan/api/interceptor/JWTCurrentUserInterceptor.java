@@ -1,6 +1,8 @@
 package com.wuyiccc.tianxuan.api.interceptor;
 
 import cn.hutool.json.JSONUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.pojo.Admin;
 import com.wuyiccc.tianxuan.pojo.User;
@@ -10,6 +12,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * @author wuyiccc
@@ -51,6 +55,16 @@ public class JWTCurrentUserInterceptor extends BaseInfoProperties implements Han
          * true: 放行，请求验证通过
          */
         return true;
+    }
+
+
+    public static void main(String[] args) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        User user = new User();
+        user.setUpdatedTime(LocalDateTime.now());
+        user.setBirthday(LocalDate.now());
+        String s = objectMapper.writeValueAsString(user);
+        System.out.println(s);
     }
 
 

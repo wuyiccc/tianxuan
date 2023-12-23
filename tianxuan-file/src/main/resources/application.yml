@@ -1,9 +1,12 @@
 server:
+  tomcat:
+    uri-encoding: UTF-8
+    max-swallow-size: -1
   # 默认端口号设置
-  port: ${PORT:11041}
+  port: ${PORT:11071}
 spring:
   application:
-    name: tianxuan-auth
+    name: tianxuan-file
 
 
 jasypt:

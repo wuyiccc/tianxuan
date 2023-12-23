@@ -1,10 +1,10 @@
 package com.wuyiccc.tianxuan.api.aspect;
 
-import cn.hutool.core.text.CharSequenceUtil;
 import io.seata.core.context.RootContext;
 import io.seata.tm.api.GlobalTransaction;
 import io.seata.tm.api.GlobalTransactionContext;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
@@ -40,7 +40,7 @@ public class SeataTransactionAspect {
         log.info("捕获到异常信息, 则回滚, 异常信息为: {}", throwable.getMessage());
         // 从当前线程获得xid
         String xid = RootContext.getXID();
-        if (CharSequenceUtil.isNotBlank(xid)) {
+        if (StringUtils.isNotBlank(xid)) {
             GlobalTransactionContext.reload(xid).rollback();
         }
     }
