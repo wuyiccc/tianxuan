@@ -100,8 +100,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userMapper.insert(user);
 
         CommonResult<String> httpRes = workMicroServiceFeign.init(user.getId());
-        if (httpRes.getStatus() != 200) {
-            throw new CustomException(ResponseStatusEnum.USER_REGISTER_FAILED);
+        //if (httpRes.getStatus() != 200) {
+        //    throw new CustomException(ResponseStatusEnum.USER_REGISTER_FAILED);
             // 如果调用状态不是200, 则手动回滚全局事务
             // 从当前线程获得xid
             //String xid = RootContext.getXID();
@@ -114,7 +114,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             //        throw new CustomException(ResponseStatusEnum.USER_REGISTER_FAILED);
             //    }
             //}
-        }
+        //}
 
 
         return user;

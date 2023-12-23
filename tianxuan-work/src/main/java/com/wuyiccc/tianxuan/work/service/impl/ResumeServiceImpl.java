@@ -32,7 +32,7 @@ public class ResumeServiceImpl implements ResumeService {
         resume.setCreateTime(LocalDateTime.now());
         resume.setUpdatedTime(LocalDateTime.now());
 
-        throw new CustomException("测试异常");
-        //resumeMapper.insert(resume);
+        //throw new CustomException("测试异常");
+        resumeMapper.insert(resume);
     }
 }

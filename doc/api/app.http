@@ -2,7 +2,7 @@
 POST http://localhost:11031/tianxuan-auth/passport/getSMSCode
 Content-Type: application/x-www-form-urlencoded
 
-mobile = 13333333333
+mobile = 12222222222
 
 
 ### 登录
@@ -11,8 +11,8 @@ Content-Type: application/json
 
 
 {
-  "mobile": "13333333333",
-  "smsCode": "433685"
+  "mobile": "12222222222",
+  "smsCode": "121322"
 }
 
 ### 图片上传

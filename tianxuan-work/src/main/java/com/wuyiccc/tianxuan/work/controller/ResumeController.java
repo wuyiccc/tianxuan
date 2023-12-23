@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.work.controller;
 
+import com.wuyiccc.tianxuan.common.exception.RemoteCallCustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.work.service.ResumeService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,11 @@ public class ResumeController {
     @PostMapping("init")
     public CommonResult<String> init(@RequestParam("userId") String userId) {
 
-        resumeService.initResume(userId);
+        try {
+            resumeService.initResume(userId);
+        } catch (Exception e) {
+            throw new RemoteCallCustomException(e.getMessage());
+        }
         return CommonResult.ok();
     }
 }
