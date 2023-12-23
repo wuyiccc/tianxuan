@@ -1,17 +1,19 @@
 package com.wuyiccc.tianxuan.user.controller;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
+import com.wuyiccc.tianxuan.pojo.Admin;
 import com.wuyiccc.tianxuan.pojo.bo.CreateAdminBO;
 import com.wuyiccc.tianxuan.pojo.bo.ResetPwdBO;
+import com.wuyiccc.tianxuan.pojo.vo.AdminInfoVO;
 import com.wuyiccc.tianxuan.user.service.AdminService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Objects;
@@ -69,6 +71,17 @@ public class AdminInfoController extends BaseInfoProperties {
         adminService.resetPassword(resetPwdBO);
 
         return CommonResult.ok();
+    }
+
+    @GetMapping("myInfo")
+    public CommonResult<AdminInfoVO> myInfo() {
+
+        Admin admin = JWTCurrentUserInterceptor.adminUser.get();
+
+        Admin newAdmin = adminService.getById(admin.getId());
+
+        AdminInfoVO adminInfoVO = BeanUtil.copyProperties(newAdmin, AdminInfoVO.class);
+        return CommonResult.ok(adminInfoVO);
     }
 
 }

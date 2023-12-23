@@ -1,19 +1,28 @@
 package com.wuyiccc.tianxuan.file.service.impl;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrPool;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import cn.hutool.core.util.IdUtil;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
+import com.wuyiccc.tianxuan.common.util.Base64ToFileUtils;
 import com.wuyiccc.tianxuan.file.config.TianxuanMinioConfig;
 import com.wuyiccc.tianxuan.file.service.FileService;
+import com.wuyiccc.tianxuan.pojo.bo.Base64FileBO;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.UploadObjectArgs;
+import io.minio.errors.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 /**
@@ -54,5 +63,39 @@ public class MinioFileServiceImpl implements FileService {
             throw new CustomException("文件上传失败");
         }
     }
+
+    @Override
+    public String uploadAdminFace(Base64FileBO base64FileBO) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+
+        String base64File = base64FileBO.getBase64File();
+
+        String suffixName = ".png";
+
+        String uuid = IdUtil.simpleUUID();
+        String objectName= uuid + suffixName;
+
+        String rootPath = "./tmp" + File.separator;
+        String filePath = rootPath + File.separator + objectName;
+
+        Base64ToFileUtils.base64ToFile(base64File, filePath);
+
+        File file = new File(filePath);
+
+        UploadObjectArgs build = UploadObjectArgs.builder()
+                .bucket(tianxuanMinioConfig.getBucket())
+                .object(objectName)
+                .filename(file.getAbsolutePath())
+                .build();
+        minioClient.uploadObject(build);
+
+        boolean delete = file.delete();
+        log.info("delete: {}", delete);
+
+
+        return tianxuanMinioConfig.getEndpoint() + "/" + tianxuanMinioConfig.getBucket() + "/" + objectName;
+    }
+
+
+
 
 }

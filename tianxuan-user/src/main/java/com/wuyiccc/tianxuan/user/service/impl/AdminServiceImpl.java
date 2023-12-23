@@ -114,5 +114,11 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         }
     }
 
+    @Override
+    public Admin getById(String id) {
+
+        return adminMapper.selectById(id);
+    }
+
 
 }
