@@ -12,5 +12,7 @@ spring:
             refresh: true
           - data-id: db.yml
             refresh: true
+          - data-id: redis.yml
+            refresh: true
           - data-id: seata.yml
             refresh: true
