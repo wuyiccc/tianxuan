@@ -18,4 +18,8 @@ public interface FileService {
     String uploadFile(MultipartFile file, String userId) throws IOException;
 
     String uploadAdminFace(Base64FileBO base64FileBO) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException;
+
+    String uploadLogo(MultipartFile file) throws IOException;
+
+    String uploadBizLicense(MultipartFile file) throws IOException;
 }

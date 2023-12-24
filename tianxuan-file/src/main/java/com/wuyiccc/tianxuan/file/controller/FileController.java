@@ -42,4 +42,19 @@ public class FileController {
         return CommonResult.ok(url);
     }
 
+    @PostMapping("/uploadLogo")
+    public CommonResult<String> uploadLogo(@RequestParam("file") MultipartFile file) throws IOException {
+
+        String url = fileService.uploadLogo(file);
+        return CommonResult.ok(url);
+    }
+
+
+    @PostMapping("/uploadBizLicense")
+    public CommonResult<String> uploadBizLicense(@RequestParam("file") MultipartFile file) throws IOException {
+
+        String url = fileService.uploadBizLicense(file);
+        return CommonResult.ok(url);
+    }
+
 }

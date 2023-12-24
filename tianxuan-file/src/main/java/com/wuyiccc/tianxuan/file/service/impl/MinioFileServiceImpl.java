@@ -95,7 +95,48 @@ public class MinioFileServiceImpl implements FileService {
         return tianxuanMinioConfig.getEndpoint() + "/" + tianxuanMinioConfig.getBucket() + "/" + objectName;
     }
 
+    @Override
+    public String uploadLogo(MultipartFile file) throws IOException {
 
+        log.info("contentType: {}", file.getContentType());
+
+        String fileName = "company" + StrPool.SLASH + UUID.randomUUID().toString().replace("-", "") + file.getOriginalFilename();
+        PutObjectArgs build = PutObjectArgs.builder()
+                .bucket(tianxuanMinioConfig.getBucket())
+                .object(fileName)
+                .stream(file.getInputStream(), file.getSize(), -1)
+                .contentType(file.getContentType())
+                .build();
+        try {
+
+            minioClient.putObject(build);
+            return tianxuanMinioConfig.getEndpoint() + "/" + tianxuanMinioConfig.getBucket() + "/" + fileName;
+        } catch (Exception e) {
+            log.error("文件上传失败", e);
+            throw new CustomException("文件上传失败");
+        }
+    }
+
+    @Override
+    public String uploadBizLicense(MultipartFile file) throws IOException {
+        log.info("contentType: {}", file.getContentType());
+
+        String fileName = "bizLicense" + StrPool.SLASH + UUID.randomUUID().toString().replace("-", "") + file.getOriginalFilename();
+        PutObjectArgs build = PutObjectArgs.builder()
+                .bucket(tianxuanMinioConfig.getBucket())
+                .object(fileName)
+                .stream(file.getInputStream(), file.getSize(), -1)
+                .contentType(file.getContentType())
+                .build();
+        try {
+
+            minioClient.putObject(build);
+            return tianxuanMinioConfig.getEndpoint() + "/" + tianxuanMinioConfig.getBucket() + "/" + fileName;
+        } catch (Exception e) {
+            log.error("文件上传失败", e);
+            throw new CustomException("文件上传失败");
+        }
+    }
 
 
 }
