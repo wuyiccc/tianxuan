@@ -19,6 +19,7 @@
         <module>tianxuan-search</module>
         <module>tianxuan-work</module>
         <module>tianxuan-file</module>
+        <module>tianxuan-chat</module>
     </modules>
 
     <properties>

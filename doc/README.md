@@ -21,4 +21,5 @@ tianxuan-common -> tianxuan-pojo -> tianxuan-api
 11051: tianxuan-search
 11061: tianxuan-work
 11071: tianxuan-file
+11081: tianxuan-chat
 ```
