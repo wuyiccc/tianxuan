@@ -1,5 +1,6 @@
-package com.wuyiccc.chat.websocket;
+package com.wuyiccc.chat;
 
+import com.wuyiccc.chat.websocket.WSInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
@@ -32,7 +33,7 @@ public class NettyServer {
                     // 设置nio的双向通道
                     .channel(NioServerSocketChannel.class)
                     // 绑定处理器, 用于处理workerGroup的任务
-                    .childHandler(new HttpServerInitializer());
+                    .childHandler(new WSInitializer());
 
             // 启动server, 同步方式运行
             ChannelFuture channelFuture = server.bind(11081).sync();

@@ -1,4 +1,4 @@
-package com.wuyiccc.chat.websocket.handler;
+package com.wuyiccc.chat.http.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

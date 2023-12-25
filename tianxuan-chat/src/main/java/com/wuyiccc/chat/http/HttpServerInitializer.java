@@ -1,6 +1,6 @@
-package com.wuyiccc.chat.websocket;
+package com.wuyiccc.chat.http;
 
-import com.wuyiccc.chat.websocket.handler.HttpHandler;
+import com.wuyiccc.chat.http.handler.HttpHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
