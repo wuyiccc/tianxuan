@@ -1,5 +1,10 @@
 package com.wuyiccc.chat.websocket.handler;
 
+import cn.hutool.json.JSONUtil;
+import com.wuyiccc.chat.websocket.UserChannelSession;
+import com.wuyiccc.tianxuan.common.enumeration.MsgTypeEnum;
+import com.wuyiccc.tianxuan.pojo.netty.ChatMsg;
+import com.wuyiccc.tianxuan.pojo.netty.DataContent;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelId;
@@ -8,6 +13,9 @@ import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import lombok.extern.slf4j.Slf4j;
+
+import java.time.LocalDateTime;
 
 /**
  * @author wuyiccc
@@ -31,19 +39,35 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
         Channel currentChannel = ctx.channel();
         String currentChannelId = currentChannel.id().asLongText();
 
-        String currentChannelIdShort = currentChannel.id().asShortText();
+        //String currentChannelIdShort = currentChannel.id().asShortText();
 
-        System.out.println("客户端currentChannelId: " + currentChannelId);
-        System.out.println("客户端currentChannelIdShort: " + currentChannelIdShort);
+        //System.out.println("客户端currentChannelId: " + currentChannelId);
+        //System.out.println("客户端currentChannelIdShort: " + currentChannelIdShort);
 
-        TextWebSocketFrame replayMsg = new TextWebSocketFrame("当前客户端的id为: " + currentChannelIdShort);
+        //TextWebSocketFrame replayMsg = new TextWebSocketFrame("当前客户端的id为: " + currentChannelIdShort);
 
-        // 测试向所有客户端群发消息
-        //for (Channel channel : clients) {
-        //    channel.writeAndFlush(replayMsg);
-        //}
-        clients.writeAndFlush(replayMsg);
+        // 1. 获取客户端发来的消息 并且解析
+        DataContent dataContent = JSONUtil.toBean(content, DataContent.class);
+        ChatMsg chatMsg = dataContent.getChatMsg();
+        String msgText = chatMsg.getMsg();
+        String receiverId = chatMsg.getReceiverId();
+        String senderId = chatMsg.getSenderId();
 
+        // 时间校准, 以服务器的时间为准
+        chatMsg.setChatTime(LocalDateTime.now());
+
+        // 获得消息类型, 用于判断
+        Integer msgType = chatMsg.getMsgType();
+
+        if (MsgTypeEnum.CONNECT_INIT.type.equals(msgType)) {
+            // 当websocket初次open的时候, 初始化channel会话, 把用户和channel关联起来
+            UserChannelSession.putUserChannelIdRelation(currentChannelId, senderId);
+            UserChannelSession.putMultiChannels(senderId, currentChannel);
+        }
+
+
+
+        UserChannelSession.outputMulti();
 
     }
 
