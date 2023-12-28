@@ -7,13 +7,11 @@ import com.wuyiccc.tianxuan.pojo.netty.ChatMsg;
 import com.wuyiccc.tianxuan.pojo.netty.DataContent;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelId;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.concurrent.GlobalEventExecutor;
-import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 
@@ -67,7 +65,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 
 
 
-        UserChannelSession.outputMulti();
+        //UserChannelSession.outputMulti();
 
     }
 
@@ -89,6 +87,12 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
         String channelId = ctx.channel().id().asLongText();
         System.out.println("客户端断开, channel对应的长id为: " + channelId);
         clients.remove(ctx.channel());
+
+        // 移除多余的会话
+        String userId = UserChannelSession.getUserIdByChannelId(channelId);
+        UserChannelSession.removeUselessChannel(channelId, userId);
+
+        //UserChannelSession.outputMulti();
     }
 
     @Override
@@ -101,5 +105,10 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
         // 从channelGroup中移除对应的channel
         clients.remove(ctx.channel());
 
+        String channelId = ctx.channel().id().asLongText();
+
+        // 移除多余的会话
+        String userId = UserChannelSession.getUserIdByChannelId(channelId);
+        UserChannelSession.removeUselessChannel(channelId, userId);
     }
 }

@@ -1,6 +1,6 @@
 package com.wuyiccc.chat.websocket;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
+import cn.hutool.core.collection.CollUtil;
 import io.netty.channel.Channel;
 
 import java.util.*;
@@ -26,7 +26,7 @@ public class UserChannelSession {
     }
 
 
-    public static String getUserChannelIdRelation(String channelId) {
+    public static String getUserIdByChannelId(String channelId) {
         return userChannelIdRelation.get(channelId);
     }
 
@@ -72,5 +72,29 @@ public class UserChannelSession {
         System.out.println("------------------------");
 
 
+    }
+
+    /**
+     * 移除多余的无用channel
+     */
+    public static void removeUselessChannel(String channelId, String userId) {
+
+        List<Channel> channels = getMultiChannels(userId);
+        if (CollUtil.isEmpty(channels)) {
+            return;
+        }
+
+        Iterator<Channel> iterator = channels.iterator();
+        while (iterator.hasNext()) {
+            Channel channel = iterator.next();
+            if (channel.id().asLongText().equals(channelId)) {
+                iterator.remove();
+            }
+        }
+
+        if (CollUtil.isEmpty(channels)) {
+            multiSession.remove(userId);
+        }
+        userChannelIdRelation.remove(channelId);
     }
 }
