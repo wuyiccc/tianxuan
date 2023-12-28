@@ -1,6 +1,7 @@
 package com.wuyiccc.chat.websocket;
 
 import com.wuyiccc.chat.websocket.handler.ChatHandler;
+import com.wuyiccc.chat.websocket.handler.HeartBeatHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -8,6 +9,7 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 
 /**
  * @author wuyiccc
@@ -35,6 +37,13 @@ public class WSInitializer extends ChannelInitializer<SocketChannel> {
          * 上面是支持http协议的
          */
 
+
+        // 增加心跳机制支持
+        // 针对客户端, 如果在1分钟内没有向服务端发送读写心跳-all, 则主动断开
+        // 如果读空闲或者写空闲, 则不处理
+        pipeline.addLast(new IdleStateHandler(8, 10, 60));
+
+        pipeline.addLast(new HeartBeatHandler());
 
         /**
          * 下面是支持websocket协议的

@@ -65,7 +65,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 
 
 
-        //UserChannelSession.outputMulti();
+        UserChannelSession.outputMulti();
 
     }
 
@@ -92,7 +92,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
         String userId = UserChannelSession.getUserIdByChannelId(channelId);
         UserChannelSession.removeUselessChannel(channelId, userId);
 
-        //UserChannelSession.outputMulti();
+        UserChannelSession.outputMulti();
     }
 
     @Override
