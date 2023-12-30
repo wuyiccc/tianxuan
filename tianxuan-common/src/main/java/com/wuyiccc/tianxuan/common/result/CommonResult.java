@@ -88,10 +88,17 @@ public class CommonResult<T> {
         this.success = responseStatus.success();
         this.data = data;
     }
+
     public CommonResult(ResponseStatusEnum responseStatus, String msg) {
         this.status = responseStatus.status();
         this.msg = msg;
         this.success = responseStatus.success();
+    }
+
+    public CommonResult(Integer status, String msg, Boolean success) {
+        this.status = status;
+        this.msg = msg;
+        this.success = success;
     }
 
     public CommonResult() {

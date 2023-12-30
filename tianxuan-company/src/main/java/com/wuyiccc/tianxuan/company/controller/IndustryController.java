@@ -2,7 +2,6 @@ package com.wuyiccc.tianxuan.company.controller;
 
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
-import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.company.service.IndustryService;
 import com.wuyiccc.tianxuan.pojo.Industry;
 import org.springframework.web.bind.annotation.PostMapping;

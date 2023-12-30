@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public CommonResult<String> returnMyCustomException(CustomException e) {
-        return CommonResult.exception(e.getResponseStatusEnum());
+        return new CommonResult<>(e.getStatus(), e.getMsg(), false);
     }
 
     @ExceptionHandler({ExpiredJwtException.class

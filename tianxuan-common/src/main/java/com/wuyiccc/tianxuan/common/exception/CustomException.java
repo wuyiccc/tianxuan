@@ -8,23 +8,29 @@ import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
  */
 public class CustomException extends RuntimeException {
 
-    private ResponseStatusEnum responseStatusEnum;
+    private Integer status;
+
+    private String msg;
+
+
+
 
     public CustomException(ResponseStatusEnum responseStatusEnum) {
-        super("异常状态码为: " + responseStatusEnum.status() + "异常信息为: " + responseStatusEnum.msg());
-        this.responseStatusEnum = responseStatusEnum;
+
+        this.status = responseStatusEnum.status();
+        this.msg = responseStatusEnum.msg();
     }
 
     public CustomException(String errorMsg) {
-        super(errorMsg);
-        this.responseStatusEnum = ResponseStatusEnum.SYSTEM_OPERATION_ERROR;
+        this.status = ResponseStatusEnum.FAILED.status();
+        this.msg = errorMsg;
     }
 
-    public ResponseStatusEnum getResponseStatusEnum() {
-        return responseStatusEnum;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setResponseStatusEnum(ResponseStatusEnum responseStatusEnum) {
-        this.responseStatusEnum = responseStatusEnum;
+    public String getMsg() {
+        return msg;
     }
 }
