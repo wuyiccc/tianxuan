@@ -16,4 +16,6 @@ public interface IndustryService {
     List<Industry> getTopIndustryList();
 
     List<Industry> getChildrenIndustryList(String industryId);
+
+    void updateNode(Industry industry);
 }

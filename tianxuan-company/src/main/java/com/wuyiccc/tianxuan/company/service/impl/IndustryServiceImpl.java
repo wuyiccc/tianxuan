@@ -57,4 +57,11 @@ public class IndustryServiceImpl implements IndustryService {
         wrapper.orderByAsc(Industry::getSort);
         return industryMapper.selectList(wrapper);
     }
+
+    @Override
+    public void updateNode(Industry industry) {
+
+
+        industryMapper.updateById(industry);
+    }
 }

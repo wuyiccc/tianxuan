@@ -48,4 +48,12 @@ public class IndustryController {
 
         return CommonResult.ok(resList);
     }
+
+    @PostMapping("/updateNode")
+    public CommonResult<String> updateNode(@RequestBody Industry industry) {
+
+        industryService.updateNode(industry);
+
+        return CommonResult.ok();
+    }
 }
