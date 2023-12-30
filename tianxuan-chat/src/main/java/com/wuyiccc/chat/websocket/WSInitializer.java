@@ -39,9 +39,9 @@ public class WSInitializer extends ChannelInitializer<SocketChannel> {
 
 
         // 增加心跳机制支持
-        // 针对客户端, 如果在1分钟内没有向服务端发送读写心跳-all, 则主动断开
+        // 针对客户端, 如果在10分钟内没有向服务端发送读写心跳-all, 则主动断开
         // 如果读空闲或者写空闲, 则不处理
-        pipeline.addLast(new IdleStateHandler(8, 10, 60));
+        pipeline.addLast(new IdleStateHandler(8, 10, 600));
 
         pipeline.addLast(new HeartBeatHandler());
 

@@ -1,8 +1,10 @@
 package com.wuyiccc.chat.websocket.handler;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
 import com.wuyiccc.chat.websocket.UserChannelSession;
 import com.wuyiccc.tianxuan.common.enumeration.MsgTypeEnum;
+import com.wuyiccc.tianxuan.common.util.LocalDateUtils;
 import com.wuyiccc.tianxuan.pojo.netty.ChatMsg;
 import com.wuyiccc.tianxuan.pojo.netty.DataContent;
 import io.netty.channel.Channel;
@@ -14,6 +16,8 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author wuyiccc
@@ -61,8 +65,29 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
             // 当websocket初次open的时候, 初始化channel会话, 把用户和channel关联起来
             UserChannelSession.putUserChannelIdRelation(currentChannelId, senderId);
             UserChannelSession.putMultiChannels(senderId, currentChannel);
-        }
+        } else if (MsgTypeEnum.WORDS.type.equals(msgType)) {
+            // 发送消息
 
+
+            // 从全局用户关系中获得对方(接受消息方)的channel
+            List<Channel> multiChannels = UserChannelSession.getMultiChannels(receiverId);
+            if (CollUtil.isEmpty(multiChannels)) {
+                // 代表用户离线/断线状态, 消息不需要发送, 后续可以直接存储到数据库中
+                chatMsg.setIsReceiverOnLine(false);
+            } else {
+                chatMsg.setIsReceiverOnLine(true);
+                // 当channels不为空, 则同账户多端接受消息
+                for (Channel c : multiChannels) {
+                    Channel findChannel = clients.find(c.id());
+                    if (Objects.nonNull(findChannel)) {
+                        dataContent.setChatMsg(chatMsg);
+                        String chatTimeFormat = LocalDateUtils.format(chatMsg.getChatTime(), LocalDateUtils.DATETIME_PATTERN_2);
+                        dataContent.setChatTime(chatTimeFormat);
+                        findChannel.writeAndFlush(new TextWebSocketFrame(JSONUtil.toJsonStr(dataContent)));
+                    }
+                }
+            }
+        }
 
 
         UserChannelSession.outputMulti();
@@ -98,7 +123,8 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 
-        cause.printStackTrace();;
+        cause.printStackTrace();
+        ;
 
         // 发生异常之后, 关闭连接channel
         ctx.channel().close();
