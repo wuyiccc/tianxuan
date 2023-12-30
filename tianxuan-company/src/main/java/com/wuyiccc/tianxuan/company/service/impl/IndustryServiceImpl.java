@@ -64,4 +64,25 @@ public class IndustryServiceImpl implements IndustryService {
 
         industryMapper.updateById(industry);
     }
+
+    @Override
+    public Industry getById(String industryId) {
+
+        return industryMapper.selectById(industryId);
+    }
+
+    @Override
+    public Long getChildrenIndustryCounts(String fatherId) {
+
+        LambdaQueryWrapper<Industry> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Industry::getFatherId, fatherId);
+
+        return industryMapper.selectCount(wrapper);
+    }
+
+    @Override
+    public void deleteNode(String industryId) {
+
+        industryMapper.deleteById(industryId);
+    }
 }

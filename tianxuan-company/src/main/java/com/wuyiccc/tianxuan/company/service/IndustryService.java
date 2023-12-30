@@ -18,4 +18,11 @@ public interface IndustryService {
     List<Industry> getChildrenIndustryList(String industryId);
 
     void updateNode(Industry industry);
+
+    Industry getById(String industryId);
+
+
+    Long getChildrenIndustryCounts(String fatherId);
+
+    void deleteNode(String industryId);
 }

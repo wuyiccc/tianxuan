@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author wuyiccc
@@ -53,6 +54,24 @@ public class IndustryController {
     public CommonResult<String> updateNode(@RequestBody Industry industry) {
 
         industryService.updateNode(industry);
+
+        return CommonResult.ok();
+    }
+
+    @DeleteMapping("/deleteNode/{industryId}")
+    public CommonResult<String> deleteNode(@PathVariable("industryId") String industryId) {
+
+        Industry industry = industryService.getById(industryId);
+
+
+        if (industry.getLevel() == 1 || industry.getLevel() == 2) {
+            Long count = industryService.getChildrenIndustryCounts(industryId);
+            if (count != 0) {
+                throw new CustomException("请保证该节点下无任何子节点后再删除");
+            }
+        }
+
+        industryService.deleteNode(industryId);
 
         return CommonResult.ok();
     }
