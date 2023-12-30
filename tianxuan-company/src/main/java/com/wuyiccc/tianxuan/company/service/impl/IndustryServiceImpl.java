@@ -85,4 +85,10 @@ public class IndustryServiceImpl implements IndustryService {
 
         industryMapper.deleteById(industryId);
     }
+
+    @Override
+    public List<Industry> getThirdIndustryListByTop(String topIndustryId) {
+
+        return industryMapper.getThirdIndustryListByTop(topIndustryId);
+    }
 }

@@ -25,4 +25,6 @@ public interface IndustryService {
     Long getChildrenIndustryCounts(String fatherId);
 
     void deleteNode(String industryId);
+
+    List<Industry> getThirdIndustryListByTop(String topIndustryId);
 }

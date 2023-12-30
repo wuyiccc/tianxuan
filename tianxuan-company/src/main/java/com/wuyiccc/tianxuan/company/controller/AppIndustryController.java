@@ -3,10 +3,7 @@ package com.wuyiccc.tianxuan.company.controller;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.company.service.IndustryService;
 import com.wuyiccc.tianxuan.pojo.Industry;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -30,10 +27,11 @@ public class AppIndustryController {
         return CommonResult.ok(resList);
     }
 
-    @GetMapping("/children/{industryId}")
-    public CommonResult<List<Industry>> children(@PathVariable("industryId") String industryId) {
 
-        List<Industry> resList = industryService.getChildrenIndustryList(industryId);
+    @GetMapping("/getThirdListByTop/{topIndustryId}")
+    public CommonResult<List<Industry>> getThirdIndustryListByTop(@PathVariable("topIndustryId") String topIndustryId) {
+
+        List<Industry> resList = industryService.getThirdIndustryListByTop(topIndustryId);
 
         return CommonResult.ok(resList);
     }

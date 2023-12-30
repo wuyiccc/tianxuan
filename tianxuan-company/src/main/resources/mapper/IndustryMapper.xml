@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuyiccc.tianxuan.company.mapper.IndustryMapper">
+
+
+    <select id="getThirdIndustryListByTop" resultType="com.wuyiccc.tianxuan.pojo.Industry">
+        select sub.*
+        from tianxuan.industry as sub
+        where sub.father_id in (select parent.id from tianxuan.industry as parent where parent.father_id = #{topIndustryId})
+    </select>
+</mapper>
