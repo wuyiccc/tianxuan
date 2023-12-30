@@ -16,6 +16,7 @@ import java.util.Objects;
 /**
  * @author wuyiccc
  * @date 2023/6/19 22:59
+ * app接口
  */
 @RestController
 @RequestMapping("/company")

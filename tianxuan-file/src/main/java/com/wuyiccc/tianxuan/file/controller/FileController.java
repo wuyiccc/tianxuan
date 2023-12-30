@@ -27,6 +27,7 @@ public class FileController {
     @Autowired
     private FileService fileService;
 
+    // app
     @PostMapping("/uploadFace")
     public CommonResult<String> uploadFace(@RequestParam("file") MultipartFile file, @RequestParam("userId") String userId) throws IOException {
 
@@ -35,6 +36,7 @@ public class FileController {
     }
 
 
+    // admin
     @PostMapping("/uploadAdminFace")
     public CommonResult<String> uploadAdminFace(@RequestBody @Valid Base64FileBO base64FileBO) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
 
@@ -42,6 +44,7 @@ public class FileController {
         return CommonResult.ok(url);
     }
 
+    // app
     @PostMapping("/uploadLogo")
     public CommonResult<String> uploadLogo(@RequestParam("file") MultipartFile file) throws IOException {
 
@@ -50,6 +53,7 @@ public class FileController {
     }
 
 
+    // app
     @PostMapping("/uploadBizLicense")
     public CommonResult<String> uploadBizLicense(@RequestParam("file") MultipartFile file) throws IOException {
 

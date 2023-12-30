@@ -11,6 +11,8 @@ import javax.annotation.Resource;
 /**
  * @author wuyiccc
  * @date 2023/12/18 20:35
+ * 内部接口调用
+ * app
  */
 @RestController
 @RequestMapping("/resume")

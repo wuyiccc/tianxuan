@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author wuyiccc
  * @date 2023/12/30 16:14
+ * admin服务
  */
 @RestController
 @RequestMapping("/industry")
