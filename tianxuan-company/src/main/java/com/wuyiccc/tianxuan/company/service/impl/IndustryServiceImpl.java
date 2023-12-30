@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -37,5 +38,23 @@ public class IndustryServiceImpl implements IndustryService {
     public void createIndustry(Industry industry) {
 
         industryMapper.insert(industry);
+    }
+
+    @Override
+    public List<Industry> getTopIndustryList() {
+
+        LambdaQueryWrapper<Industry> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Industry::getFatherId, "0");
+        wrapper.orderByAsc(Industry::getSort);
+        return industryMapper.selectList(wrapper);
+    }
+
+    @Override
+    public List<Industry> getChildrenIndustryList(String industryId) {
+
+        LambdaQueryWrapper<Industry> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Industry::getFatherId, industryId);
+        wrapper.orderByAsc(Industry::getSort);
+        return industryMapper.selectList(wrapper);
     }
 }

@@ -4,12 +4,10 @@ import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.company.service.IndustryService;
 import com.wuyiccc.tianxuan.pojo.Industry;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author wuyiccc
@@ -35,5 +33,19 @@ public class IndustryController {
         // 节点创建
         industryService.createIndustry(industry);
         return CommonResult.ok();
+    }
+
+    @GetMapping("/getTopList")
+    public CommonResult<List<Industry>> getTopIndustryList() {
+        List<Industry> resList = industryService.getTopIndustryList();
+        return CommonResult.ok(resList);
+    }
+
+    @GetMapping("/children/{industryId}")
+    public CommonResult<List<Industry>> children(@PathVariable("industryId") String industryId) {
+
+        List<Industry> resList = industryService.getChildrenIndustryList(industryId);
+
+        return CommonResult.ok(resList);
     }
 }
