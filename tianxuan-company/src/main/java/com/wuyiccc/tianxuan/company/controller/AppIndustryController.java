@@ -43,7 +43,7 @@ public class AppIndustryController {
             resList = JSONUtil.toList(topIndustryListStr, Industry.class);
         } else {
             resList = industryService.getTopIndustryList();
-            redisUtils.set(BaseInfoProperties.TOP_INDUSTRY_LIST, JSONUtil.toJsonStr(resList));
+            redisUtils.set(BaseInfoProperties.TOP_INDUSTRY_LIST, JSONUtil.toJsonStr(resList), 10 * 60);
         }
         return CommonResult.ok(resList);
     }
@@ -60,7 +60,7 @@ public class AppIndustryController {
         } else {
             resList = industryService.getThirdIndustryListByTop(topIndustryId);
 
-            redisUtils.set(BaseInfoProperties.THIRD_INDUSTRY_LIST + ":byTopId:" + topIndustryId, JSONUtil.toJsonStr(resList));
+            redisUtils.set(BaseInfoProperties.THIRD_INDUSTRY_LIST + ":byTopId:" + topIndustryId, JSONUtil.toJsonStr(resList), 10 * 60);
         }
 
         return CommonResult.ok(resList);

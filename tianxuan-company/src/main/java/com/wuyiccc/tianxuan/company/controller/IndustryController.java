@@ -94,14 +94,14 @@ public class IndustryController {
         if (industry.getLevel() == 1) {
 
             List<Industry> resList = industryService.getTopIndustryList();
-            redisUtils.set(BaseInfoProperties.TOP_INDUSTRY_LIST, JSONUtil.toJsonStr(resList));
+            redisUtils.set(BaseInfoProperties.TOP_INDUSTRY_LIST, JSONUtil.toJsonStr(resList), 10 * 60);
         } else if (industry.getLevel() == 3) {
 
             String topId = industryService.getTopIdBySecondId(industry.getFatherId());
 
             List<Industry> resList = industryService.getThirdIndustryListByTop(topId);
 
-            redisUtils.set(BaseInfoProperties.THIRD_INDUSTRY_LIST + ":byTopId:" + topId, JSONUtil.toJsonStr(resList));
+            redisUtils.set(BaseInfoProperties.THIRD_INDUSTRY_LIST + ":byTopId:" + topId, JSONUtil.toJsonStr(resList), 10 * 60);
         }
     }
 }
