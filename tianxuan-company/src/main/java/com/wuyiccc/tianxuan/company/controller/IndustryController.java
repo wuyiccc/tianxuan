@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.company.controller;
 
+import cn.hutool.json.JSONUtil;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
@@ -87,15 +88,20 @@ public class IndustryController {
         return CommonResult.ok();
     }
 
+    // 重置缓存必须确保前面的更新事务已经提交
     public void  resetCache(Industry industry) {
 
         if (industry.getLevel() == 1) {
 
-            redisUtils.del(BaseInfoProperties.TOP_INDUSTRY_LIST);
+            List<Industry> resList = industryService.getTopIndustryList();
+            redisUtils.set(BaseInfoProperties.TOP_INDUSTRY_LIST, JSONUtil.toJsonStr(resList));
         } else if (industry.getLevel() == 3) {
 
             String topId = industryService.getTopIdBySecondId(industry.getFatherId());
-            redisUtils.del(BaseInfoProperties.THIRD_INDUSTRY_LIST + ":byTopId:" + topId);
+
+            List<Industry> resList = industryService.getThirdIndustryListByTop(topId);
+
+            redisUtils.set(BaseInfoProperties.THIRD_INDUSTRY_LIST + ":byTopId:" + topId, JSONUtil.toJsonStr(resList));
         }
     }
 }
