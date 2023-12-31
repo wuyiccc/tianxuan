@@ -91,4 +91,16 @@ public class IndustryServiceImpl implements IndustryService {
 
         return industryMapper.getThirdIndustryListByTop(topIndustryId);
     }
+
+    @Override
+    public String getTopIdBySecondId(String id) {
+
+        LambdaQueryWrapper<Industry> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Industry::getId, id);
+
+        Industry secondIndustry = industryMapper.selectOne(wrapper);
+
+        return secondIndustry.getFatherId();
+    }
+
 }

@@ -65,4 +65,7 @@ public class AppIndustryController {
 
         return CommonResult.ok(resList);
     }
+
+
+
 }

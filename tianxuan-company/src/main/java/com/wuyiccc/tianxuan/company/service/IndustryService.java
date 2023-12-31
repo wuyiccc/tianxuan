@@ -27,4 +27,6 @@ public interface IndustryService {
     void deleteNode(String industryId);
 
     List<Industry> getThirdIndustryListByTop(String topIndustryId);
+
+    String getTopIdBySecondId(String fatherId);
 }

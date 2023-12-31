@@ -1,7 +1,9 @@
 package com.wuyiccc.tianxuan.company.controller;
 
+import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.util.RedisUtils;
 import com.wuyiccc.tianxuan.company.service.IndustryService;
 import com.wuyiccc.tianxuan.pojo.Industry;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,9 @@ public class IndustryController {
     @Resource
     private IndustryService industryService;
 
+    @Resource
+    private RedisUtils redisUtils;
+
     @PostMapping("/createNode")
     public CommonResult<String> createNode(@RequestBody Industry industry) {
 
@@ -33,6 +38,9 @@ public class IndustryController {
 
         // 节点创建
         industryService.createIndustry(industry);
+
+        resetCache(industry);
+
         return CommonResult.ok();
     }
 
@@ -55,6 +63,7 @@ public class IndustryController {
 
         industryService.updateNode(industry);
 
+        resetCache(industry);
         return CommonResult.ok();
     }
 
@@ -73,6 +82,20 @@ public class IndustryController {
 
         industryService.deleteNode(industryId);
 
+        resetCache(industry);
+
         return CommonResult.ok();
+    }
+
+    public void  resetCache(Industry industry) {
+
+        if (industry.getLevel() == 1) {
+
+            redisUtils.del(BaseInfoProperties.TOP_INDUSTRY_LIST);
+        } else if (industry.getLevel() == 3) {
+
+            String topId = industryService.getTopIdBySecondId(industry.getFatherId());
+            redisUtils.del(BaseInfoProperties.THIRD_INDUSTRY_LIST + ":byTopId:" + topId);
+        }
     }
 }
