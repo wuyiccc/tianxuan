@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.company.service;
 
 import com.wuyiccc.tianxuan.pojo.Company;
+import com.wuyiccc.tianxuan.pojo.bo.CreateCompanyBO;
 
 /**
  * @author wuyiccc
@@ -9,4 +10,8 @@ import com.wuyiccc.tianxuan.pojo.Company;
 public interface CompanyService {
 
     public Company getByFullName(String fullName);
+
+    String createNewCompany(CreateCompanyBO createCompanyBO);
+
+    String resetNewCompany(CreateCompanyBO createCompanyBO);
 }

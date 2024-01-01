@@ -5,8 +5,10 @@ import cn.hutool.core.text.CharSequenceUtil;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.Company;
+import com.wuyiccc.tianxuan.pojo.bo.CreateCompanyBO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,5 +42,20 @@ public class CompanyController {
         }
 
         return CommonResult.ok(BeanUtil.copyProperties(company, CompanySimpleVO.class));
+    }
+
+    @PostMapping("createNewCompany")
+    public CommonResult<String> createNewCompany(@RequestBody CreateCompanyBO createCompanyBO) {
+
+        String companyId = createCompanyBO.getCompanyId();
+        if (CharSequenceUtil.isBlank(companyId)) {
+            // 创建公司
+            companyId = companyService.createNewCompany(createCompanyBO);
+        } else {
+            // 修改公司
+            companyId = companyService.resetNewCompany(createCompanyBO);
+        }
+
+        return CommonResult.ok(companyId);
     }
 }
