@@ -2,9 +2,12 @@ package com.wuyiccc.tianxuan.resource.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.pagehelper.PageHelper;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.DataDictionary;
 import com.wuyiccc.tianxuan.pojo.bo.DataDictionaryBO;
 import com.wuyiccc.tianxuan.resource.mapper.DataDictionaryMapper;
@@ -36,7 +39,7 @@ public class DataDictionaryServiceImpl implements DataDictionaryService {
 
         DataDictionary dataDictionary = BeanUtil.copyProperties(dataDictionaryBO, DataDictionary.class);
 
-        if (Objects.nonNull(dataDictionary.getId())) {
+        if (CharSequenceUtil.isNotBlank(dataDictionary.getId())) {
             dataDictionaryMapper.updateById(dataDictionary);
         } else {
 
@@ -51,5 +54,19 @@ public class DataDictionaryServiceImpl implements DataDictionaryService {
             }
             dataDictionaryMapper.insert(dataDictionary);
         }
+    }
+
+    @Override
+    public PagedGridResult getDataDictListPaged(String typeName, String itemValue, Integer page, Integer limit) {
+
+        PageHelper.startPage(page, limit);
+
+        LambdaQueryWrapper<DataDictionary> wrapper = Wrappers.lambdaQuery();
+        wrapper.like(DataDictionary::getTypeName, typeName);
+        wrapper.like(DataDictionary::getItemValue, itemValue);
+        wrapper.orderByAsc(DataDictionary::getTypeCode);
+
+        List<DataDictionary> dataList = dataDictionaryMapper.selectList(wrapper);
+        return PagedGridResult.build(dataList, page);
     }
 }

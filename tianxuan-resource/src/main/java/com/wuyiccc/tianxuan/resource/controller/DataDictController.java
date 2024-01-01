@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.resource.controller;
 
 import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.bo.DataDictionaryBO;
 import com.wuyiccc.tianxuan.resource.service.DataDictionaryService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 /**
  * @author wuyiccc
@@ -29,4 +31,20 @@ public class DataDictController {
 
         return CommonResult.ok();
     }
+
+    @PostMapping("list")
+    public CommonResult<PagedGridResult> list(String typeName, String itemValue, Integer page, Integer limit) {
+
+        if (Objects.isNull(page)) {
+            page = 1;
+        }
+        if (Objects.isNull(limit)) {
+            limit = 10;
+        }
+
+        PagedGridResult pagedGridResult = dataDictionaryService.getDataDictListPaged(typeName, itemValue, page, limit);
+        return CommonResult.ok(pagedGridResult);
+    }
+
+
 }
