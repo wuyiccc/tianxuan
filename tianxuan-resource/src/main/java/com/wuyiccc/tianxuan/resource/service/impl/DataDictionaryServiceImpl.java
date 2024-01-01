@@ -69,4 +69,21 @@ public class DataDictionaryServiceImpl implements DataDictionaryService {
         List<DataDictionary> dataList = dataDictionaryMapper.selectList(wrapper);
         return PagedGridResult.build(dataList, page);
     }
+
+    @Override
+    public DataDictionary getDataDictionary(String dictId) {
+
+
+        return dataDictionaryMapper.selectById(dictId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void delete(String dictId) {
+
+        int res = dataDictionaryMapper.deleteById(dictId);
+        if (res == 0) {
+            throw new CustomException("删除错误");
+        }
+    }
 }

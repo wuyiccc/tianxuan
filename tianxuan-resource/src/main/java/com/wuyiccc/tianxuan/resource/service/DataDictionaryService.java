@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.resource.service;
 
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
+import com.wuyiccc.tianxuan.pojo.DataDictionary;
 import com.wuyiccc.tianxuan.pojo.bo.DataDictionaryBO;
 
 /**
@@ -11,4 +12,8 @@ public interface DataDictionaryService {
     void createOrUpdateDataDictionary(DataDictionaryBO dataDictionaryBO);
 
     PagedGridResult getDataDictListPaged(String typeName, String itemValue, Integer page, Integer limit);
+
+    DataDictionary getDataDictionary(String dictId);
+
+    void delete(String dictId);
 }

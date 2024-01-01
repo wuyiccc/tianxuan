@@ -1,13 +1,12 @@
 package com.wuyiccc.tianxuan.resource.controller;
 
+import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
+import com.wuyiccc.tianxuan.pojo.DataDictionary;
 import com.wuyiccc.tianxuan.pojo.bo.DataDictionaryBO;
 import com.wuyiccc.tianxuan.resource.service.DataDictionaryService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -46,5 +45,30 @@ public class DataDictController {
         return CommonResult.ok(pagedGridResult);
     }
 
+    @PostMapping("modify")
+    public CommonResult<String> modify(@RequestBody DataDictionaryBO dataDictionaryBO) {
+
+        if (Objects.isNull(dataDictionaryBO.getId())) {
+            throw new CustomException("修改的数据字典id不能为空");
+        }
+
+        dataDictionaryService.createOrUpdateDataDictionary(dataDictionaryBO);
+        return CommonResult.ok();
+    }
+
+    @PostMapping("item")
+    public CommonResult<DataDictionary> item(String dictId) {
+
+        DataDictionary dataDictionary = dataDictionaryService.getDataDictionary(dictId);
+        return CommonResult.ok(dataDictionary);
+    }
+
+
+    @PostMapping("delete")
+    public CommonResult<String> delete(String dictId) {
+
+        dataDictionaryService.delete(dictId);
+        return CommonResult.ok();
+    }
 
 }
