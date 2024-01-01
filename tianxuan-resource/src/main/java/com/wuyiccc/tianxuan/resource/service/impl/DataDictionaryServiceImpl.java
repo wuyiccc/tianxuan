@@ -17,14 +17,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.xml.crypto.Data;
 import java.util.List;
-import java.util.Objects;
-import java.util.WeakHashMap;
 
 /**
  * @author wuyiccc
  * @date 2024/1/1 10:45
+ * admin端
  */
 @Slf4j
 @Service
@@ -85,5 +83,14 @@ public class DataDictionaryServiceImpl implements DataDictionaryService {
         if (res == 0) {
             throw new CustomException("删除错误");
         }
+    }
+
+    @Override
+    public List<DataDictionary> getDataByCode(String typeCode) {
+
+        LambdaQueryWrapper<DataDictionary> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(DataDictionary::getTypeCode, typeCode);
+
+        return dataDictionaryMapper.selectList(wrapper);
     }
 }
