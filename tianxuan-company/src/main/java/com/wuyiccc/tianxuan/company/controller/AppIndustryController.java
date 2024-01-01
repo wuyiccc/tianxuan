@@ -42,6 +42,7 @@ public class AppIndustryController {
         if (Objects.nonNull(topIndustryListStr)) {
             resList = JSONUtil.toList(topIndustryListStr, Industry.class);
         } else {
+            // 即使查出来为null也需要设置, 防止缓存穿透
             resList = industryService.getTopIndustryList();
             redisUtils.set(BaseInfoProperties.TOP_INDUSTRY_LIST, JSONUtil.toJsonStr(resList), 10 * 60);
         }
