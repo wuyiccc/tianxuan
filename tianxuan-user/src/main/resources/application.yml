@@ -1,9 +1,7 @@
 server:
   # 默认端口号设置
   port: ${PORT:11011}
-spring:
-  application:
-    name: tianxuan-user
+
 
 
 

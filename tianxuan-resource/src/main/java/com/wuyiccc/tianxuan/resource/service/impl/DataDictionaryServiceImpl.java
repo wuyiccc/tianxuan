@@ -1,0 +1,55 @@
+package com.wuyiccc.tianxuan.resource.service.impl;
+
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.wuyiccc.tianxuan.common.exception.CustomException;
+import com.wuyiccc.tianxuan.pojo.DataDictionary;
+import com.wuyiccc.tianxuan.pojo.bo.DataDictionaryBO;
+import com.wuyiccc.tianxuan.resource.mapper.DataDictionaryMapper;
+import com.wuyiccc.tianxuan.resource.service.DataDictionaryService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import javax.xml.crypto.Data;
+import java.util.List;
+import java.util.Objects;
+import java.util.WeakHashMap;
+
+/**
+ * @author wuyiccc
+ * @date 2024/1/1 10:45
+ */
+@Slf4j
+@Service
+public class DataDictionaryServiceImpl implements DataDictionaryService {
+
+    @Resource
+    private DataDictionaryMapper dataDictionaryMapper;
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void createOrUpdateDataDictionary(DataDictionaryBO dataDictionaryBO) {
+
+        DataDictionary dataDictionary = BeanUtil.copyProperties(dataDictionaryBO, DataDictionary.class);
+
+        if (Objects.nonNull(dataDictionary.getId())) {
+            dataDictionaryMapper.updateById(dataDictionary);
+        } else {
+
+            // 检查是否存在重复的键值对
+            LambdaQueryWrapper<DataDictionary> wrapper = Wrappers.lambdaQuery();
+            wrapper.eq(DataDictionary::getItemKey, dataDictionary.getItemKey());
+            wrapper.eq(DataDictionary::getItemValue, dataDictionary.getItemValue());
+
+            List<DataDictionary> resList = dataDictionaryMapper.selectList(wrapper);
+            if (CollUtil.isNotEmpty(resList)) {
+                throw new CustomException("字典键值对已经存在");
+            }
+            dataDictionaryMapper.insert(dataDictionary);
+        }
+    }
+}

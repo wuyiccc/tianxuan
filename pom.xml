@@ -20,6 +20,7 @@
         <module>tianxuan-work</module>
         <module>tianxuan-file</module>
         <module>tianxuan-chat</module>
+        <module>tianxuan-resource</module>
     </modules>
 
     <properties>

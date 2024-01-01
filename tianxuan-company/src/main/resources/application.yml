@@ -1,8 +1,6 @@
 server:
   port: ${PORT:11021}
-spring:
-  application:
-    name: tianxuan-company
+
 
 
 

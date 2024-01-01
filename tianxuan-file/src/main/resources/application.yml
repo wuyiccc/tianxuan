@@ -4,9 +4,7 @@ server:
     max-swallow-size: -1
   # 默认端口号设置
   port: ${PORT:11071}
-spring:
-  application:
-    name: tianxuan-file
+
 
 
 jasypt:

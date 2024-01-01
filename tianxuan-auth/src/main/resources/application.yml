@@ -1,10 +1,6 @@
 server:
   # 默认端口号设置
   port: ${PORT:11041}
-spring:
-  application:
-    name: tianxuan-auth
-
 
 jasypt:
   encryptor:

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: tianxuan-user
+    name: tianxuan-file
   cloud:
     nacos:
       config:
