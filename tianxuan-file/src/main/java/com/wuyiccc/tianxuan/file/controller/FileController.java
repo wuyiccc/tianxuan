@@ -61,4 +61,12 @@ public class FileController {
         return CommonResult.ok(url);
     }
 
+    // app
+    @PostMapping("/uploadAuthLetter")
+    public CommonResult<String> uploadAuthLetter(@RequestParam("file") MultipartFile file) throws IOException {
+
+        String url = fileService.uploadAuthLetter(file);
+        return CommonResult.ok(url);
+    }
+
 }
