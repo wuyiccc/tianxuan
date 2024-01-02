@@ -2,6 +2,7 @@ package com.wuyiccc.tianxuan.company.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.CharSequenceUtil;
+import com.wuyiccc.tianxuan.api.feign.UserInfoInnerServiceFeign;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.Company;
@@ -27,6 +28,9 @@ public class CompanyController {
 
     @Resource
     private CompanyService companyService;
+
+    @Resource
+    private UserInfoInnerServiceFeign userInfoInnerServiceFeign;
 
     @PostMapping("/getByFullName")
     public CommonResult<CompanySimpleVO> getByFullName(String fullName) {
@@ -57,5 +61,19 @@ public class CompanyController {
         }
 
         return CommonResult.ok(companyId);
+    }
+
+    @PostMapping("getInfo")
+    public CommonResult<CompanySimpleVO> getInfo(String companyId, boolean withHRCounts) {
+
+        CompanySimpleVO companySimpleVO = companyService.getCompany(companyId);
+
+        if (withHRCounts) {
+
+            CommonResult<Long> result = userInfoInnerServiceFeign.getCountsByCompanyId(companyId);
+            companySimpleVO.setHrCounts(result.getData());
+        }
+
+        return CommonResult.ok(companySimpleVO);
     }
 }

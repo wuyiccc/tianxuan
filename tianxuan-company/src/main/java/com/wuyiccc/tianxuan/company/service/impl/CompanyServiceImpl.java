@@ -2,17 +2,17 @@ package com.wuyiccc.tianxuan.company.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.wuyiccc.tianxuan.common.enumeration.CompanyReviewStatusEnum;
 import com.wuyiccc.tianxuan.common.enumeration.YesOrNoEnum;
-import com.wuyiccc.tianxuan.common.util.LocalDateUtils;
 import com.wuyiccc.tianxuan.company.mapper.CompanyMapper;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.Company;
 import com.wuyiccc.tianxuan.pojo.bo.CreateCompanyBO;
+import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,5 +74,15 @@ public class CompanyServiceImpl implements CompanyService {
 
         companyMapper.updateById(newCompany);
         return newCompany.getId();
+    }
+
+    @Override
+    public CompanySimpleVO getCompany(String companyId) {
+
+        if (CharSequenceUtil.isBlank(companyId)) {
+            return null;
+        }
+        Company company = companyMapper.selectById(companyId);
+        return BeanUtil.copyProperties(company, CompanySimpleVO.class);
     }
 }

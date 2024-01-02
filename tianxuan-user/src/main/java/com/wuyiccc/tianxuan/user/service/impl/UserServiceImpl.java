@@ -1,5 +1,7 @@
 package com.wuyiccc.tianxuan.user.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.pojo.User;
@@ -50,6 +52,15 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectById(id);
 
         return user;
+    }
+
+    @Override
+    public Long getCountsByCompanyId(String companyId) {
+
+        LambdaQueryWrapper<User> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(User::getHrInWhichCompanyId, companyId);
+
+        return userMapper.selectCount(wrapper);
     }
 
 
