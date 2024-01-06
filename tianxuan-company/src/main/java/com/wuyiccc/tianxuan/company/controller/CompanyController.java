@@ -6,7 +6,9 @@ import com.wuyiccc.tianxuan.api.feign.UserInfoInnerServiceFeign;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.Company;
+import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.bo.CreateCompanyBO;
+import com.wuyiccc.tianxuan.pojo.bo.ReviewCompanyBO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.Objects;
 
 /**
@@ -75,5 +78,17 @@ public class CompanyController {
         }
 
         return CommonResult.ok(companySimpleVO);
+    }
+
+    @PostMapping("goReviewCompany")
+    public CommonResult<String> goReviewCompany(@RequestBody @Valid ReviewCompanyBO reviewCompanyBO) {
+
+
+        // 微服务调用, 绑定HR企业id
+        CommonResult<User> userCommonResult = userInfoInnerServiceFeign.bindingHRToCompany(reviewCompanyBO.getHrUserId(), reviewCompanyBO.getRealname(), reviewCompanyBO.getCompanyId());
+
+
+
+        return CommonResult.error();
     }
 }

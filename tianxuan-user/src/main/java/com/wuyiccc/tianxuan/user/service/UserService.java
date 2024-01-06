@@ -14,4 +14,6 @@ public interface UserService {
     public User getById(String id);
 
     Long getCountsByCompanyId(String companyId);
+
+    void updateUserCompanyId(String hrUserId, String realname, String companyId);
 }

@@ -63,5 +63,20 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectCount(wrapper);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateUserCompanyId(String hrUserId, String realname, String companyId) {
+
+
+        User hrUser = new User();
+        hrUser.setId(hrUserId);
+        hrUser.setRealName(realname);
+        hrUser.setHrInWhichCompanyId(companyId);
+
+        hrUser.setUpdatedTime(LocalDateTime.now());
+
+        userMapper.updateById(hrUser);
+    }
+
 
 }

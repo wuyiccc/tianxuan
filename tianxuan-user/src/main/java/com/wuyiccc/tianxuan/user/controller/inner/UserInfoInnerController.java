@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.user.controller.inner;
 
 import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,5 +29,19 @@ public class UserInfoInnerController {
 
         Long count = userService.getCountsByCompanyId(companyId);
         return CommonResult.ok(count);
+    }
+
+    @PostMapping("bindingHRToCompany")
+    public CommonResult<User> bindingHRToCompany(
+            @RequestParam("hrUserId") String hrUserId,
+            @RequestParam("realname") String realname,
+            @RequestParam("companyId") String companyId
+    ) {
+
+        userService.updateUserCompanyId(hrUserId, realname, companyId);
+
+        User user = userService.getById(hrUserId);
+
+        return CommonResult.ok(user);
     }
 }
