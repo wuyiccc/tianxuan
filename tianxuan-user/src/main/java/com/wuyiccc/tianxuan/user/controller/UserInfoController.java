@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.user.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
@@ -10,10 +11,7 @@ import com.wuyiccc.tianxuan.pojo.vo.UserVO;
 import com.wuyiccc.tianxuan.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -49,6 +47,15 @@ public class UserInfoController {
         BeanUtils.copyProperties(user, userVO);
 
         userVO.setUserToken(uToken);
+
+        return CommonResult.ok(userVO);
+    }
+
+    @PostMapping("/freshUserInfo")
+    public CommonResult<UserVO> freshUserInfo(@RequestParam("userId") String userId) {
+
+        User user = userService.getById(userId);
+        UserVO userVO = BeanUtil.copyProperties(user, UserVO.class);
 
         return CommonResult.ok(userVO);
     }

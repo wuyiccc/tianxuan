@@ -93,8 +93,7 @@ public class CompanyController {
 
         companyService.commitReviewCompanyInfo(reviewCompanyBO);
 
-        //int i = 1 / 0;
 
-        return CommonResult.error();
+        return CommonResult.ok();
     }
 }
