@@ -10,6 +10,7 @@ import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.bo.CreateCompanyBO;
 import com.wuyiccc.tianxuan.pojo.bo.ReviewCompanyBO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
+import com.wuyiccc.tianxuan.pojo.vo.UserVO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -95,5 +96,18 @@ public class CompanyController {
 
 
         return CommonResult.ok();
+    }
+
+    @PostMapping("information")
+    public CommonResult<CompanySimpleVO> information(String hrUserId) {
+
+        CommonResult<UserVO> userVOCommonResult = userInfoInnerServiceFeign.get(hrUserId);
+
+        UserVO userVO = userVOCommonResult.getData();
+
+        CompanySimpleVO company = companyService.getCompany(userVO.getHrInWhichCompanyId());
+        CompanySimpleVO companySimpleVO = BeanUtil.copyProperties(company, CompanySimpleVO.class);
+
+        return CommonResult.ok(companySimpleVO);
     }
 }
