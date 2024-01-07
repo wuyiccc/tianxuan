@@ -11,12 +11,14 @@ import com.wuyiccc.tianxuan.company.mapper.CompanyMapper;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.Company;
 import com.wuyiccc.tianxuan.pojo.bo.CreateCompanyBO;
+import com.wuyiccc.tianxuan.pojo.bo.ReviewCompanyBO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -84,5 +86,25 @@ public class CompanyServiceImpl implements CompanyService {
         }
         Company company = companyMapper.selectById(companyId);
         return BeanUtil.copyProperties(company, CompanySimpleVO.class);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void commitReviewCompanyInfo(ReviewCompanyBO reviewCompanyBO) {
+
+        Company pendingCompany = new Company();
+        pendingCompany.setId(reviewCompanyBO.getCompanyId());
+
+        pendingCompany.setReviewStatus(CompanyReviewStatusEnum.REVIEW_ING.type);
+        pendingCompany.setReviewReplay(CharSequenceUtil.EMPTY);
+        pendingCompany.setAuthLetter(reviewCompanyBO.getAuthLetter());
+
+        pendingCompany.setCommitUserId(reviewCompanyBO.getHrUserId());
+        pendingCompany.setCommitUserMobile(reviewCompanyBO.getHrMobile());
+        pendingCompany.setCommitDate(LocalDate.now());
+
+        pendingCompany.setUpdatedTime(LocalDateTime.now());
+
+        companyMapper.updateById(pendingCompany);
     }
 }

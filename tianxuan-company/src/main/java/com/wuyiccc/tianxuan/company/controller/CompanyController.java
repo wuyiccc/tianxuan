@@ -87,7 +87,13 @@ public class CompanyController {
         // 微服务调用, 绑定HR企业id
         CommonResult<User> userCommonResult = userInfoInnerServiceFeign.bindingHRToCompany(reviewCompanyBO.getHrUserId(), reviewCompanyBO.getRealname(), reviewCompanyBO.getCompanyId());
 
+        String hrMobile = userCommonResult.getData().getMobile();
+        // 保存审核信息, 修改状态为 审核中
+        reviewCompanyBO.setHrMobile(hrMobile);
 
+        companyService.commitReviewCompanyInfo(reviewCompanyBO);
+
+        //int i = 1 / 0;
 
         return CommonResult.error();
     }

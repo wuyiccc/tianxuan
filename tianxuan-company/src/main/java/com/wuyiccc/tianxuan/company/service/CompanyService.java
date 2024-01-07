@@ -2,6 +2,7 @@ package com.wuyiccc.tianxuan.company.service;
 
 import com.wuyiccc.tianxuan.pojo.Company;
 import com.wuyiccc.tianxuan.pojo.bo.CreateCompanyBO;
+import com.wuyiccc.tianxuan.pojo.bo.ReviewCompanyBO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
 
 /**
@@ -18,4 +19,5 @@ public interface CompanyService {
 
     CompanySimpleVO getCompany(String companyId);
 
+    void commitReviewCompanyInfo(ReviewCompanyBO reviewCompanyBO);
 }
