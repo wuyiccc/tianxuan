@@ -5,13 +5,17 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.pagehelper.PageHelper;
 import com.wuyiccc.tianxuan.common.enumeration.CompanyReviewStatusEnum;
 import com.wuyiccc.tianxuan.common.enumeration.YesOrNoEnum;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.company.mapper.CompanyMapper;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.Company;
 import com.wuyiccc.tianxuan.pojo.bo.CreateCompanyBO;
+import com.wuyiccc.tianxuan.pojo.bo.QueryCompanyBO;
 import com.wuyiccc.tianxuan.pojo.bo.ReviewCompanyBO;
+import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -106,5 +110,15 @@ public class CompanyServiceImpl implements CompanyService {
         pendingCompany.setUpdatedTime(LocalDateTime.now());
 
         companyMapper.updateById(pendingCompany);
+    }
+
+    @Override
+    public PagedGridResult getCompanyList(QueryCompanyBO queryCompanyBO, Integer page, Integer limit) {
+
+        PageHelper.startPage(page, limit);
+
+        List<CompanyInfoVO> list = companyMapper.queryCompanyList(queryCompanyBO);
+
+        return PagedGridResult.build(list, page);
     }
 }

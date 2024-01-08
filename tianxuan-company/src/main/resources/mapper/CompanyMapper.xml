@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuyiccc.tianxuan.company.mapper.CompanyMapper">
+
+    <select id="queryCompanyList" resultType="com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO">
+
+        SELECT
+        c.id as companyId,
+        c.company_name as companyName,
+        c.short_name as shortName,
+        c.logo as logo,
+        c.address as address,
+        c.nature as nature,
+        c.people_size as peopleSize,
+        c.industry as industry,
+        c.financ_stage as financStage,
+        c.review_status as reviewStatus,
+        c.commit_date as commitDate,
+        u.real_name as commitUser
+        FROM
+        company c
+        LEFT JOIN
+        user u
+        ON
+        u.id = c.commit_user_id
+        WHERE
+        1 = 1
+        <if test="queryCompanyBO.companyName != null and queryCompanyBO.companyName != ''">
+            and c.company_name LIKE concat('%', #{queryCompanyBO.companyName}, '%')
+        </if>
+        <if test="queryCompanyBO.commitUser != null and queryCompanyBO.commitUser != ''">
+            and u.real_name LIKE concat('%', #{queryCompanyBO.commitUser}, '%')
+        </if>
+        <if test="queryCompanyBO.reviewStatus != null and queryCompanyBO.reviewStatus >= 0">
+            and c.review_status = #{queryCompanyBO.reviewStatus}
+        </if>
+        <if test="queryCompanyBO.commitDateStart != null">
+            and c.commit_date &gt;= #{queryCompanyBO.commitDateStart}
+        </if>
+        <if test="queryCompanyBO.commitDateEnd != null">
+            and c.commit_date &lt;= #{queryCompanyBO.commitDateEnd}
+        </if>
+        ORDER BY c.commit_date DESC
+    </select>
+</mapper>

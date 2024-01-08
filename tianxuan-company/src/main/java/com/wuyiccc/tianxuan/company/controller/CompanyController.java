@@ -110,4 +110,5 @@ public class CompanyController {
 
         return CommonResult.ok(companySimpleVO);
     }
+
 }
