@@ -4,6 +4,7 @@ import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.bo.QueryCompanyBO;
+import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,4 +41,12 @@ public class AdminCompanyController {
         PagedGridResult pagedGridResult = companyService.getCompanyList(queryCompanyBO, page, limit);
         return CommonResult.ok(pagedGridResult);
     }
+
+    @PostMapping("getCompanyInfo")
+    public CommonResult<CompanyInfoVO> getCompanyInfo(String companyId) {
+
+        CompanyInfoVO companyInfoVO = companyService.getCompanyInfo(companyId);
+        return CommonResult.ok(companyInfoVO);
+    }
+
 }

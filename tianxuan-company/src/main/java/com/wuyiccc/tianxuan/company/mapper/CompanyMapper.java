@@ -17,4 +17,6 @@ import java.util.List;
 public interface CompanyMapper extends BaseMapper<Company> {
 
     List<CompanyInfoVO> queryCompanyList(@Param("queryCompanyBO") QueryCompanyBO queryCompanyBO);
+
+    CompanyInfoVO getCompanyInfo(@Param("companyId") String companyId);
 }

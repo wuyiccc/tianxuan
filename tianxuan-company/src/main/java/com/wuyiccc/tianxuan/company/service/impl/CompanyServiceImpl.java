@@ -121,4 +121,14 @@ public class CompanyServiceImpl implements CompanyService {
 
         return PagedGridResult.build(list, page);
     }
+
+    @Override
+    public CompanyInfoVO getCompanyInfo(String companyId) {
+
+        CompanyInfoVO companyInfo = companyMapper.getCompanyInfo(companyId);
+
+        return companyInfo;
+    }
+
+
 }
