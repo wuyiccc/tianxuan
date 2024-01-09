@@ -27,4 +27,6 @@ public interface CompanyService {
     PagedGridResult getCompanyList(QueryCompanyBO queryCompanyBO, Integer page, Integer limit);
 
     CompanyInfoVO getCompanyInfo(String companyId);
+
+    void updateReviewInfo(ReviewCompanyBO reviewCompanyBO);
 }

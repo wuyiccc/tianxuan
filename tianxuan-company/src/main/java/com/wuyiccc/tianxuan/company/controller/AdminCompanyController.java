@@ -1,9 +1,12 @@
 package com.wuyiccc.tianxuan.company.controller;
 
+import com.wuyiccc.tianxuan.api.feign.UserInfoInnerServiceFeign;
+import com.wuyiccc.tianxuan.common.enumeration.CompanyReviewStatusEnum;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.bo.QueryCompanyBO;
+import com.wuyiccc.tianxuan.pojo.bo.ReviewCompanyBO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +29,10 @@ public class AdminCompanyController {
     @Resource
     private CompanyService companyService;
 
+
+    @Resource
+    private UserInfoInnerServiceFeign userInfoInnerServiceFeign;
+
     @PostMapping("getCompanyList")
     public CommonResult<PagedGridResult> getCompanyList(@RequestBody @Valid QueryCompanyBO queryCompanyBO
             , Integer page
@@ -47,6 +54,19 @@ public class AdminCompanyController {
 
         CompanyInfoVO companyInfoVO = companyService.getCompanyInfo(companyId);
         return CommonResult.ok(companyInfoVO);
+    }
+
+    @PostMapping("doReview")
+    public CommonResult<String> doReview(@RequestBody @Valid ReviewCompanyBO reviewCompanyBO) {
+
+
+        // 1. 审核企业
+        companyService.updateReviewInfo(reviewCompanyBO);
+
+        if (CompanyReviewStatusEnum.SUCCESSFUL.type.equals(reviewCompanyBO.getReviewStatus())) {
+            userInfoInnerServiceFeign.changeUserToHR(reviewCompanyBO.getHrUserId());
+        }
+        return CommonResult.ok();
     }
 
 }

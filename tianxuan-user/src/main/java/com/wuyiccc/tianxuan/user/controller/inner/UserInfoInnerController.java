@@ -33,7 +33,7 @@ public class UserInfoInnerController {
 
 
     @PostMapping("getCountsByCompanyId")
-    public CommonResult<Long>  getCountsByCompanyId(@RequestParam("companyId") String companyId) {
+    public CommonResult<Long> getCountsByCompanyId(@RequestParam("companyId") String companyId) {
 
         Long count = userService.getCountsByCompanyId(companyId);
         return CommonResult.ok(count);
@@ -62,5 +62,12 @@ public class UserInfoInnerController {
         String uToken = jwtUtils.createJWTWithPrefix(JSONUtil.toJsonStr(user), BaseInfoProperties.TOKEN_USER_PREFIX);
         userVO.setUserToken(uToken);
         return CommonResult.ok(userVO);
+    }
+
+    @PostMapping("changeUserToHR")
+    public CommonResult<String> changeUserToHR(@RequestParam("hrUserId") String hrUserId) {
+
+        userService.updateUserToHR(hrUserId);
+        return CommonResult.ok();
     }
 }

@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * @author wuyiccc
  * @date 2024/1/6 20:42
@@ -15,12 +17,14 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ReviewCompanyBO {
 
+    @NotBlank
     private String hrUserId;
 
     private String realname;
 
     private String hrMobile;
 
+    @NotBlank
     private String companyId;
 
     private String authLetter;

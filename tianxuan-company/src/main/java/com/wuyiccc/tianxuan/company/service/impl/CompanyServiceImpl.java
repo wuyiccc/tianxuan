@@ -17,6 +17,7 @@ import com.wuyiccc.tianxuan.pojo.bo.QueryCompanyBO;
 import com.wuyiccc.tianxuan.pojo.bo.ReviewCompanyBO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,6 +129,22 @@ public class CompanyServiceImpl implements CompanyService {
         CompanyInfoVO companyInfo = companyMapper.getCompanyInfo(companyId);
 
         return companyInfo;
+    }
+
+    @GlobalTransactional
+    @Override
+    public void updateReviewInfo(ReviewCompanyBO reviewCompanyBO) {
+
+        Company pendingCompany = new Company();
+
+        pendingCompany.setId(reviewCompanyBO.getCompanyId());
+
+        pendingCompany.setReviewStatus(reviewCompanyBO.getReviewStatus());
+        pendingCompany.setReviewReplay(reviewCompanyBO.getReviewReplay());
+
+        pendingCompany.setUpdatedTime(LocalDateTime.now());
+
+        companyMapper.updateById(pendingCompany);
     }
 
 

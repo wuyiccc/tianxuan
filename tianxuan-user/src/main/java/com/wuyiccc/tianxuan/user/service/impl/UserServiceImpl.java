@@ -2,6 +2,7 @@ package com.wuyiccc.tianxuan.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.wuyiccc.tianxuan.common.enumeration.UserRoleEnum;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.pojo.User;
@@ -72,6 +73,18 @@ public class UserServiceImpl implements UserService {
         hrUser.setId(hrUserId);
         hrUser.setRealName(realname);
         hrUser.setHrInWhichCompanyId(companyId);
+
+        hrUser.setUpdatedTime(LocalDateTime.now());
+
+        userMapper.updateById(hrUser);
+    }
+
+    @Override
+    public void updateUserToHR(String hrUserId) {
+
+        User hrUser = new User();
+        hrUser.setId(hrUserId);
+        hrUser.setRole(UserRoleEnum.RECRUITER.code);
 
         hrUser.setUpdatedTime(LocalDateTime.now());
 

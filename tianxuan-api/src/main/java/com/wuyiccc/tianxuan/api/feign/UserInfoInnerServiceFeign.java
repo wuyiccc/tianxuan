@@ -27,4 +27,7 @@ public interface UserInfoInnerServiceFeign {
 
     @PostMapping("/userInfoInner/get")
     CommonResult<UserVO> get(@RequestParam("userId") String userId);
+
+    @PostMapping("/userInfoInner/changeUserToHR")
+    CommonResult<String> changeUserToHR(@RequestParam("hrUserId") String hrUserId);
 }
