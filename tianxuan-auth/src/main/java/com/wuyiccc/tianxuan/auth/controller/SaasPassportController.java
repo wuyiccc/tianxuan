@@ -1,6 +1,6 @@
 package com.wuyiccc.tianxuan.auth.controller;
 
-import com.google.gson.Gson;
+import cn.hutool.json.JSONUtil;
 import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.auth.service.UserService;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
@@ -137,7 +137,7 @@ public class SaasPassportController extends BaseInfoProperties {
                 }
 
                 // 存入用户信息到redis中, 方便前端用户获取
-                redisUtils.set(REDIS_SAAS_USER_INFO + ":temp:" + preToken, new Gson().toJson(hrUser), 5 * 60);
+                redisUtils.set(REDIS_SAAS_USER_INFO + ":temp:" + preToken, JSONUtil.toJsonStr(hrUser), 5 * 60);
             }
         }
         return CommonResult.ok();
