@@ -4,6 +4,7 @@ import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.User;
+import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,5 +33,14 @@ public class SaasCompanyController {
         CompanySimpleVO company = companyService.getCompany(user.getHrInWhichCompanyId());
 
         return CommonResult.ok(company);
+    }
+
+    @PostMapping("moreInfo")
+    public CommonResult<CompanyInfoVO> moreInfo(String companyId) {
+        // 普通用户
+        User user = JWTCurrentUserInterceptor.currentUser.get();
+
+        CompanyInfoVO companyInfo = companyService.getCompanyInfo(user.getHrInWhichCompanyId());
+        return CommonResult.ok(companyInfo);
     }
 }
