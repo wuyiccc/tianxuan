@@ -36,7 +36,7 @@ public class SaasCompanyController {
     }
 
     @PostMapping("moreInfo")
-    public CommonResult<CompanyInfoVO> moreInfo(String companyId) {
+    public CommonResult<CompanyInfoVO> moreInfo() {
         // 普通用户
         User user = JWTCurrentUserInterceptor.currentUser.get();
 
