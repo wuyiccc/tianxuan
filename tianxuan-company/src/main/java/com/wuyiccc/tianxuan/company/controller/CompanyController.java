@@ -3,12 +3,14 @@ package com.wuyiccc.tianxuan.company.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.wuyiccc.tianxuan.api.feign.UserInfoInnerServiceFeign;
+import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.Company;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.bo.CreateCompanyBO;
 import com.wuyiccc.tianxuan.pojo.bo.ReviewCompanyBO;
+import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
 import com.wuyiccc.tianxuan.pojo.vo.UserVO;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -109,6 +111,16 @@ public class CompanyController {
         CompanySimpleVO companySimpleVO = BeanUtil.copyProperties(company, CompanySimpleVO.class);
 
         return CommonResult.ok(companySimpleVO);
+    }
+
+
+    @PostMapping("moreInfo")
+    public CommonResult<CompanyInfoVO> moreInfo(String companyId) {
+        // 普通用户
+        //User user = JWTCurrentUserInterceptor.currentUser.get();
+
+        CompanyInfoVO companyInfo = companyService.getCompanyInfo(companyId);
+        return CommonResult.ok(companyInfo);
     }
 
 }
