@@ -8,17 +8,20 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
 import com.wuyiccc.tianxuan.common.enumeration.CompanyReviewStatusEnum;
 import com.wuyiccc.tianxuan.common.enumeration.YesOrNoEnum;
+import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.company.mapper.CompanyMapper;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.Company;
 import com.wuyiccc.tianxuan.pojo.bo.CreateCompanyBO;
+import com.wuyiccc.tianxuan.pojo.bo.ModifyCompanyInfoBO;
 import com.wuyiccc.tianxuan.pojo.bo.QueryCompanyBO;
 import com.wuyiccc.tianxuan.pojo.bo.ReviewCompanyBO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -142,6 +145,25 @@ public class CompanyServiceImpl implements CompanyService {
         pendingCompany.setReviewStatus(reviewCompanyBO.getReviewStatus());
         pendingCompany.setReviewReplay(reviewCompanyBO.getReviewReplay());
 
+        pendingCompany.setUpdatedTime(LocalDateTime.now());
+
+        companyMapper.updateById(pendingCompany);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void modifyCompanyInfo(ModifyCompanyInfoBO companyInfoBO) {
+
+        String companyId = companyInfoBO.getCompanyId();
+        if (CharSequenceUtil.isBlank(companyId)) {
+            throw new CustomException("公司信息更新失败");
+        }
+
+        Company pendingCompany = new Company();
+
+        BeanUtil.copyProperties(companyInfoBO, pendingCompany);
+
+        pendingCompany.setId(companyInfoBO.getCompanyId());
         pendingCompany.setUpdatedTime(LocalDateTime.now());
 
         companyMapper.updateById(pendingCompany);

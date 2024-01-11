@@ -3,12 +3,13 @@ package com.wuyiccc.tianxuan.company.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.wuyiccc.tianxuan.api.feign.UserInfoInnerServiceFeign;
-import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
+import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.Company;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.bo.CreateCompanyBO;
+import com.wuyiccc.tianxuan.pojo.bo.ModifyCompanyInfoBO;
 import com.wuyiccc.tianxuan.pojo.bo.ReviewCompanyBO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
@@ -122,5 +123,29 @@ public class CompanyController {
         CompanyInfoVO companyInfo = companyService.getCompanyInfo(companyId);
         return CommonResult.ok(companyInfo);
     }
+
+
+    @PostMapping("modify")
+    public CommonResult<String> modify(@RequestBody ModifyCompanyInfoBO companyInfoBO) {
+
+        checkUser(companyInfoBO.getCurrentUserId(), companyInfoBO.getCompanyId());
+
+        companyService.modifyCompanyInfo(companyInfoBO);
+
+        return CommonResult.ok();
+    }
+
+    private void checkUser(String currentUserId, String companyId) {
+
+        if (CharSequenceUtil.isBlank(currentUserId)) {
+            throw new CustomException("公司信息更新失败");
+        }
+
+        UserVO hrUser = userInfoInnerServiceFeign.get(currentUserId).getData();
+        if (Objects.nonNull(hrUser) && !hrUser.getHrInWhichCompanyId().equalsIgnoreCase(companyId)) {
+            throw new CustomException("公司信息更新失败");
+        }
+    }
+
 
 }

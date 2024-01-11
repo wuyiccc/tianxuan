@@ -3,6 +3,7 @@ package com.wuyiccc.tianxuan.company.service;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Company;
 import com.wuyiccc.tianxuan.pojo.bo.CreateCompanyBO;
+import com.wuyiccc.tianxuan.pojo.bo.ModifyCompanyInfoBO;
 import com.wuyiccc.tianxuan.pojo.bo.QueryCompanyBO;
 import com.wuyiccc.tianxuan.pojo.bo.ReviewCompanyBO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
@@ -29,4 +30,6 @@ public interface CompanyService {
     CompanyInfoVO getCompanyInfo(String companyId);
 
     void updateReviewInfo(ReviewCompanyBO reviewCompanyBO);
+
+    void modifyCompanyInfo(ModifyCompanyInfoBO companyInfoBO);
 }
