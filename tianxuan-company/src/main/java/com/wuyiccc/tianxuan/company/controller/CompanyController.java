@@ -118,7 +118,6 @@ public class CompanyController {
     @PostMapping("moreInfo")
     public CommonResult<CompanyInfoVO> moreInfo(String companyId) {
         // 普通用户
-        //User user = JWTCurrentUserInterceptor.currentUser.get();
 
         CompanyInfoVO companyInfo = companyService.getCompanyInfo(companyId);
         return CommonResult.ok(companyInfo);
