@@ -159,5 +159,24 @@ public class MinioFileServiceImpl implements FileService {
         }
     }
 
+    @Override
+    public String uploadPhoto(MultipartFile file, String companyId) throws IOException {
+        String fileName = "company/photo/" + companyId + StrPool.SLASH + UUID.randomUUID().toString().replace("-", "") + file.getOriginalFilename();
+        PutObjectArgs build = PutObjectArgs.builder()
+                .bucket(tianxuanMinioConfig.getBucket())
+                .object(fileName)
+                .stream(file.getInputStream(), file.getSize(), -1)
+                .contentType(file.getContentType())
+                .build();
+        try {
+
+            minioClient.putObject(build);
+            return tianxuanMinioConfig.getEndpoint() + "/" + tianxuanMinioConfig.getBucket() + "/" + fileName;
+        } catch (Exception e) {
+            log.error("文件上传失败", e);
+            throw new CustomException("文件上传失败");
+        }
+    }
+
 
 }

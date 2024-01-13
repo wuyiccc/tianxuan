@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.file.controller;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.file.service.FileService;
 import com.wuyiccc.tianxuan.pojo.bo.Base64FileBO;
@@ -13,6 +14,8 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author wuyiccc
@@ -67,6 +70,24 @@ public class FileController {
 
         String url = fileService.uploadAuthLetter(file);
         return CommonResult.ok(url);
+    }
+
+    // app
+    @PostMapping("/uploadPhoto")
+    public CommonResult<List<String>> uploadPhoto(@RequestParam("files") List<MultipartFile> files, @RequestParam("companyId") String companyId) throws IOException {
+
+        if (CharSequenceUtil.isBlank(companyId)) {
+            companyId = CharSequenceUtil.EMPTY;
+        }
+
+        List<String> imgUrlList = new ArrayList<>();
+        for (MultipartFile file : files) {
+
+            String url = fileService.uploadPhoto(file, companyId);
+            imgUrlList.add(url);
+        }
+
+        return CommonResult.ok(imgUrlList);
     }
 
 }

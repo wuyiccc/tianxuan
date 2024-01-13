@@ -24,4 +24,6 @@ public interface FileService {
     String uploadBizLicense(MultipartFile file) throws IOException;
 
     String uploadAuthLetter(MultipartFile file) throws IOException;
+
+    String uploadPhoto(MultipartFile file, String companyId) throws IOException;
 }
