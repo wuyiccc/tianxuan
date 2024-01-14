@@ -3,6 +3,7 @@ package com.wuyiccc.tianxuan.company.controller;
 import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
+import com.wuyiccc.tianxuan.pojo.CompanyPhoto;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
@@ -42,5 +43,14 @@ public class SaasCompanyController {
 
         CompanyInfoVO companyInfo = companyService.getCompanyInfo(user.getHrInWhichCompanyId());
         return CommonResult.ok(companyInfo);
+    }
+
+    @PostMapping("getPhotos")
+    public CommonResult<CompanyPhoto> getPhotos() {
+
+        User user = JWTCurrentUserInterceptor.currentUser.get();
+        String companyId = user.getHrInWhichCompanyId();
+        CompanyPhoto companyPhoto = companyService.getPhotos(companyId);
+        return CommonResult.ok(companyPhoto);
     }
 }
