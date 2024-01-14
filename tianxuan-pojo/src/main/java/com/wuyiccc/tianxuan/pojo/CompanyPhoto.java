@@ -1,5 +1,7 @@
 package com.wuyiccc.tianxuan.pojo;
 
+import lombok.Data;
+
 /**
  * <p>
  * 企业相册表，本表只存企业上传的图片
@@ -8,6 +10,7 @@ package com.wuyiccc.tianxuan.pojo;
  * @author wuyiccc
  * @since 2023-06-22
  */
+@Data
 public class CompanyPhoto {
 
     /**

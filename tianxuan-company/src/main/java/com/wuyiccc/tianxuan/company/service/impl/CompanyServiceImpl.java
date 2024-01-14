@@ -11,8 +11,10 @@ import com.wuyiccc.tianxuan.common.enumeration.YesOrNoEnum;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.company.mapper.CompanyMapper;
+import com.wuyiccc.tianxuan.company.mapper.CompanyPhotoMapper;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.Company;
+import com.wuyiccc.tianxuan.pojo.CompanyPhoto;
 import com.wuyiccc.tianxuan.pojo.bo.CreateCompanyBO;
 import com.wuyiccc.tianxuan.pojo.bo.ModifyCompanyInfoBO;
 import com.wuyiccc.tianxuan.pojo.bo.QueryCompanyBO;
@@ -41,6 +43,9 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Resource
     private CompanyMapper companyMapper;
+
+    @Resource
+    private CompanyPhotoMapper companyPhotoMapper;
 
     @Override
     public Company getByFullName(String fullName) {
@@ -167,6 +172,40 @@ public class CompanyServiceImpl implements CompanyService {
         pendingCompany.setUpdatedTime(LocalDateTime.now());
 
         companyMapper.updateById(pendingCompany);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateCompanyPhoto(ModifyCompanyInfoBO companyInfoBO) {
+
+        String companyId = companyInfoBO.getCompanyId();
+
+        // 删除旧数据
+        LambdaQueryWrapper<CompanyPhoto> deleteWrapper = Wrappers.lambdaQuery();
+        deleteWrapper.eq(CompanyPhoto::getCompanyId, companyId);
+        companyPhotoMapper.delete(deleteWrapper);
+
+        // 新增数据
+        CompanyPhoto companyPhoto = new CompanyPhoto();
+        companyPhoto.setCompanyId(companyId);
+        companyPhoto.setPhotos(companyInfoBO.getPhotos());
+
+        companyPhotoMapper.insert(companyPhoto);
+    }
+
+    @Override
+    public CompanyPhoto getPhotos(String companyId) {
+
+
+        LambdaQueryWrapper<CompanyPhoto> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(CompanyPhoto::getCompanyId, companyId);
+
+        List<CompanyPhoto> companyPhotos = companyPhotoMapper.selectList(wrapper);
+        if (CollUtil.isEmpty(companyPhotos)) {
+            return null;
+        }
+
+        return companyPhotos.get(0);
     }
 
 

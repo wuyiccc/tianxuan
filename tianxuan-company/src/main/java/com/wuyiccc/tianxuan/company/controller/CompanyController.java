@@ -7,6 +7,7 @@ import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.Company;
+import com.wuyiccc.tianxuan.pojo.CompanyPhoto;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.bo.CreateCompanyBO;
 import com.wuyiccc.tianxuan.pojo.bo.ModifyCompanyInfoBO;
@@ -14,10 +15,7 @@ import com.wuyiccc.tianxuan.pojo.bo.ReviewCompanyBO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
 import com.wuyiccc.tianxuan.pojo.vo.UserVO;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -131,6 +129,10 @@ public class CompanyController {
 
         companyService.modifyCompanyInfo(companyInfoBO);
 
+        if (CharSequenceUtil.isNotBlank(companyInfoBO.getPhotos())) {
+            companyService.updateCompanyPhoto(companyInfoBO);
+        }
+
         return CommonResult.ok();
     }
 
@@ -144,6 +146,13 @@ public class CompanyController {
         if (Objects.nonNull(hrUser) && !hrUser.getHrInWhichCompanyId().equalsIgnoreCase(companyId)) {
             throw new CustomException("公司信息更新失败");
         }
+    }
+
+    @PostMapping("getPhotos")
+    public CommonResult<CompanyPhoto> getPhotos(String companyId) {
+
+        CompanyPhoto companyPhoto = companyService.getPhotos(companyId);
+        return CommonResult.ok(companyPhoto);
     }
 
 
