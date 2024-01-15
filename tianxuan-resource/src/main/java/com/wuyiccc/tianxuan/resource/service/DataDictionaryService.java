@@ -20,4 +20,6 @@ public interface DataDictionaryService {
     void delete(String dictId);
 
     List<DataDictionary> getDataByCode(String typeCode);
+
+    List<DataDictionary> getItemsByKeys(String[] advantage);
 }

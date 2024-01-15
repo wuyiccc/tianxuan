@@ -93,4 +93,14 @@ public class DataDictionaryServiceImpl implements DataDictionaryService {
 
         return dataDictionaryMapper.selectList(wrapper);
     }
+
+    @Override
+    public List<DataDictionary> getItemsByKeys(String[] itemKeys) {
+
+        LambdaQueryWrapper<DataDictionary> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(DataDictionary::getItemKey, itemKeys);
+        wrapper.eq(DataDictionary::getEnable, Boolean.TRUE);
+
+        return dataDictionaryMapper.selectList(wrapper);
+    }
 }

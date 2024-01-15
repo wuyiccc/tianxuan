@@ -15,23 +15,14 @@ import java.util.List;
 
 /**
  * @author wuyiccc
- * @date 2024/1/1 16:05
- * app端
+ * @date 2024/1/15 20:23
  */
-@RequestMapping("appDataDict")
 @RestController
-public class AppDataDictController {
-
+@RequestMapping("saasDataDict")
+public class SaasDataDictController {
 
     @Resource
     private DataDictionaryService dataDictionaryService;
-
-    @PostMapping("getDataByCode")
-    public CommonResult<List<DataDictionary>> getDataByCode(String typeCode) {
-
-        List<DataDictionary> resList = dataDictionaryService.getDataByCode(typeCode);
-        return CommonResult.ok(resList);
-    }
 
     @PostMapping("getItemsByKeys")
     public CommonResult<CompanyPointsVO> getItemsByKeys(@RequestBody QueryDictItemBO queryDictItemBO) {
