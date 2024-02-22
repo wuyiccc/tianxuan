@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author wuyiccc
@@ -24,6 +27,9 @@ public class AppDataDictController {
 
 
     @Resource
+    private ThreadPoolExecutor threadPoolExecutor;
+
+    @Resource
     private DataDictionaryService dataDictionaryService;
 
     @PostMapping("getDataByCode")
@@ -34,21 +40,44 @@ public class AppDataDictController {
     }
 
     @PostMapping("getItemsByKeys")
-    public CommonResult<CompanyPointsVO> getItemsByKeys(@RequestBody QueryDictItemBO queryDictItemBO) {
+    public CommonResult<CompanyPointsVO> getItemsByKeys(@RequestBody QueryDictItemBO queryDictItemBO) throws ExecutionException, InterruptedException {
 
         CompanyPointsVO resVO = new CompanyPointsVO();
 
-        List<DataDictionary> advantages = dataDictionaryService.getItemsByKeys(queryDictItemBO.getAdvantage());
-        resVO.setAdvantageList(advantages);
 
-        List<DataDictionary> subsidy = dataDictionaryService.getItemsByKeys(queryDictItemBO.getSubsidy());
-        resVO.setSubsidyList(subsidy);
+        CompletableFuture<List<DataDictionary>> advantageFuture = CompletableFuture.supplyAsync(() -> {
 
-        List<DataDictionary> bonus = dataDictionaryService.getItemsByKeys(queryDictItemBO.getBonus());
-        resVO.setBonusList(bonus);
+            List<DataDictionary> dataList = dataDictionaryService.getItemsByKeys(queryDictItemBO.getAdvantage());
+            resVO.setAdvantageList(dataList);
+            return dataList;
+        }, threadPoolExecutor);
 
-        List<DataDictionary> benefits = dataDictionaryService.getItemsByKeys(queryDictItemBO.getBenefits());
-        resVO.setBenefitsList(benefits);
+
+        CompletableFuture<List<DataDictionary>> subsidyFuture = CompletableFuture.supplyAsync(() -> {
+            List<DataDictionary> dataList = dataDictionaryService.getItemsByKeys(queryDictItemBO.getSubsidy());
+            resVO.setSubsidyList(dataList);
+            return dataList;
+        }, threadPoolExecutor);
+
+
+        CompletableFuture<List<DataDictionary>> bonusFuture = CompletableFuture.supplyAsync(() -> {
+            List<DataDictionary> dataList = dataDictionaryService.getItemsByKeys(queryDictItemBO.getBonus());
+
+            resVO.setBonusList(dataList);
+            return dataList;
+
+        }, threadPoolExecutor);
+
+
+        CompletableFuture<List<DataDictionary>> benefitsFuture = CompletableFuture.supplyAsync(() -> {
+            List<DataDictionary> dataList = dataDictionaryService.getItemsByKeys(queryDictItemBO.getBenefits());
+            resVO.setBenefitsList(dataList);
+            return dataList;
+        }, threadPoolExecutor);
+
+        CompletableFuture<Void> allOfFuture = CompletableFuture.allOf(advantageFuture, subsidyFuture, bonusFuture, benefitsFuture);
+
+        allOfFuture.get();
 
         return CommonResult.ok(resVO);
     }
