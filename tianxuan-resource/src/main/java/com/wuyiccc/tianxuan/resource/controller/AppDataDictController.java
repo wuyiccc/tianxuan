@@ -81,4 +81,31 @@ public class AppDataDictController {
 
         return CommonResult.ok(resVO);
     }
+
+
+    @PostMapping("getItemsByKeys2")
+    public CommonResult<CompanyPointsVO> getItemsByKeys2(@RequestBody QueryDictItemBO queryDictItemBO) {
+
+        CompanyPointsVO resVO = new CompanyPointsVO();
+
+
+        List<DataDictionary> dataList = dataDictionaryService.getItemsByKeys(queryDictItemBO.getAdvantage());
+        resVO.setAdvantageList(dataList);
+
+
+        dataList = dataDictionaryService.getItemsByKeys(queryDictItemBO.getSubsidy());
+        resVO.setSubsidyList(dataList);
+
+
+        dataList = dataDictionaryService.getItemsByKeys(queryDictItemBO.getBonus());
+
+        resVO.setBonusList(dataList);
+
+
+        dataList = dataDictionaryService.getItemsByKeys(queryDictItemBO.getBenefits());
+        resVO.setBenefitsList(dataList);
+
+
+        return CommonResult.ok(resVO);
+    }
 }
