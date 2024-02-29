@@ -29,6 +29,10 @@ public class ModifyUserBO {
 
     private Integer showWhichName;
 
+    private String hrSignature;
+
+    private String hrTags;
+
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
