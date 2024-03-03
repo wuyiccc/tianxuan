@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.user.service;
 
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.bo.ModifyUserBO;
 
@@ -18,4 +19,6 @@ public interface UserService {
     void updateUserCompanyId(String hrUserId, String realname, String companyId);
 
     void updateUserToHR(String hrUserId);
+
+    PagedGridResult getHRList(String companyId, Integer page, Integer limit);
 }

@@ -1,0 +1,9 @@
+### 查询信息
+GET http://localhost:11031/saasUserInfo/hrList?page=1&limit=10
+Content-Type: application/json
+
+
+
+
+
+

@@ -2,8 +2,10 @@ package com.wuyiccc.tianxuan.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.pagehelper.PageHelper;
 import com.wuyiccc.tianxuan.common.enumeration.UserRoleEnum;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.bo.ModifyUserBO;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author wuyiccc
@@ -90,6 +93,19 @@ public class UserServiceImpl implements UserService {
 
         userMapper.updateById(hrUser);
     }
+
+    @Override
+    public PagedGridResult getHRList(String companyId, Integer page, Integer limit) {
+
+        PageHelper.startPage(page, limit);
+
+        LambdaQueryWrapper<User> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(User::getHrInWhichCompanyId, companyId);
+
+        List<User> userList = userMapper.selectList(wrapper);
+        return PagedGridResult.build(userList, page);
+    }
+
 
 
 }

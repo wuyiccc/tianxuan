@@ -59,4 +59,5 @@ public class UserInfoController {
 
         return CommonResult.ok(userVO);
     }
+
 }
