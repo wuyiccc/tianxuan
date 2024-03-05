@@ -21,4 +21,6 @@ public interface UserService {
     void updateUserToHR(String hrUserId);
 
     PagedGridResult getHRList(String companyId, Integer page, Integer limit);
+
+    void changeUserToCand(String hrUserId);
 }

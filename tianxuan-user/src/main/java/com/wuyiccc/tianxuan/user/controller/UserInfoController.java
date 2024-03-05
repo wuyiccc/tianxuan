@@ -60,4 +60,10 @@ public class UserInfoController {
         return CommonResult.ok(userVO);
     }
 
+    @PostMapping("/changeUserToCand")
+    public CommonResult<String> changeUserToCand(@RequestParam("hrUserId") String hrUserId) {
+        userService.changeUserToCand(hrUserId);
+        return CommonResult.ok();
+    }
+
 }

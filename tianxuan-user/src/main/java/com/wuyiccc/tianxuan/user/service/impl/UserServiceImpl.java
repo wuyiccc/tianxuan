@@ -106,6 +106,19 @@ public class UserServiceImpl implements UserService {
         return PagedGridResult.build(userList, page);
     }
 
+    @Override
+    public void changeUserToCand(String hrUserId) {
+
+
+        User user = new User();
+        user.setId(hrUserId);
+        user.setRole(UserRoleEnum.CANDIDATE.code);
+        user.setHrInWhichCompanyId("0");
+
+        user.setUpdatedTime(LocalDateTime.now());
+
+        userMapper.updateById(user);
+    }
 
 
 }
