@@ -10,10 +10,13 @@ import com.wuyiccc.tianxuan.pojo.Admin;
 import com.wuyiccc.tianxuan.pojo.bo.AdminBO;
 import com.wuyiccc.tianxuan.pojo.vo.AdminVO;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -33,15 +36,27 @@ public class AdminController extends BaseInfoProperties {
     @Autowired
     private JWTUtils jwtUtils;
 
+    @Resource
+    private RedissonClient redissonClient;
+
     @PostMapping("/login")
     public CommonResult<String> login(@Valid @RequestBody AdminBO adminBO) {
 
-        Admin admin = adminService.adminLogin(adminBO);
+        RLock mylock = redissonClient.getLock("mylock");
+
+        mylock.lock();
+        log.info("get redisson lock success");
+
+        try {
+            Admin admin = adminService.adminLogin(adminBO);
+            String token = jwtUtils.createJWTWithPrefix(JSONUtil.toJsonStr(admin), TOKEN_ADMIN_PREFIX);
+            return CommonResult.ok(token);
+        } finally {
+            mylock.unlock();
+        }
 
 
-        String token = jwtUtils.createJWTWithPrefix(JSONUtil.toJsonStr(admin), TOKEN_ADMIN_PREFIX);
 
-        return CommonResult.ok(token);
     }
 
 

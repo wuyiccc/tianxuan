@@ -1,7 +1,6 @@
 package com.wuyiccc.tianxuan.common.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.StringRedisConnection;
@@ -10,6 +9,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +24,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisUtils {
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
 
     // Key（键），简单的key-value操作
 
@@ -35,7 +35,7 @@ public class RedisUtils {
      * @return
      */
     public boolean keyIsExist(String key) {
-        return redisTemplate.hasKey(key);
+        return stringRedisTemplate.hasKey(key);
     }
 
     /**
@@ -45,7 +45,7 @@ public class RedisUtils {
      * @return
      */
     public long ttl(String key) {
-        return redisTemplate.getExpire(key);
+        return stringRedisTemplate.getExpire(key);
     }
 
     /**
@@ -55,7 +55,7 @@ public class RedisUtils {
      * @return
      */
     public void expire(String key, long timeout) {
-        redisTemplate.expire(key, timeout, TimeUnit.SECONDS);
+        stringRedisTemplate.expire(key, timeout, TimeUnit.SECONDS);
     }
 
     /**
@@ -65,14 +65,14 @@ public class RedisUtils {
      * @return
      */
     public long increment(String key, long delta) {
-        return redisTemplate.opsForValue().increment(key, delta);
+        return stringRedisTemplate.opsForValue().increment(key, delta);
     }
 
     /**
      * 累加，使用hash
      */
     public long incrementHash(String name, String key, long delta) {
-        return redisTemplate.opsForHash().increment(name, key, delta);
+        return stringRedisTemplate.opsForHash().increment(name, key, delta);
     }
 
     /**
@@ -80,21 +80,21 @@ public class RedisUtils {
      */
     public long decrementHash(String name, String key, long delta) {
         delta = delta * (-1);
-        return redisTemplate.opsForHash().increment(name, key, delta);
+        return stringRedisTemplate.opsForHash().increment(name, key, delta);
     }
 
     /**
      * hash 设置value
      */
     public void setHashValue(String name, String key, String value) {
-        redisTemplate.opsForHash().put(name, key, value);
+        stringRedisTemplate.opsForHash().put(name, key, value);
     }
 
     /**
      * hash 获得value
      */
     public String getHashValue(String name, String key) {
-        return (String)redisTemplate.opsForHash().get(name, key);
+        return (String) stringRedisTemplate.opsForHash().get(name, key);
     }
 
     /**
@@ -104,14 +104,14 @@ public class RedisUtils {
      * @return
      */
     public long decrement(String key, long delta) {
-        return redisTemplate.opsForValue().decrement(key, delta);
+        return stringRedisTemplate.opsForValue().decrement(key, delta);
     }
 
     /**
      * 实现命令：KEYS pattern，查找所有符合给定模式 pattern的 key
      */
     public Set<String> keys(String pattern) {
-        return redisTemplate.keys(pattern);
+        return stringRedisTemplate.keys(pattern);
     }
 
     /**
@@ -120,7 +120,7 @@ public class RedisUtils {
      * @param key
      */
     public void del(String key) {
-        redisTemplate.delete(key);
+        stringRedisTemplate.delete(key);
     }
 
     /**
@@ -128,8 +128,8 @@ public class RedisUtils {
      * @param key 可以传一个值 或多个
      */
     public void allDel(String key) {
-        Set<String> keys = redisTemplate.keys(key + "*");
-        redisTemplate.delete(keys);
+        Set<String> keys = stringRedisTemplate.keys(key + "*");
+        stringRedisTemplate.delete(keys);
     }
 
     // String（字符串）
@@ -141,7 +141,7 @@ public class RedisUtils {
      * @param value
      */
     public void set(String key, String value) {
-        redisTemplate.opsForValue().set(key, value);
+        stringRedisTemplate.opsForValue().set(key, value);
     }
 
     /**
@@ -153,7 +153,7 @@ public class RedisUtils {
      *            （以秒为单位）
      */
     public void set(String key, String value, long timeout) {
-        redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.SECONDS);
+        stringRedisTemplate.opsForValue().set(key, value, timeout, TimeUnit.SECONDS);
     }
 
     /**
@@ -162,7 +162,7 @@ public class RedisUtils {
      * @param value
      */
     public void setnx60s(String key, String value) {
-        redisTemplate.opsForValue().setIfAbsent(key, value, 60, TimeUnit.SECONDS);
+        stringRedisTemplate.opsForValue().setIfAbsent(key, value, 60, TimeUnit.SECONDS);
     }
 
     /**
@@ -171,11 +171,11 @@ public class RedisUtils {
      * @param value
      */
     public Boolean setnx(String key, String value) {
-        return redisTemplate.opsForValue().setIfAbsent(key, value);
+        return stringRedisTemplate.opsForValue().setIfAbsent(key, value);
     }
 
     public Boolean setnx(String key, String value, Integer seconds) {
-        return redisTemplate.opsForValue().setIfAbsent(key, value, seconds, TimeUnit.SECONDS);
+        return stringRedisTemplate.opsForValue().setIfAbsent(key, value, seconds, TimeUnit.SECONDS);
     }
 
     /**
@@ -185,7 +185,7 @@ public class RedisUtils {
      * @return value
      */
     public String get(String key) {
-        return (String)redisTemplate.opsForValue().get(key);
+        return (String) stringRedisTemplate.opsForValue().get(key);
     }
 
     /**
@@ -194,7 +194,7 @@ public class RedisUtils {
      * @return
      */
     public List<String> mget(List<String> keys) {
-        return redisTemplate.opsForValue().multiGet(keys);
+        return stringRedisTemplate.opsForValue().multiGet(keys);
     }
 
     /**
@@ -207,7 +207,7 @@ public class RedisUtils {
 //		nginx -> keepalive
 //		redis -> pipeline
 
-        List<Object> result = redisTemplate.executePipelined(new RedisCallback<String>() {
+        List<Object> result = stringRedisTemplate.executePipelined(new RedisCallback<String>() {
             @Override
             public String doInRedis(RedisConnection connection) throws DataAccessException {
                 StringRedisConnection src = (StringRedisConnection)connection;
@@ -233,7 +233,7 @@ public class RedisUtils {
      * @param value
      */
     public void hset(String key, String field, Object value) {
-        redisTemplate.opsForHash().put(key, field, value);
+        stringRedisTemplate.opsForHash().put(key, field, value);
     }
 
     /**
@@ -244,7 +244,7 @@ public class RedisUtils {
      * @return
      */
     public String hget(String key, String field) {
-        return (String) redisTemplate.opsForHash().get(key, field);
+        return (String) stringRedisTemplate.opsForHash().get(key, field);
     }
 
     /**
@@ -254,7 +254,7 @@ public class RedisUtils {
      * @param fields
      */
     public void hdel(String key, Object... fields) {
-        redisTemplate.opsForHash().delete(key, fields);
+        stringRedisTemplate.opsForHash().delete(key, fields);
     }
 
     /**
@@ -264,7 +264,7 @@ public class RedisUtils {
      * @return
      */
     public Map<Object, Object> hgetall(String key) {
-        return redisTemplate.opsForHash().entries(key);
+        return stringRedisTemplate.opsForHash().entries(key);
     }
 
     // List（列表）
@@ -277,7 +277,7 @@ public class RedisUtils {
      * @return 执行 LPUSH命令后，列表的长度。
      */
     public long lpush(String key, String value) {
-        return redisTemplate.opsForList().leftPush(key, value);
+        return stringRedisTemplate.opsForList().leftPush(key, value);
     }
 
     /**
@@ -287,7 +287,7 @@ public class RedisUtils {
      * @return 列表key的头元素。
      */
     public String lpop(String key) {
-        return (String)redisTemplate.opsForList().leftPop(key);
+        return (String) stringRedisTemplate.opsForList().leftPop(key);
     }
 
     /**
@@ -298,7 +298,7 @@ public class RedisUtils {
      * @return 执行 LPUSH命令后，列表的长度。
      */
     public long rpush(String key, String value) {
-        return redisTemplate.opsForList().rightPush(key, value);
+        return stringRedisTemplate.opsForList().rightPush(key, value);
     }
 
     /**
@@ -309,7 +309,7 @@ public class RedisUtils {
      * @param value
      */
     public Long execLuaScript(String script, String key, String value) {
-        return redisTemplate.execute(
+        return stringRedisTemplate.execute(
                 new DefaultRedisScript<>(script, Long.class),
                 //				Arrays.asList(key),
                 Collections.singletonList(key),
