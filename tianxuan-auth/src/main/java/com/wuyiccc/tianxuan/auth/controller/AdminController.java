@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.auth.controller;
 
 import cn.hutool.json.JSONUtil;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.auth.service.AdminService;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
@@ -9,8 +10,12 @@ import com.wuyiccc.tianxuan.common.util.JWTUtils;
 import com.wuyiccc.tianxuan.pojo.Admin;
 import com.wuyiccc.tianxuan.pojo.bo.AdminBO;
 import com.wuyiccc.tianxuan.pojo.vo.AdminVO;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.C;
+import org.redisson.RedissonMultiLock;
 import org.redisson.api.RLock;
+import org.redisson.api.RSemaphore;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.BitSet;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author wuyiccc
@@ -42,15 +49,18 @@ public class AdminController extends BaseInfoProperties {
     @PostMapping("/login")
     public CommonResult<String> login(@Valid @RequestBody AdminBO adminBO) {
 
-        RLock mylock = redissonClient.getLock("mylock");
+        RLock mylock = redissonClient.getFairLock("mylock");
 
         mylock.lock();
         log.info("get redisson lock success");
 
         try {
+            TimeUnit.SECONDS.sleep(10);
             Admin admin = adminService.adminLogin(adminBO);
             String token = jwtUtils.createJWTWithPrefix(JSONUtil.toJsonStr(admin), TOKEN_ADMIN_PREFIX);
             return CommonResult.ok(token);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         } finally {
             mylock.unlock();
         }
@@ -72,6 +82,24 @@ public class AdminController extends BaseInfoProperties {
     @PostMapping("/logout")
     public CommonResult<String> logout() {
 //        redisUtils.del(REDIS_USER_TOKEN + ":" + userId);
+        return CommonResult.ok();
+    }
+
+
+    @GetMapping("/hello")
+    public CommonResult<String> hello() throws InterruptedException {
+
+        RLock lock1 = redissonClient.getLock("lock1");
+        RLock lock2 = redissonClient.getLock("lock2");
+        RLock lock3 = redissonClient.getLock("lock3");
+        RedissonMultiLock lock = new RedissonMultiLock(lock1, lock2, lock3);
+
+        lock.lock();
+
+        TimeUnit.SECONDS.sleep(10);
+
+        lock.unlock();
+
         return CommonResult.ok();
     }
 
