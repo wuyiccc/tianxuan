@@ -1,7 +1,11 @@
 package com.wuyiccc.tianxuan.work.controller;
 
+import cn.hutool.core.text.CharSequenceUtil;
+import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.exception.RemoteCallCustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.pojo.bo.EditResumeBO;
+import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
 import com.wuyiccc.tianxuan.work.service.ResumeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -37,4 +41,25 @@ public class ResumeController {
         }
         return CommonResult.ok();
     }
+
+
+    @PostMapping("modify")
+    public CommonResult<String> modify(@RequestBody EditResumeBO editResumeBO) {
+
+        resumeService.modify(editResumeBO);
+
+        return CommonResult.ok();
+    }
+
+    @PostMapping("/queryMyResume")
+    public CommonResult<ResumeVO> queryMyResume(String userId) {
+
+        if (CharSequenceUtil.isBlank(userId)) {
+            throw new CustomException("用户id不能为空");
+        }
+
+        ResumeVO resume = resumeService.queryMyResume(userId);
+        return CommonResult.ok(resume);
+    }
+
 }
