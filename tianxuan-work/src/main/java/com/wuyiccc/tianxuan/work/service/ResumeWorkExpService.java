@@ -10,4 +10,8 @@ import java.util.List;
  */
 public interface ResumeWorkExpService {
     List<ResumeWorkExp> findByUserId(String userId);
+
+    void save(ResumeWorkExp editWorkExpBO);
+
+    void update(ResumeWorkExp entity);
 }

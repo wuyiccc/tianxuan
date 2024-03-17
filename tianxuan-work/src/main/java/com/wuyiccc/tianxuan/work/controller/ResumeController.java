@@ -5,6 +5,7 @@ import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.exception.RemoteCallCustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.pojo.bo.EditResumeBO;
+import com.wuyiccc.tianxuan.pojo.bo.EditWorkExpBO;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
 import com.wuyiccc.tianxuan.work.service.ResumeService;
 import lombok.extern.slf4j.Slf4j;
@@ -61,5 +62,13 @@ public class ResumeController {
         ResumeVO resume = resumeService.queryMyResume(userId);
         return CommonResult.ok(resume);
     }
+
+    @PostMapping("/editWorkExp")
+    public CommonResult<String> editWorkExp(@RequestBody EditWorkExpBO editWorkExpBO) {
+
+        resumeService.editWorkExp(editWorkExpBO);
+        return CommonResult.ok();
+    }
+
 
 }

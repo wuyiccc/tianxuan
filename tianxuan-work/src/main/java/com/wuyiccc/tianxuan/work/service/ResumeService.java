@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.work.service;
 
 import com.wuyiccc.tianxuan.pojo.bo.EditResumeBO;
+import com.wuyiccc.tianxuan.pojo.bo.EditWorkExpBO;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
 
 /**
@@ -14,4 +15,6 @@ public interface ResumeService {
     void modify(EditResumeBO editResumeBO);
 
     ResumeVO queryMyResume(String userId);
+
+    void editWorkExp(EditWorkExpBO editWorkExpBO);
 }

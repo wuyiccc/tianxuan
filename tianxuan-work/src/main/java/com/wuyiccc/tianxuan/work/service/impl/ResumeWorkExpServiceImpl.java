@@ -31,4 +31,14 @@ public class ResumeWorkExpServiceImpl implements ResumeWorkExpService {
 
         return resumeWorkExpMapper.selectList(wrapper);
     }
+
+    @Override
+    public void save(ResumeWorkExp editWorkExpBO) {
+        resumeWorkExpMapper.insert(editWorkExpBO);
+    }
+
+    @Override
+    public void update(ResumeWorkExp entity) {
+        resumeWorkExpMapper.updateById(entity);
+    }
 }
