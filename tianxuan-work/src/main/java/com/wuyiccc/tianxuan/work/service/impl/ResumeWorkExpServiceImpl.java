@@ -24,10 +24,11 @@ public class ResumeWorkExpServiceImpl implements ResumeWorkExpService {
 
 
     @Override
-    public List<ResumeWorkExp> findByUserId(String userId) {
+    public List<ResumeWorkExp> findByUserId(String userId, String resumeId) {
 
         LambdaQueryWrapper<ResumeWorkExp> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(ResumeWorkExp::getUserId, userId);
+        wrapper.eq(ResumeWorkExp::getResumeId, resumeId);
 
         return resumeWorkExpMapper.selectList(wrapper);
     }

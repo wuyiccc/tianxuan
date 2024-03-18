@@ -9,7 +9,7 @@ import java.util.List;
  * @date 2024/3/16 16:36
  */
 public interface ResumeWorkExpService {
-    List<ResumeWorkExp> findByUserId(String userId);
+    List<ResumeWorkExp> findByUserId(String userId, String resumeId);
 
     void save(ResumeWorkExp editWorkExpBO);
 

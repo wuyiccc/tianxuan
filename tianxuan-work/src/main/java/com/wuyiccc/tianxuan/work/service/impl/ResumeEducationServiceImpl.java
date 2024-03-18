@@ -25,10 +25,11 @@ public class ResumeEducationServiceImpl implements ResumeEducationService {
 
 
     @Override
-    public List<ResumeEducation> findByUserId(String userId) {
+    public List<ResumeEducation> findByUserId(String userId, String resumeId) {
 
         LambdaQueryWrapper<ResumeEducation> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(ResumeEducation::getUserId, userId);
+        wrapper.eq(ResumeEducation::getResumeId, resumeId);
 
         return resumeEducationMapper.selectList(wrapper);
     }

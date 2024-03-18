@@ -9,5 +9,5 @@ import java.util.List;
  * @date 2024/3/16 16:32
  */
 public interface ResumeProjectExpService {
-    List<ResumeProjectExp> findByUserId(String userId);
+    List<ResumeProjectExp> findByUserId(String userId, String resumeId);
 }

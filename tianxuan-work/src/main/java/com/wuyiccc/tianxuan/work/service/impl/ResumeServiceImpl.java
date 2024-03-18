@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author wuyiccc
@@ -95,15 +94,15 @@ public class ResumeServiceImpl implements ResumeService {
 
         ResumeVO vo = BeanUtil.copyProperties(resume, ResumeVO.class);
 
-        List<ResumeEducation> resumeEducationList = resumeEducationService.findByUserId(userId);
+        List<ResumeEducation> resumeEducationList = resumeEducationService.findByUserId(userId, resume.getId());
 
         vo.setEducationList(resumeEducationList);
 
 
-        List<ResumeProjectExp> resumeProjectExpList = resumeProjectExpService.findByUserId(userId);
+        List<ResumeProjectExp> resumeProjectExpList = resumeProjectExpService.findByUserId(userId, resume.getId());
         vo.setProjectExpList(resumeProjectExpList);
 
-        List<ResumeWorkExp> resumeWorkExpList = resumeWorkExpService.findByUserId(userId);
+        List<ResumeWorkExp> resumeWorkExpList = resumeWorkExpService.findByUserId(userId, resume.getId());
 
         vo.setWorkExpList(resumeWorkExpList);
 
