@@ -14,4 +14,6 @@ public interface ResumeWorkExpService {
     void save(ResumeWorkExp editWorkExpBO);
 
     void update(ResumeWorkExp entity);
+
+    ResumeWorkExp getWorkExp(String workExpId, String userId);
 }

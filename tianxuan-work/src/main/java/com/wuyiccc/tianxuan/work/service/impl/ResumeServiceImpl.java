@@ -125,4 +125,11 @@ public class ResumeServiceImpl implements ResumeService {
         resumeWorkExpService.update(entity);
 
     }
+
+    @Override
+    public ResumeWorkExp getWorkExp(String workExpId, String userId) {
+
+        ResumeWorkExp workExp = resumeWorkExpService.getWorkExp(workExpId, userId);
+        return workExp;
+    }
 }

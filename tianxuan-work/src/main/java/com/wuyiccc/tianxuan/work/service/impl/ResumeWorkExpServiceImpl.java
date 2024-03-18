@@ -1,5 +1,7 @@
 package com.wuyiccc.tianxuan.work.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.db.meta.Column;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
@@ -41,5 +43,19 @@ public class ResumeWorkExpServiceImpl implements ResumeWorkExpService {
     @Override
     public void update(ResumeWorkExp entity) {
         resumeWorkExpMapper.updateById(entity);
+    }
+
+    @Override
+    public ResumeWorkExp getWorkExp(String workExpId, String userId) {
+
+        LambdaQueryWrapper<ResumeWorkExp> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(ResumeWorkExp::getId, workExpId);
+        wrapper.eq(ResumeWorkExp::getUserId, userId);
+        List<ResumeWorkExp> resumeWorkExpList = resumeWorkExpMapper.selectList(wrapper);
+        if (CollUtil.isEmpty(resumeWorkExpList)) {
+            return null;
+        }
+
+        return resumeWorkExpList.get(0);
     }
 }
