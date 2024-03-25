@@ -4,11 +4,13 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.db.meta.Column;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
 import com.wuyiccc.tianxuan.work.mapper.ResumeWorkExpMapper;
 import com.wuyiccc.tianxuan.work.service.ResumeWorkExpService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -57,5 +59,19 @@ public class ResumeWorkExpServiceImpl implements ResumeWorkExpService {
         }
 
         return resumeWorkExpList.get(0);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+
+    @Override
+    public void delete(String workExpId, String userId) {
+        LambdaQueryWrapper<ResumeWorkExp> deleteWrapper = Wrappers.lambdaQuery();
+        deleteWrapper.eq(ResumeWorkExp::getId, workExpId);
+        deleteWrapper.eq(ResumeWorkExp::getUserId, userId);
+
+        int res = resumeWorkExpMapper.delete(deleteWrapper);
+        if (res != 1) {
+            throw new CustomException("数据不存在");
+        }
     }
 }

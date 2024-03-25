@@ -78,5 +78,14 @@ public class ResumeController {
         return CommonResult.ok(resumeWorkExp);
     }
 
+    @PostMapping("/deleteWorkExp")
+    public CommonResult<String> deleteWorkExp(String workExpId, String userId) {
+
+
+
+        resumeService.deleteWorkExp(workExpId, userId);
+
+        return CommonResult.ok("删除成功");
+    }
 
 }

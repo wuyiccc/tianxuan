@@ -48,6 +48,7 @@ public class ResumeServiceImpl implements ResumeService {
     @Resource
     private ResumeWorkExpService resumeWorkExpService;
 
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void initResume(String userId) {
@@ -131,5 +132,15 @@ public class ResumeServiceImpl implements ResumeService {
 
         ResumeWorkExp workExp = resumeWorkExpService.getWorkExp(workExpId, userId);
         return workExp;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteWorkExp(String workExpId, String userId) {
+
+        resumeWorkExpService.delete(workExpId, userId);
+
+
+
     }
 }

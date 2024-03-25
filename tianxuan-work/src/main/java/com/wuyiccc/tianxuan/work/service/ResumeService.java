@@ -20,4 +20,6 @@ public interface ResumeService {
     void editWorkExp(EditWorkExpBO editWorkExpBO);
 
     ResumeWorkExp getWorkExp(String workExpId, String userId);
+
+    void deleteWorkExp(String workExpId, String userId);
 }

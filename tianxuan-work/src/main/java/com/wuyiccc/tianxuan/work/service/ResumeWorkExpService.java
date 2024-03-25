@@ -16,4 +16,6 @@ public interface ResumeWorkExpService {
     void update(ResumeWorkExp entity);
 
     ResumeWorkExp getWorkExp(String workExpId, String userId);
+
+    void delete(String workExpId, String userId);
 }
