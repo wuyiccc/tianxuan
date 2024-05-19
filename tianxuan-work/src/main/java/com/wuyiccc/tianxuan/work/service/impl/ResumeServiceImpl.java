@@ -3,6 +3,7 @@ package com.wuyiccc.tianxuan.work.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
@@ -10,10 +11,12 @@ import com.wuyiccc.tianxuan.pojo.Resume;
 import com.wuyiccc.tianxuan.pojo.ResumeEducation;
 import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
 import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
+import com.wuyiccc.tianxuan.pojo.bo.EditProjectExpBO;
 import com.wuyiccc.tianxuan.pojo.bo.EditResumeBO;
 import com.wuyiccc.tianxuan.pojo.bo.EditWorkExpBO;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
 import com.wuyiccc.tianxuan.work.mapper.ResumeMapper;
+import com.wuyiccc.tianxuan.work.mapper.ResumeProjectExpMapper;
 import com.wuyiccc.tianxuan.work.service.ResumeEducationService;
 import com.wuyiccc.tianxuan.work.service.ResumeProjectExpService;
 import com.wuyiccc.tianxuan.work.service.ResumeService;
@@ -25,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * @author wuyiccc
@@ -47,6 +51,9 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Resource
     private ResumeWorkExpService resumeWorkExpService;
+
+    @Resource
+    private ResumeProjectExpMapper resumeProjectExpMapper;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -141,6 +148,30 @@ public class ResumeServiceImpl implements ResumeService {
         resumeWorkExpService.delete(workExpId, userId);
 
 
+
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void editProjectExp(EditProjectExpBO editProjectExpBO) {
+
+
+        ResumeProjectExp resumeProjectExp = new ResumeProjectExp();
+        BeanUtil.copyProperties(editProjectExpBO, resumeProjectExp);
+
+        resumeProjectExp.setUpdatedTime(LocalDateTime.now());
+
+        if (StrUtil.isBlank(resumeProjectExp.getId())) {
+            resumeProjectExp.setCreateTime(LocalDateTime.now());
+            resumeProjectExpMapper.insert(resumeProjectExp);
+        } else {
+            LambdaQueryWrapper<ResumeProjectExp> wrapper = Wrappers.lambdaQuery();
+            wrapper.eq(ResumeProjectExp::getId, resumeProjectExp.getId());
+            wrapper.eq(ResumeProjectExp::getUserId, resumeProjectExp.getUserId());
+            wrapper.eq(ResumeProjectExp::getResumeId, resumeProjectExp.getResumeId());
+
+            resumeProjectExpMapper.update(resumeProjectExp, wrapper);
+        }
 
     }
 }

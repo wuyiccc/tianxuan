@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.work.service;
 
 import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
+import com.wuyiccc.tianxuan.pojo.bo.EditProjectExpBO;
 import com.wuyiccc.tianxuan.pojo.bo.EditResumeBO;
 import com.wuyiccc.tianxuan.pojo.bo.EditWorkExpBO;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
@@ -22,4 +23,6 @@ public interface ResumeService {
     ResumeWorkExp getWorkExp(String workExpId, String userId);
 
     void deleteWorkExp(String workExpId, String userId);
+
+    void editProjectExp(EditProjectExpBO editProjectExpBO);
 }
