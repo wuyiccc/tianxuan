@@ -174,4 +174,19 @@ public class ResumeServiceImpl implements ResumeService {
         }
 
     }
+
+    @Override
+    public ResumeProjectExp getProjectExp(String projectExpId, String userId) {
+
+        LambdaQueryWrapper<ResumeProjectExp> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(ResumeProjectExp::getId, projectExpId);
+        wrapper.eq(ResumeProjectExp::getUserId, userId);
+
+        List<ResumeProjectExp> resumeProjectExpList = resumeProjectExpMapper.selectList(wrapper);
+        if (CollUtil.isEmpty(resumeProjectExpList)) {
+            return null;
+        }
+
+        return resumeProjectExpList.get(0);
+    }
 }

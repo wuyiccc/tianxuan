@@ -4,6 +4,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.exception.RemoteCallCustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
 import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
 import com.wuyiccc.tianxuan.pojo.bo.EditProjectExpBO;
 import com.wuyiccc.tianxuan.pojo.bo.EditResumeBO;
@@ -93,6 +94,13 @@ public class ResumeController {
 
         resumeService.editProjectExp(editProjectExpBO);
         return CommonResult.ok();
+    }
+
+    @PostMapping("/getProjectExp")
+    public CommonResult<ResumeProjectExp> getProjectExp(@RequestParam String projectExpId, @RequestParam String userId) {
+
+        ResumeProjectExp resumeProjectExp = resumeService.getProjectExp(projectExpId, userId);
+        return CommonResult.ok(resumeProjectExp);
     }
 
 }
