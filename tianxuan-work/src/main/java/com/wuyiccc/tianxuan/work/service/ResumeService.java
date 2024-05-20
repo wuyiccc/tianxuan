@@ -28,4 +28,6 @@ public interface ResumeService {
     void editProjectExp(EditProjectExpBO editProjectExpBO);
 
     ResumeProjectExp getProjectExp(String projectExpId, String userId);
+
+    void deleteProjectExp(String projectExpId, String userId);
 }

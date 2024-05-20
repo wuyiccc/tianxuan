@@ -103,4 +103,14 @@ public class ResumeController {
         return CommonResult.ok(resumeProjectExp);
     }
 
+
+    @PostMapping("/deleteProjectExp")
+    public CommonResult<String> deleteProjectExp(@RequestParam String projectExpId, @RequestParam String userId) {
+
+
+        resumeService.deleteProjectExp(projectExpId, userId);
+
+        return CommonResult.ok();
+    }
+
 }
