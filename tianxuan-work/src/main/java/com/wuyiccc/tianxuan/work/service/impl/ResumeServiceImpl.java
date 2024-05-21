@@ -11,10 +11,12 @@ import com.wuyiccc.tianxuan.pojo.Resume;
 import com.wuyiccc.tianxuan.pojo.ResumeEducation;
 import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
 import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
+import com.wuyiccc.tianxuan.pojo.bo.EditEducationBO;
 import com.wuyiccc.tianxuan.pojo.bo.EditProjectExpBO;
 import com.wuyiccc.tianxuan.pojo.bo.EditResumeBO;
 import com.wuyiccc.tianxuan.pojo.bo.EditWorkExpBO;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
+import com.wuyiccc.tianxuan.work.mapper.ResumeEducationMapper;
 import com.wuyiccc.tianxuan.work.mapper.ResumeMapper;
 import com.wuyiccc.tianxuan.work.mapper.ResumeProjectExpMapper;
 import com.wuyiccc.tianxuan.work.service.ResumeEducationService;
@@ -54,6 +56,9 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Resource
     private ResumeProjectExpMapper resumeProjectExpMapper;
+
+    @Resource
+    private ResumeEducationMapper resumeEducationMapper;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -202,5 +207,29 @@ public class ResumeServiceImpl implements ResumeService {
         if (res != 1) {
             throw new CustomException("删除失败");
         }
+    }
+
+    @Override
+    public void editEducation(EditEducationBO editEducationBO) {
+
+
+
+        ResumeEducation resumeEducation = new ResumeEducation();
+        BeanUtil.copyProperties(editEducationBO, resumeEducation);
+
+        resumeEducation.setUpdatedTime(LocalDateTime.now());
+
+        if (StrUtil.isBlank(resumeEducation.getId())) {
+            resumeEducation.setCreateTime(LocalDateTime.now());
+            resumeEducationMapper.insert(resumeEducation);
+        } else {
+            LambdaQueryWrapper<ResumeEducation> wrapper = Wrappers.lambdaQuery();
+            wrapper.eq(ResumeEducation::getId, resumeEducation.getId());
+            wrapper.eq(ResumeEducation::getUserId, resumeEducation.getUserId());
+            wrapper.eq(ResumeEducation::getResumeId, resumeEducation.getResumeId());
+
+            resumeEducationMapper.update(resumeEducation, wrapper);
+        }
+
     }
 }

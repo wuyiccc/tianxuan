@@ -6,6 +6,7 @@ import com.wuyiccc.tianxuan.common.exception.RemoteCallCustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
 import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
+import com.wuyiccc.tianxuan.pojo.bo.EditEducationBO;
 import com.wuyiccc.tianxuan.pojo.bo.EditProjectExpBO;
 import com.wuyiccc.tianxuan.pojo.bo.EditResumeBO;
 import com.wuyiccc.tianxuan.pojo.bo.EditWorkExpBO;
@@ -109,6 +110,16 @@ public class ResumeController {
 
 
         resumeService.deleteProjectExp(projectExpId, userId);
+
+        return CommonResult.ok();
+    }
+
+
+    @PostMapping("/editEducation")
+    public CommonResult<String> editEducation(@RequestBody EditEducationBO editEducationBO) {
+
+
+        resumeService.editEducation(editEducationBO);
 
         return CommonResult.ok();
     }
