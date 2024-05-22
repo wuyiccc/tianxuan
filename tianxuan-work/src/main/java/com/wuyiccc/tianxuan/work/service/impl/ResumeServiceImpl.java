@@ -232,4 +232,21 @@ public class ResumeServiceImpl implements ResumeService {
         }
 
     }
+
+    @Override
+    public ResumeEducation getEducation(String eduId, String userId) {
+
+
+        LambdaQueryWrapper<ResumeEducation> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(ResumeEducation::getId, eduId);
+        wrapper.eq(ResumeEducation::getUserId, userId);
+
+        List<ResumeEducation> resumeEducationList = resumeEducationMapper.selectList(wrapper);
+        if (CollUtil.isEmpty(resumeEducationList)) {
+            return null;
+        }
+
+        return resumeEducationList.get(0);
+    }
+
 }

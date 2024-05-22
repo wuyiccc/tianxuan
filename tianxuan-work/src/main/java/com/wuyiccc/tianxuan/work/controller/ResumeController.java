@@ -1,9 +1,12 @@
 package com.wuyiccc.tianxuan.work.controller;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.exception.RemoteCallCustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.pojo.ResumeEducation;
 import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
 import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
 import com.wuyiccc.tianxuan.pojo.bo.EditEducationBO;
@@ -122,6 +125,14 @@ public class ResumeController {
         resumeService.editEducation(editEducationBO);
 
         return CommonResult.ok();
+    }
+
+    @PostMapping("/getEducation")
+    public CommonResult<ResumeEducation> getEducation(@RequestParam String eduId, @RequestParam String userId) {
+
+
+        ResumeEducation resumeEducation = resumeService.getEducation(eduId, userId);
+        return CommonResult.ok(resumeEducation);
     }
 
 }
