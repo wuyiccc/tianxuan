@@ -135,4 +135,12 @@ public class ResumeController {
         return CommonResult.ok(resumeEducation);
     }
 
+    @PostMapping("/deleteEducation")
+    public CommonResult<String> deleteEducation(@RequestParam String eduId, @RequestParam String userId) {
+
+        resumeService.deleteEducation(eduId, userId);
+
+        return CommonResult.ok();
+    }
+
 }

@@ -249,4 +249,19 @@ public class ResumeServiceImpl implements ResumeService {
         return resumeEducationList.get(0);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteEducation(String eduId, String userId) {
+
+
+        LambdaQueryWrapper<ResumeEducation> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(ResumeEducation::getId, eduId);
+        wrapper.eq(ResumeEducation::getUserId, userId);
+
+        int res = resumeEducationMapper.delete(wrapper);
+        if (res != 1) {
+            throw new CustomException("删除失败");
+        }
+    }
+
 }

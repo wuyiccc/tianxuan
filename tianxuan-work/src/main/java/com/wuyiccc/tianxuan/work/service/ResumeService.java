@@ -36,4 +36,6 @@ public interface ResumeService {
     void editEducation(EditEducationBO editEducationBO);
 
     ResumeEducation getEducation(String eduId, String userId);
+
+    void deleteEducation(String eduId, String userId);
 }
