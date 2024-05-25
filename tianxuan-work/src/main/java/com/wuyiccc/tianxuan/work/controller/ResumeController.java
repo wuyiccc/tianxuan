@@ -166,4 +166,12 @@ public class ResumeController {
     }
 
 
+    @PostMapping("/deleteMyResumeExpect")
+    public CommonResult<String> deleteMyResumeExpect(@RequestParam String resumeExpectId, @RequestParam String userId) {
+
+        resumeService.deleteMyResumeExpect(resumeExpectId, userId);
+
+        return CommonResult.ok();
+    }
+
 }

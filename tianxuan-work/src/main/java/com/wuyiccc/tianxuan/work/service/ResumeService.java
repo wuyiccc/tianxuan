@@ -42,4 +42,6 @@ public interface ResumeService {
     void editJobExpect(EditResumeExpectBO editResumeExpectBO);
 
     List<ResumeExpect> getMyResumeExpectList(String resumeId, String userId);
+
+    void deleteMyResumeExpect(String resumeExpectId, String userId);
 }

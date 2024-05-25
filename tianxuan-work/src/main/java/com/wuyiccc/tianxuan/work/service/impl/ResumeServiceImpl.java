@@ -292,4 +292,18 @@ public class ResumeServiceImpl implements ResumeService {
         return resumeExpectMapper.selectList(wrapper);
     }
 
+    @Override
+    public void deleteMyResumeExpect(String resumeExpectId, String userId) {
+
+        LambdaQueryWrapper<ResumeExpect> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(ResumeExpect::getId, resumeExpectId);
+        wrapper.eq(ResumeExpect::getUserId, userId);
+
+        int res = resumeExpectMapper.delete(wrapper);
+
+        if (res != 1) {
+            throw new CustomException("删除失败");
+        }
+    }
+
 }
