@@ -1,10 +1,13 @@
 package com.wuyiccc.tianxuan.work.service;
 
 import com.wuyiccc.tianxuan.pojo.ResumeEducation;
+import com.wuyiccc.tianxuan.pojo.ResumeExpect;
 import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
 import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
 import com.wuyiccc.tianxuan.pojo.bo.*;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
+
+import java.util.List;
 
 /**
  * @author wuyiccc
@@ -37,4 +40,6 @@ public interface ResumeService {
     void deleteEducation(String eduId, String userId);
 
     void editJobExpect(EditResumeExpectBO editResumeExpectBO);
+
+    List<ResumeExpect> getMyResumeExpectList(String resumeId, String userId);
 }

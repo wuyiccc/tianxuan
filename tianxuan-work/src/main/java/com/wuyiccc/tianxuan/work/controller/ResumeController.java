@@ -7,6 +7,7 @@ import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.exception.RemoteCallCustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.pojo.ResumeEducation;
+import com.wuyiccc.tianxuan.pojo.ResumeExpect;
 import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
 import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
 import com.wuyiccc.tianxuan.pojo.bo.*;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author wuyiccc
@@ -148,5 +150,20 @@ public class ResumeController {
 
         return CommonResult.ok();
     }
+
+
+    @PostMapping("/getMyResumeExpectList")
+    public CommonResult<List<ResumeExpect>> getMyResumeExpectList(@RequestParam String resumeId, @RequestParam String userId) {
+
+        if (CharSequenceUtil.isBlank(resumeId) || CharSequenceUtil.isBlank(userId)) {
+            return CommonResult.error();
+        }
+
+
+        List<ResumeExpect> expectList = resumeService.getMyResumeExpectList(resumeId, userId);
+
+        return CommonResult.ok(expectList);
+    }
+
 
 }

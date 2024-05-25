@@ -58,6 +58,8 @@ public class ResumeServiceImpl implements ResumeService {
     private ResumeExpectMapper resumeExpectMapper;
 
 
+
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void initResume(String userId) {
@@ -277,6 +279,17 @@ public class ResumeServiceImpl implements ResumeService {
             wrapper.eq(ResumeExpect::getResumeId, editResumeExpectBO.getResumeId());
             resumeExpectMapper.update(resumeExpect, wrapper);
         }
+    }
+
+    @Override
+    public List<ResumeExpect> getMyResumeExpectList(String resumeId, String userId) {
+
+        LambdaQueryWrapper<ResumeExpect> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(ResumeExpect::getResumeId, resumeId);
+        wrapper.eq(ResumeExpect::getUserId, userId);
+        wrapper.orderByDesc(ResumeExpect::getUpdatedTime);
+
+        return resumeExpectMapper.selectList(wrapper);
     }
 
 }
