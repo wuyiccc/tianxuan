@@ -3,10 +3,7 @@ package com.wuyiccc.tianxuan.work.service;
 import com.wuyiccc.tianxuan.pojo.ResumeEducation;
 import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
 import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
-import com.wuyiccc.tianxuan.pojo.bo.EditEducationBO;
-import com.wuyiccc.tianxuan.pojo.bo.EditProjectExpBO;
-import com.wuyiccc.tianxuan.pojo.bo.EditResumeBO;
-import com.wuyiccc.tianxuan.pojo.bo.EditWorkExpBO;
+import com.wuyiccc.tianxuan.pojo.bo.*;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
 
 /**
@@ -38,4 +35,6 @@ public interface ResumeService {
     ResumeEducation getEducation(String eduId, String userId);
 
     void deleteEducation(String eduId, String userId);
+
+    void editJobExpect(EditResumeExpectBO editResumeExpectBO);
 }

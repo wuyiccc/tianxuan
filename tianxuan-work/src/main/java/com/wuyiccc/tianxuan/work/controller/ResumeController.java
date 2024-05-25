@@ -9,16 +9,14 @@ import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.pojo.ResumeEducation;
 import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
 import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
-import com.wuyiccc.tianxuan.pojo.bo.EditEducationBO;
-import com.wuyiccc.tianxuan.pojo.bo.EditProjectExpBO;
-import com.wuyiccc.tianxuan.pojo.bo.EditResumeBO;
-import com.wuyiccc.tianxuan.pojo.bo.EditWorkExpBO;
+import com.wuyiccc.tianxuan.pojo.bo.*;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
 import com.wuyiccc.tianxuan.work.service.ResumeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 /**
  * @author wuyiccc
@@ -139,6 +137,14 @@ public class ResumeController {
     public CommonResult<String> deleteEducation(@RequestParam String eduId, @RequestParam String userId) {
 
         resumeService.deleteEducation(eduId, userId);
+
+        return CommonResult.ok();
+    }
+
+    @PostMapping("/editJobExpect")
+    public CommonResult<String> editJobExpect(@RequestBody @Valid EditResumeExpectBO editResumeExpectBO) {
+
+        resumeService.editJobExpect(editResumeExpectBO);
 
         return CommonResult.ok();
     }

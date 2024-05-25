@@ -7,16 +7,11 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
-import com.wuyiccc.tianxuan.pojo.Resume;
-import com.wuyiccc.tianxuan.pojo.ResumeEducation;
-import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
-import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
-import com.wuyiccc.tianxuan.pojo.bo.EditEducationBO;
-import com.wuyiccc.tianxuan.pojo.bo.EditProjectExpBO;
-import com.wuyiccc.tianxuan.pojo.bo.EditResumeBO;
-import com.wuyiccc.tianxuan.pojo.bo.EditWorkExpBO;
+import com.wuyiccc.tianxuan.pojo.*;
+import com.wuyiccc.tianxuan.pojo.bo.*;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
 import com.wuyiccc.tianxuan.work.mapper.ResumeEducationMapper;
+import com.wuyiccc.tianxuan.work.mapper.ResumeExpectMapper;
 import com.wuyiccc.tianxuan.work.mapper.ResumeMapper;
 import com.wuyiccc.tianxuan.work.mapper.ResumeProjectExpMapper;
 import com.wuyiccc.tianxuan.work.service.ResumeEducationService;
@@ -30,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * @author wuyiccc
@@ -59,6 +53,9 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Resource
     private ResumeEducationMapper resumeEducationMapper;
+
+    @Resource
+    private ResumeExpectMapper resumeExpectMapper;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -153,7 +150,6 @@ public class ResumeServiceImpl implements ResumeService {
         resumeWorkExpService.delete(workExpId, userId);
 
 
-
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -213,7 +209,6 @@ public class ResumeServiceImpl implements ResumeService {
     public void editEducation(EditEducationBO editEducationBO) {
 
 
-
         ResumeEducation resumeEducation = new ResumeEducation();
         BeanUtil.copyProperties(editEducationBO, resumeEducation);
 
@@ -261,6 +256,26 @@ public class ResumeServiceImpl implements ResumeService {
         int res = resumeEducationMapper.delete(wrapper);
         if (res != 1) {
             throw new CustomException("删除失败");
+        }
+    }
+
+    @Override
+    public void editJobExpect(EditResumeExpectBO editResumeExpectBO) {
+
+        ResumeExpect resumeExpect = new ResumeExpect();
+        BeanUtil.copyProperties(editResumeExpectBO, resumeExpect);
+
+        resumeExpect.setUpdatedTime(LocalDateTime.now());
+
+        if (CharSequenceUtil.isBlank(editResumeExpectBO.getId())) {
+            resumeExpect.setCreateTime(LocalDateTime.now());
+            resumeExpectMapper.insert(resumeExpect);
+        } else {
+            LambdaQueryWrapper<ResumeExpect> wrapper = Wrappers.lambdaQuery();
+            wrapper.eq(ResumeExpect::getId, editResumeExpectBO.getId());
+            wrapper.eq(ResumeExpect::getUserId, editResumeExpectBO.getUserId());
+            wrapper.eq(ResumeExpect::getResumeId, editResumeExpectBO.getResumeId());
+            resumeExpectMapper.update(resumeExpect, wrapper);
         }
     }
 
