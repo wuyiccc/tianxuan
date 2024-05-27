@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.work.service;
 
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.bo.EditJobBO;
 
 /**
@@ -8,4 +9,6 @@ import com.wuyiccc.tianxuan.pojo.bo.EditJobBO;
  */
 public interface JobService {
     void modifyJobDetail(EditJobBO editJobBO);
+
+    PagedGridResult queryJobList(String hrId, String companyId, Integer page, Integer limit, Integer status);
 }

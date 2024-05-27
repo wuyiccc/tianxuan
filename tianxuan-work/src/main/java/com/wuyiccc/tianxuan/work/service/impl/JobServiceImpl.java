@@ -4,18 +4,21 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.pagehelper.PageHelper;
 import com.wuyiccc.tianxuan.common.enumeration.JobStatusEnum;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Job;
 import com.wuyiccc.tianxuan.pojo.bo.EditJobBO;
 import com.wuyiccc.tianxuan.work.mapper.JobMapper;
 import com.wuyiccc.tianxuan.work.service.JobService;
-import org.springframework.stereotype.Repository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author wuyiccc
@@ -53,5 +56,30 @@ public class JobServiceImpl implements JobService {
                 throw new CustomException("数据不存在");
             }
         }
+    }
+
+    @Override
+    public PagedGridResult queryJobList(String hrId, String companyId, Integer page, Integer pageSize, Integer status) {
+        PageHelper.startPage(page, pageSize);
+
+        LambdaQueryWrapper<Job> queryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotBlank(hrId)) {
+            queryWrapper.eq(Job::getHrId, hrId);
+        }
+
+        queryWrapper.eq(Job::getCompanyId, companyId);
+
+        if (status != null) {
+            if (status.equals(JobStatusEnum.OPEN.code) ||
+                    status.equals(JobStatusEnum.CLOSE.code) ||
+                    status.equals(JobStatusEnum.DELETE.code)) {
+                queryWrapper.eq(Job::getStatus, status);
+            }
+        }
+
+        queryWrapper.orderByDesc(Job::getUpdatedTime);
+
+        List<Job> jobList = jobMapper.selectList(queryWrapper);
+        return PagedGridResult.build(jobList, page);
     }
 }
