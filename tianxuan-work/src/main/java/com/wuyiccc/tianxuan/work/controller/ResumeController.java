@@ -1,11 +1,14 @@
 package com.wuyiccc.tianxuan.work.controller;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import cn.hutool.core.text.StrPool;
+import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.exception.RemoteCallCustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
+import com.wuyiccc.tianxuan.common.util.LocalDateUtils;
+import com.wuyiccc.tianxuan.common.util.RedisUtils;
 import com.wuyiccc.tianxuan.pojo.ResumeEducation;
 import com.wuyiccc.tianxuan.pojo.ResumeExpect;
 import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
@@ -34,6 +37,10 @@ public class ResumeController {
 
     @Resource
     private ResumeService resumeService;
+
+    @Resource
+    private RedisUtils redisUtils;
+
 
     /**
      * 初始化用户简历
@@ -174,4 +181,41 @@ public class ResumeController {
         return CommonResult.ok();
     }
 
+
+    @PostMapping("/refresh")
+    public CommonResult<String> refresh(@RequestParam String resumeId, @RequestParam String userId) {
+
+        if (CharSequenceUtil.isBlank(resumeId) || CharSequenceUtil.isBlank(userId)) {
+            return CommonResult.error();
+        }
+
+        Integer maxCount = 3;
+
+        String today = LocalDateUtils.getLocalDateStr();
+        int userAlreadyRefreshCount = 0;
+
+        String redisKey = BaseInfoProperties.USER_ALREADY_REFRESHED_COUNTS
+                + StrPool.COLON + today
+                + StrPool.COLON + userId;
+        String userAlreadyRefreshedCountStr = redisUtils.get(redisKey);
+        if (CharSequenceUtil.isBlank(userAlreadyRefreshedCountStr)) {
+            redisUtils.set(redisKey, String.valueOf(userAlreadyRefreshCount), 24 * 60 * 60);
+        } else {
+            userAlreadyRefreshCount = Integer.parseInt(userAlreadyRefreshedCountStr);
+        }
+
+        if (userAlreadyRefreshCount < maxCount) {
+
+            // 刷新简历
+            resumeService.refreshResume(resumeId, userId);
+
+            // 自增
+            redisUtils.increment(redisKey, 1);
+        } else {
+
+            return CommonResult.errorCustom(ResponseStatusEnum.RESUME_MAX_LIMIT_ERROR);
+        }
+
+        return CommonResult.ok();
+    }
 }

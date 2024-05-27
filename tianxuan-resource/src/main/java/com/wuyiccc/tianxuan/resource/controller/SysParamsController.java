@@ -6,7 +6,10 @@ import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.pojo.SysParam;
 import com.wuyiccc.tianxuan.pojo.vo.SysParamVO;
 import com.wuyiccc.tianxuan.resource.service.SysParamService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Objects;

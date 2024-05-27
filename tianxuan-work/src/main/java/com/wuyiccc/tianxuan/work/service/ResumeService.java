@@ -44,4 +44,6 @@ public interface ResumeService {
     List<ResumeExpect> getMyResumeExpectList(String resumeId, String userId);
 
     void deleteMyResumeExpect(String resumeExpectId, String userId);
+
+    void refreshResume(String resumeId, String userId);
 }

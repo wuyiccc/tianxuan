@@ -306,4 +306,16 @@ public class ResumeServiceImpl implements ResumeService {
         }
     }
 
+    @Override
+    public void refreshResume(String resumeId, String userId) {
+
+
+        EditResumeBO editResumeBO = new EditResumeBO();
+        editResumeBO.setId(resumeId);
+        editResumeBO.setUserId(userId);
+        editResumeBO.setRefreshTime(LocalDateTime.now());
+
+        this.modify(editResumeBO);
+    }
+
 }
