@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author wuyiccc
@@ -94,9 +95,15 @@ public class JobServiceImpl implements JobService {
         statusList.add(JobStatusEnum.DELETE.code);
 
         LambdaQueryWrapper<Job> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(Job::getId, jobId);
-        wrapper.eq(Job::getHrId, hrId);
-        wrapper.eq(Job::getCompanyId, companyId);
+        if (CharSequenceUtil.isNotBlank(jobId)) {
+            wrapper.eq(Job::getId, jobId);
+        }
+        if (CharSequenceUtil.isNotBlank(hrId)) {
+            wrapper.eq(Job::getHrId, hrId);
+        }
+        if (CharSequenceUtil.isNotBlank(companyId)) {
+            wrapper.eq(Job::getCompanyId, companyId);
+        }
 
         wrapper.in(Job::getStatus, statusList);
 
