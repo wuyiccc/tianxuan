@@ -3,7 +3,6 @@ package com.wuyiccc.tianxuan.work.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.db.meta.Column;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -109,5 +107,22 @@ public class JobServiceImpl implements JobService {
         }
 
         return jobList.get(0);
+    }
+
+    @Override
+    public void modifyStatus(String hrId, String companyId, String jobId, Integer jobStatus) {
+
+        Job job = new Job();
+        job.setStatus(jobStatus);
+        job.setUpdatedTime(LocalDateTime.now());
+
+        LambdaQueryWrapper<Job> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Job::getId, jobId);
+        wrapper.eq(Job::getHrId, hrId);
+        wrapper.eq(Job::getCompanyId, companyId);
+        int res = jobMapper.update(job, wrapper);
+        if (res != 1) {
+            throw new CustomException("更新职位状态失败");
+        }
     }
 }

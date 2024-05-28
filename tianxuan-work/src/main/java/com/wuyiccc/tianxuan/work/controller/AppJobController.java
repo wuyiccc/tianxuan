@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.work.controller;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import com.wuyiccc.tianxuan.common.enumeration.JobStatusEnum;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Job;
@@ -77,4 +78,38 @@ public class AppJobController {
 
         return CommonResult.ok(job);
     }
+
+    @PostMapping("close")
+    public CommonResult<String> close(
+            @RequestParam String hrId
+            , @RequestParam String companyId
+            , @RequestParam String jobId
+
+    ) {
+
+        if (CharSequenceUtil.isBlank(hrId) || CharSequenceUtil.isBlank(companyId) || CharSequenceUtil.isBlank(jobId)) {
+            return CommonResult.error();
+        }
+
+        jobService.modifyStatus(hrId, companyId, jobId, JobStatusEnum.CLOSE.code);
+        return CommonResult.ok();
+    }
+
+    @PostMapping("open")
+    public CommonResult<String> open(
+            @RequestParam String hrId
+            , @RequestParam String companyId
+            , @RequestParam String jobId
+
+    ) {
+
+        if (CharSequenceUtil.isBlank(hrId) || CharSequenceUtil.isBlank(companyId) || CharSequenceUtil.isBlank(jobId)) {
+            return CommonResult.error();
+        }
+
+        jobService.modifyStatus(hrId, companyId, jobId, JobStatusEnum.OPEN.code);
+        return CommonResult.ok();
+    }
+
+
 }

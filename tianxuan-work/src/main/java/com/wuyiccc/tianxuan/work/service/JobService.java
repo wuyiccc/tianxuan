@@ -14,4 +14,6 @@ public interface JobService {
     PagedGridResult queryJobList(String hrId, String companyId, Integer page, Integer limit, Integer status);
 
     Job queryJobDetail(String hrId, String companyId, String jobId);
+
+    void modifyStatus(String hrId, String companyId, String jobId, Integer jobStatus);
 }
