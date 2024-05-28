@@ -1,7 +1,9 @@
 package com.wuyiccc.tianxuan.work.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.db.meta.Column;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
@@ -18,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -81,5 +85,29 @@ public class JobServiceImpl implements JobService {
 
         List<Job> jobList = jobMapper.selectList(queryWrapper);
         return PagedGridResult.build(jobList, page);
+    }
+
+    @Override
+    public Job queryJobDetail(String hrId, String companyId, String jobId) {
+
+        List<Integer> statusList = new ArrayList<>();
+        statusList.add(JobStatusEnum.OPEN.code);
+        statusList.add(JobStatusEnum.CLOSE.code);
+        statusList.add(JobStatusEnum.DELETE.code);
+
+        LambdaQueryWrapper<Job> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Job::getId, jobId);
+        wrapper.eq(Job::getHrId, hrId);
+        wrapper.eq(Job::getCompanyId, companyId);
+
+        wrapper.in(Job::getStatus, statusList);
+
+        List<Job> jobList = jobMapper.selectList(wrapper);
+
+        if (CollUtil.isEmpty(jobList)) {
+            return null;
+        }
+
+        return jobList.get(0);
     }
 }

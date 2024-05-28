@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.work.controller;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Job;
@@ -7,10 +8,7 @@ import com.wuyiccc.tianxuan.pojo.bo.EditJobBO;
 import com.wuyiccc.tianxuan.work.service.JobService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -29,7 +27,6 @@ public class AppJobController {
     private JobService jobService;
 
 
-
     @PostMapping("/modify")
     public CommonResult<String> modify(@RequestBody @Valid EditJobBO editJobBO) {
 
@@ -40,10 +37,10 @@ public class AppJobController {
 
     @PostMapping("hr/jobList")
     public CommonResult<PagedGridResult> jobListHR(String hrId,
-                                                        String companyId,
-                                                        Integer page,
-                                                        Integer limit,
-                                                        Integer status) {
+                                                   String companyId,
+                                                   Integer page,
+                                                   Integer limit,
+                                                   Integer status) {
 
         if (StringUtils.isBlank(hrId)) {
             return CommonResult.errorMsg("hrId 不能为空");
@@ -59,5 +56,25 @@ public class AppJobController {
                 status);
 
         return CommonResult.ok(gridResult);
+    }
+
+
+    @PostMapping("/hr/jobDetail")
+    public CommonResult<Job> jobDetail(
+            @RequestParam String hrId,
+            @RequestParam String companyId,
+            @RequestParam String jobId
+    ) {
+
+        if (CharSequenceUtil.isBlank(hrId) || CharSequenceUtil.isBlank(companyId) || CharSequenceUtil.isBlank(jobId)) {
+
+            return CommonResult.error();
+        }
+
+
+        Job job = jobService.queryJobDetail(hrId, companyId, jobId);
+
+
+        return CommonResult.ok(job);
     }
 }
