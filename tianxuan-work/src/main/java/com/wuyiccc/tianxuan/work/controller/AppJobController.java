@@ -6,6 +6,7 @@ import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Job;
 import com.wuyiccc.tianxuan.pojo.bo.EditJobBO;
+import com.wuyiccc.tianxuan.pojo.bo.SearchJobsBO;
 import com.wuyiccc.tianxuan.work.service.JobService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Objects;
 
 /**
  * @author wuyiccc
@@ -111,5 +113,21 @@ public class AppJobController {
         return CommonResult.ok();
     }
 
+
+    @PostMapping("/searchJobs")
+    public CommonResult<PagedGridResult> searchJobs(@RequestBody SearchJobsBO searchJobsBO
+            , Integer page
+            , Integer limit) {
+
+        if (Objects.isNull(page)) {
+            page = 1;
+        }
+        if (Objects.isNull(limit)) {
+            limit = 10;
+        }
+
+        PagedGridResult gridResult = jobService.searchJobs(searchJobsBO, page, limit);
+        return CommonResult.ok(gridResult);
+    }
 
 }

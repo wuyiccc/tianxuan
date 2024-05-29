@@ -2,6 +2,7 @@ package com.wuyiccc.tianxuan.company.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -206,6 +207,16 @@ public class CompanyServiceImpl implements CompanyService {
         }
 
         return companyPhotos.get(0);
+    }
+
+    @Override
+    public List<CompanyInfoVO> getList(List<String> companyIdList) {
+
+        if (CollUtil.isEmpty(companyIdList)) {
+            return ListUtil.empty();
+        }
+
+        return companyMapper.getCompanyInfoList(companyIdList);
     }
 
 

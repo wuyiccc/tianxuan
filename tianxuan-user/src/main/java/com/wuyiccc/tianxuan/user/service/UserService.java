@@ -4,6 +4,8 @@ import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.bo.ModifyUserBO;
 
+import java.util.List;
+
 /**
  * @author wuyiccc
  * @date 2023/12/22 20:54
@@ -23,4 +25,6 @@ public interface UserService {
     PagedGridResult getHRList(String companyId, Integer page, Integer limit);
 
     void changeUserToCand(String hrUserId);
+
+    List<User> getByIds(List<String> userIdList);
 }

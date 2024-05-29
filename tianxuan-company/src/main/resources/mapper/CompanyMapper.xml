@@ -91,4 +91,58 @@
             c.id = #{companyId}
 
     </select>
+
+    <select id="getCompanyInfoList" resultType="com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO">
+        SELECT
+            c.id AS companyId,
+            c.company_name AS companyName,
+            c.short_name AS shortName,
+            c.logo AS logo,
+            c.province AS province,
+            c.city AS city,
+            c.district AS district,
+            c.address AS address,
+
+            c.nature AS nature,
+            c.people_size AS peopleSize,
+            c.industry AS industry,
+            c.financ_stage AS financStage,
+
+            c.work_time AS workTime,
+            c.introduction AS introduction,
+            c.advantage AS advantage,
+            c.benefits AS benefits,
+            c.bonus AS bonus,
+            c.subsidy AS subsidy,
+
+            c.review_status AS reviewStatus,
+            c.review_replay AS reviewReplay,
+
+            c.commit_date AS commitDate,
+            c.commit_user_id AS commitUserId,
+            u.real_name AS commitUser,
+            c.commit_user_mobile AS commitMobile,
+
+            c.legal_representative AS legalRepresentative,
+            c.regist_capital AS registCapital,
+            c.regist_place AS registPlace,
+            c.build_date AS buildDate,
+
+            c.auth_letter AS authLetter,
+            c.biz_license AS bizLicense
+        FROM
+            tianxuan.company c
+                LEFT JOIN
+            tianxuan.user u
+            ON
+                c.commit_user_id = u.id
+        <where>
+            <if test="companyIdList != null and companyIdList.size() > 0">
+                and c.id in
+                <foreach collection="companyIdList" item="companyId" open="(" separator="," close=")">
+                    #{companyId}
+                </foreach>
+            </if>
+        </where>
+    </select>
 </mapper>

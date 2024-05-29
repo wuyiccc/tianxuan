@@ -1,5 +1,7 @@
 package com.wuyiccc.tianxuan.user.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -118,6 +121,16 @@ public class UserServiceImpl implements UserService {
         user.setUpdatedTime(LocalDateTime.now());
 
         userMapper.updateById(user);
+    }
+
+    @Override
+    public List<User> getByIds(List<String> userIdList) {
+
+        if (CollUtil.isEmpty(userIdList)) {
+            return ListUtil.empty();
+        }
+
+        return userMapper.selectBatchIds(userIdList);
     }
 
 

@@ -1,16 +1,25 @@
 package com.wuyiccc.tianxuan.work.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollStreamUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
+import com.wuyiccc.tianxuan.api.feign.CompanyInnerServiceFeign;
+import com.wuyiccc.tianxuan.api.feign.UserInfoInnerServiceFeign;
 import com.wuyiccc.tianxuan.common.enumeration.JobStatusEnum;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
+import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Job;
 import com.wuyiccc.tianxuan.pojo.bo.EditJobBO;
+import com.wuyiccc.tianxuan.pojo.bo.SearchJobsBO;
+import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
+import com.wuyiccc.tianxuan.pojo.vo.SearchJobsVO;
+import com.wuyiccc.tianxuan.pojo.vo.UserVO;
 import com.wuyiccc.tianxuan.work.mapper.JobMapper;
 import com.wuyiccc.tianxuan.work.service.JobService;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +30,8 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author wuyiccc
@@ -32,6 +42,12 @@ public class JobServiceImpl implements JobService {
 
     @Resource
     private JobMapper jobMapper;
+
+    @Resource
+    private UserInfoInnerServiceFeign userInfoInnerServiceFeign;
+
+    @Resource
+    private CompanyInnerServiceFeign companyInnerServiceFeign;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -132,4 +148,93 @@ public class JobServiceImpl implements JobService {
             throw new CustomException("更新职位状态失败");
         }
     }
+
+    @Override
+    public PagedGridResult searchJobs(SearchJobsBO searchJobsBO, Integer page, Integer limit) {
+
+        String jobName = searchJobsBO.getJobName();
+        String jobType = searchJobsBO.getJobType();
+        String city = searchJobsBO.getCity();
+        Integer beginSalary = searchJobsBO.getBeginSalary();
+        Integer endSalary = searchJobsBO.getEndSalary();
+
+
+        PageHelper.startPage(page, limit);
+
+        LambdaQueryWrapper<Job> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Job::getStatus, JobStatusEnum.OPEN.code);
+
+        if (CharSequenceUtil.isNotBlank(jobName)) {
+            wrapper.like(Job::getJobName, jobName);
+        }
+
+        if (CharSequenceUtil.isNotBlank(jobType)) {
+            wrapper.like(Job::getJobType, jobType);
+        }
+        if (CharSequenceUtil.isNotBlank(city)) {
+            wrapper.like(Job::getCity, city);
+        }
+
+
+        if (beginSalary > 0 && endSalary > 0) {
+
+            // 符合求职薪资范围的职位薪资有三种情况
+            wrapper.and(qw -> qw.or(
+                                    subQW -> subQW.ge(Job::getEndSalary, beginSalary)
+                                            .le(Job::getBeginSalary, endSalary)
+                            )
+                            .or(subQW -> subQW.ge(Job::getEndSalary, endSalary)
+                                    .le(Job::getBeginSalary, beginSalary))
+                            .or(subQW -> subQW.ge(Job::getBeginSalary, beginSalary)
+                                    .le(Job::getEndSalary, endSalary)
+                            )
+            );
+        }
+
+
+        List<Job> jobList = jobMapper.selectList(wrapper);
+
+        if (CollUtil.isEmpty(jobList)) {
+            PagedGridResult pagedGridResult = new PagedGridResult();
+            pagedGridResult.setPage(page);
+            pagedGridResult.setTotal(0);
+            pagedGridResult.setRecords(0);
+            pagedGridResult.setRows(ListUtil.empty());
+            return pagedGridResult;
+        }
+
+
+        List<String> hrIdList = jobList.stream().map(Job::getHrId).collect(Collectors.toList());
+        List<String> companyIdList = jobList.stream().map(Job::getCompanyId).collect(Collectors.toList());
+
+        CommonResult<List<UserVO>> userVOListRes = userInfoInnerServiceFeign.getList(hrIdList);
+        List<UserVO> userVOList = userVOListRes.getData();
+        Map<String, UserVO> userCache = CollStreamUtil.toIdentityMap(userVOList, UserVO::getId);
+
+        CommonResult<List<CompanyInfoVO>> companyInfoVORes = companyInnerServiceFeign.getList(companyIdList);
+        List<CompanyInfoVO> companyInfoVOList = companyInfoVORes.getData();
+        Map<String, CompanyInfoVO> companyCache = CollStreamUtil.toIdentityMap(companyInfoVOList, CompanyInfoVO::getCompanyId);
+
+
+        PagedGridResult res = PagedGridResult.build(jobList, page);
+
+        List<SearchJobsVO> voList = new ArrayList<>();
+
+        for (Job job : jobList) {
+
+            SearchJobsVO vo = new SearchJobsVO();
+            BeanUtil.copyProperties(job, vo);
+
+            UserVO userVO = userCache.get(job.getHrId());
+            vo.setUsersVO(userVO);
+
+            CompanyInfoVO companyInfoVO = companyCache.get(job.getCompanyId());
+            vo.setCompanyInfoVO(companyInfoVO);
+
+            voList.add(vo);
+        }
+        res.setRows(voList);
+        return res;
+    }
+
 }

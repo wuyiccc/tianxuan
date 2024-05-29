@@ -3,6 +3,7 @@ package com.wuyiccc.tianxuan.work.service;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Job;
 import com.wuyiccc.tianxuan.pojo.bo.EditJobBO;
+import com.wuyiccc.tianxuan.pojo.bo.SearchJobsBO;
 
 /**
  * @author wuyiccc
@@ -16,4 +17,6 @@ public interface JobService {
     Job queryJobDetail(String hrId, String companyId, String jobId);
 
     void modifyStatus(String hrId, String companyId, String jobId, Integer jobStatus);
+
+    PagedGridResult searchJobs(SearchJobsBO searchJobsBO, Integer page, Integer limit);
 }

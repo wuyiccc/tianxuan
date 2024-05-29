@@ -5,7 +5,10 @@ import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.vo.UserVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * @author wuyiccc
@@ -30,4 +33,8 @@ public interface UserInfoInnerServiceFeign {
 
     @PostMapping("/userInfoInner/changeUserToHR")
     CommonResult<String> changeUserToHR(@RequestParam("hrUserId") String hrUserId);
+
+    @PostMapping("/userInfoInner/getList")
+    CommonResult<List<UserVO>> getList(@RequestBody List<String> userIdList);
+
 }

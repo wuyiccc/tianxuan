@@ -9,12 +9,10 @@ import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.vo.UserVO;
 import com.wuyiccc.tianxuan.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author wuyiccc
@@ -69,5 +67,14 @@ public class UserInfoInnerController {
 
         userService.updateUserToHR(hrUserId);
         return CommonResult.ok();
+    }
+
+    @PostMapping("/getList")
+    public CommonResult<List<UserVO>> getList(@RequestBody List<String> userIdList) {
+
+        List<User> userList = userService.getByIds(userIdList);
+
+        List<UserVO> userVOList = BeanUtil.copyToList(userList, UserVO.class);
+        return CommonResult.ok(userVOList);
     }
 }

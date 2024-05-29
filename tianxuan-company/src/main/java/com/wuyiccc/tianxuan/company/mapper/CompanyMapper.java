@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.company.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.tencentcloudapi.ssl.v20191205.models.CompanyInfo;
 import com.wuyiccc.tianxuan.pojo.Company;
 import com.wuyiccc.tianxuan.pojo.bo.QueryCompanyBO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
@@ -19,4 +20,6 @@ public interface CompanyMapper extends BaseMapper<Company> {
     List<CompanyInfoVO> queryCompanyList(@Param("queryCompanyBO") QueryCompanyBO queryCompanyBO);
 
     CompanyInfoVO getCompanyInfo(@Param("companyId") String companyId);
+
+    List<CompanyInfoVO> getCompanyInfoList(@Param("companyIdList") List<String> companyIdList);
 }

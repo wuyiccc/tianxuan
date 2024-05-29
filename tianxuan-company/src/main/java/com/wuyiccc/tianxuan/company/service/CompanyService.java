@@ -10,6 +10,8 @@ import com.wuyiccc.tianxuan.pojo.bo.ReviewCompanyBO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
 
+import java.util.List;
+
 /**
  * @author wuyiccc
  * @date 2023/12/24 15:59
@@ -37,4 +39,6 @@ public interface CompanyService {
     void updateCompanyPhoto(ModifyCompanyInfoBO companyInfoBO);
 
     CompanyPhoto getPhotos(String companyId);
+
+    List<CompanyInfoVO> getList(List<String> companyIdList);
 }
