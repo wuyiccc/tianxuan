@@ -66,4 +66,12 @@ public class UserInfoController {
         return CommonResult.ok();
     }
 
+    @PostMapping("/getInfo")
+    public CommonResult<User> getInfo(@RequestParam String userId) {
+
+        User user = userService.getById(userId);
+
+        return CommonResult.ok(user);
+    }
+
 }
