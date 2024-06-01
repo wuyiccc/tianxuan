@@ -74,4 +74,6 @@ public class UserInfoController {
         return CommonResult.ok(user);
     }
 
+
 }
+

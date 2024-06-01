@@ -6,10 +6,14 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.pagehelper.PageHelper;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.*;
 import com.wuyiccc.tianxuan.pojo.bo.*;
+import com.wuyiccc.tianxuan.pojo.dto.SearchResumeDTO;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
+import com.wuyiccc.tianxuan.pojo.vo.SearchResumeVO;
 import com.wuyiccc.tianxuan.work.mapper.ResumeEducationMapper;
 import com.wuyiccc.tianxuan.work.mapper.ResumeExpectMapper;
 import com.wuyiccc.tianxuan.work.mapper.ResumeMapper;
@@ -316,6 +320,33 @@ public class ResumeServiceImpl implements ResumeService {
         editResumeBO.setRefreshTime(LocalDateTime.now());
 
         this.modify(editResumeBO);
+    }
+
+    @Override
+    public PagedGridResult searchResumes(SearchResumeBO searchResumeBO, Integer page, Integer limit) {
+
+
+        String basicTitle = searchResumeBO.getBasicTitle();
+        String jobType = searchResumeBO.getJobType();
+        Integer beginAge = searchResumeBO.getBeginAge();
+        Integer endAge = searchResumeBO.getEndAge();
+        Integer sex = searchResumeBO.getSex();
+        Integer activeTimes = searchResumeBO.getActiveTimes();
+        Integer beginWorkExpYears = searchResumeBO.getBeginWorkExpYears();
+        Integer endWorkExpYears = searchResumeBO.getEndWorkExpYears();
+        String edu = searchResumeBO.getEdu();
+        List<String> eduList = searchResumeBO.getEduList();
+        Integer beginSalary = searchResumeBO.getBeginSalary();
+        Integer endSalary = searchResumeBO.getEndSalary();
+        String jobStatus = searchResumeBO.getJobStatus();
+
+
+        SearchResumeDTO queryDTO = BeanUtil.copyProperties(searchResumeBO, SearchResumeDTO.class);
+
+        PageHelper.startPage(page, limit);
+        List<SearchResumeVO> voList = resumeMapper.searchResumes(queryDTO);
+
+        return PagedGridResult.build(voList, page);
     }
 
 }

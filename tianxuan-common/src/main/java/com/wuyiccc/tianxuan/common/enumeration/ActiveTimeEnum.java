@@ -1,0 +1,41 @@
+package com.wuyiccc.tianxuan.common.enumeration;
+
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * @author wuyiccc
+ * @date 2024/6/1 00:10
+ * 用户简历筛选活跃度枚举
+ */
+public enum ActiveTimeEnum {
+    just("just", 3 * 60 * 60),                        // 3小时前
+    today("today", 24 * 60 * 60),                    // 1天前，24小时前
+    threeDays("threeDays", 3 * 24 * 60 * 60),        // 3天前
+    thisWeek("thisWeek", 7 * 24 * 60 * 60),          // 7天前
+    thisMonth("thisMonth", 30 * 24 * 60 * 60);       // 30天前
+
+    public final String active;
+
+    private final Integer times;
+
+    ActiveTimeEnum(String active, Integer times) {
+        this.active = active;
+        this.times = times;
+    }
+
+    public static Integer getActiveTimes(String active) {
+        if (StringUtils.isBlank(active)) {
+            return 0;
+        }
+
+        ActiveTimeEnum[] times = ActiveTimeEnum.values();
+        for (ActiveTimeEnum at : times) {
+            if (at.active.equalsIgnoreCase(active)) {
+                return at.times;
+            }
+        }
+        // 如果没有匹配的，则使用默认的thisMonth
+        return times[times.length - 1].times;
+    }
+
+}

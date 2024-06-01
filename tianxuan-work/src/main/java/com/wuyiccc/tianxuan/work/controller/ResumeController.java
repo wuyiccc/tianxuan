@@ -3,9 +3,12 @@ package com.wuyiccc.tianxuan.work.controller;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrPool;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
+import com.wuyiccc.tianxuan.common.enumeration.ActiveTimeEnum;
+import com.wuyiccc.tianxuan.common.enumeration.EduEnum;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.exception.RemoteCallCustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.common.util.LocalDateUtils;
 import com.wuyiccc.tianxuan.common.util.RedisUtils;
@@ -217,5 +220,27 @@ public class ResumeController {
         }
 
         return CommonResult.ok();
+    }
+
+    @PostMapping("/searchResumes")
+    public CommonResult<PagedGridResult> searchResumes(@RequestBody SearchResumeBO searchResumeBO
+            , @RequestParam Integer page
+            , @RequestParam Integer limit) {
+
+
+        String activeTime = searchResumeBO.getActiveTime();
+
+        Integer activeTimes = ActiveTimeEnum.getActiveTimes(activeTime);
+        searchResumeBO.setActiveTimes(activeTimes);
+
+        String edu = searchResumeBO.getEdu();
+
+        Integer eduIndex = EduEnum.getEduIndex(edu);
+        List<String> eduList = EduEnum.getEduList(eduIndex);
+        searchResumeBO.setEduList(eduList);
+
+        PagedGridResult pagedGridResult = resumeService.searchResumes(searchResumeBO, page, limit);
+
+        return CommonResult.ok(pagedGridResult);
     }
 }

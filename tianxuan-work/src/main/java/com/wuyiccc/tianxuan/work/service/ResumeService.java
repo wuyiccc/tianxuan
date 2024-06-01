@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.work.service;
 
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.ResumeEducation;
 import com.wuyiccc.tianxuan.pojo.ResumeExpect;
 import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
@@ -46,4 +47,6 @@ public interface ResumeService {
     void deleteMyResumeExpect(String resumeExpectId, String userId);
 
     void refreshResume(String resumeId, String userId);
+
+    PagedGridResult searchResumes(SearchResumeBO searchResumeBO, Integer page, Integer limit);
 }
