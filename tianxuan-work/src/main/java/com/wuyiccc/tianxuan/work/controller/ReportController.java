@@ -59,7 +59,7 @@ public class ReportController {
 
 
         if (Objects.nonNull(beginDate)) {
-            String beginDateTimeStr = LocalDateUtils.format(beginDate, LocalDateUtils.DATE_PATTERN) + "00:00:00";
+            String beginDateTimeStr = LocalDateUtils.format(beginDate, LocalDateUtils.DATE_PATTERN) + " 00:00:00";
 
             LocalDateTime beginDateTime = LocalDateUtils.parseLocalDateTime(beginDateTimeStr, LocalDateUtils.DATETIME_PATTERN);
 
