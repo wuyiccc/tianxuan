@@ -44,43 +44,5 @@ public class ReportController {
     }
 
 
-    @PostMapping("/pagedReportRecordList")
-    public CommonResult<PagedGridResult> pagedReportRecordList(@RequestBody SearchReportJobBO reportJobBO
-    , @RequestParam Integer page
-    , @RequestParam Integer pageSize) {
 
-
-        if (Objects.isNull(page)) page = 0;
-        if (Objects.isNull(pageSize)) pageSize = 10;
-
-        LocalDate beginDate = reportJobBO.getBeginDate();
-        LocalDate endDate = reportJobBO.getEndDate();
-
-
-
-        if (Objects.nonNull(beginDate)) {
-            String beginDateTimeStr = LocalDateUtils.format(beginDate, LocalDateUtils.DATE_PATTERN) + " 00:00:00";
-
-            LocalDateTime beginDateTime = LocalDateUtils.parseLocalDateTime(beginDateTimeStr, LocalDateUtils.DATETIME_PATTERN);
-
-            reportJobBO.setBeginDateTime(beginDateTime);
-        }
-
-        if (Objects.nonNull(endDate)) {
-
-            // 结束日期加上时间: 23:59:59
-            String endDateTimeStr = LocalDateUtils.format(endDate,
-                    LocalDateUtils.DATE_PATTERN) + " 23:59:59";
-
-            LocalDateTime endDateTime = LocalDateUtils.parseLocalDateTime(endDateTimeStr,
-                    LocalDateUtils.DATETIME_PATTERN);
-            reportJobBO.setEndDateTime(endDateTime);
-        }
-
-
-
-        PagedGridResult pagedGridResult = reportService.pagedReportRecordList(reportJobBO, page, pageSize);
-
-        return CommonResult.ok(pagedGridResult);
-    }
 }

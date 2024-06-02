@@ -1,9 +1,13 @@
 package com.wuyiccc.tianxuan.work.service.impl;
 
 import com.wuyiccc.tianxuan.common.enumeration.DealStatusEnum;
+import com.wuyiccc.tianxuan.common.enumeration.JobStatusEnum;
+import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
+import com.wuyiccc.tianxuan.pojo.Job;
 import com.wuyiccc.tianxuan.pojo.bo.SearchReportJobBO;
 import com.wuyiccc.tianxuan.pojo.mo.ReportMO;
+import com.wuyiccc.tianxuan.work.mapper.JobMapper;
 import com.wuyiccc.tianxuan.work.repository.ReportRepository;
 import com.wuyiccc.tianxuan.work.service.ReportService;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +17,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -33,6 +39,9 @@ public class ReportServiceImpl implements ReportService {
 
     @Resource
     private MongoTemplate mongoTemplate;
+
+    @Resource
+    private JobMapper jobMapper;
 
     @Override
     public boolean isReportRecordExist(String reportUserId, String jobId) {
@@ -110,6 +119,39 @@ public class ReportServiceImpl implements ReportService {
         gridResult.setRecords(counts);
 
         return gridResult;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateReportRecordStatus(String reportId, DealStatusEnum dealStatusEnum) {
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(reportId));
+
+        Update update = new Update();
+        update.set("deal_status", dealStatusEnum.type);
+        update.set("updated_time", LocalDateTime.now());
+
+
+        if (Objects.equals(DealStatusEnum.DONE, dealStatusEnum)) {
+            // 修改状态为已处理的时候, 需要同步关闭职位
+            ReportMO tmp = reportRepository.findById(reportId).get();
+
+            String jobId = tmp.getJobId();
+            Job pending = new Job();
+            pending.setId(jobId);
+            pending.setStatus(JobStatusEnum.DELETE.code);
+            pending.setViolateReason(tmp.getReportReason());
+            pending.setUpdatedTime(LocalDateTime.now());
+
+
+            int res = jobMapper.updateById(pending);
+            if (res != 1) {
+                throw new CustomException("职位不存在");
+            }
+        }
+
+        mongoTemplate.updateFirst(query, update, ReportMO.class);
     }
 
 
