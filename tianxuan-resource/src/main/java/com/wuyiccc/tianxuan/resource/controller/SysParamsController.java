@@ -9,8 +9,7 @@ import com.wuyiccc.tianxuan.pojo.SysParam;
 import com.wuyiccc.tianxuan.pojo.vo.SysParamVO;
 import com.wuyiccc.tianxuan.resource.service.SysParamService;
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.recipes.locks.InterProcessMutex;
-import org.apache.curator.framework.recipes.locks.InterProcessReadWriteLock;
+import org.apache.curator.framework.recipes.locks.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,16 +59,19 @@ public class SysParamsController {
     @PostMapping("/params")
     public CommonResult<SysParamVO> params() throws Exception {
 
-        InterProcessReadWriteLock processReadWriteLock = new InterProcessReadWriteLock(zkClient, "/rw_locks");
+        //InterProcessReadWriteLock processReadWriteLock = new InterProcessReadWriteLock(zkClient, "/rw_locks");
+        InterProcessSemaphoreV2 semaphoreV2 = new InterProcessSemaphoreV2(zkClient, "/sem_locks", 5);
 
-        processReadWriteLock.readLock().acquire();
+        //processReadWriteLock.readLock().acquire();
+        Lease lease = semaphoreV2.acquire();
 
         try {
             SysParam sysParam = sysParamService.getSysParam();
             SysParamVO vo = BeanUtil.copyProperties(sysParam, SysParamVO.class);
             return CommonResult.ok(vo);
         } finally {
-            processReadWriteLock.readLock().release();
+            //processReadWriteLock.readLock().release();
+            semaphoreV2.returnLease(lease);
         }
     }
 
