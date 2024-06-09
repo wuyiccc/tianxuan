@@ -35,7 +35,7 @@ public class SysParamsController {
     @PostMapping("/modifyMaxResumeRefreshCounts")
     public CommonResult<Integer> modifyMaxResumeRefreshCounts(@RequestParam Integer maxCounts, @RequestParam(required = false) Integer version) {
 
-        ZKLock zKLock = zkConnector.getLock("wuyiccc-lock");
+        ZKLock zKLock = zkConnector.getLock("tianxuan-lock");
         zKLock.getLock();
 
         if (Objects.isNull(maxCounts) || maxCounts < 1) {
