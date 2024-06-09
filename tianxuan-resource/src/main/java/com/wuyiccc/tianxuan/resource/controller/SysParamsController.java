@@ -1,7 +1,7 @@
 package com.wuyiccc.tianxuan.resource.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.wuyiccc.tianxuan.api.zookeeper.ZKConnector;
+import com.wuyiccc.tianxuan.api.config.CuratorConfig;
 import com.wuyiccc.tianxuan.api.zookeeper.ZKLock;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
@@ -30,14 +30,14 @@ public class SysParamsController {
     private SysParamService sysParamService;
 
     @Resource
-    private ZKConnector zkConnector;
+    private CuratorConfig curatorConfig;
 
 
     @PostMapping("/modifyMaxResumeRefreshCounts")
     public CommonResult<Integer> modifyMaxResumeRefreshCounts(@RequestParam Integer maxCounts, @RequestParam(required = false) Integer version) throws InterruptedException {
 
-        ZKLock zKLock = zkConnector.getLock("tianxuan-lock");
-        zKLock.getLock();
+        //ZKLock zKLock = curatorConfig.getLock("tianxuan-lock");
+        //zKLock.getLock();
 
         if (Objects.isNull(maxCounts) || maxCounts < 1) {
             return CommonResult.errorCustom(ResponseStatusEnum.SYSTEM_PARAMS_SETTINGS_ERROR);
@@ -46,7 +46,7 @@ public class SysParamsController {
         sysParamService.modifyMaxResumeRefreshCounts(maxCounts, version);
 
         TimeUnit.SECONDS.sleep(5);
-        zKLock.releaseLock();
+        //zKLock.releaseLock();
         return CommonResult.ok(0);
     }
 

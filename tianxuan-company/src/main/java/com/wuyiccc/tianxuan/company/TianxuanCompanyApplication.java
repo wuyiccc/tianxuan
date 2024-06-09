@@ -1,6 +1,6 @@
 package com.wuyiccc.tianxuan.company;
 
-import com.wuyiccc.tianxuan.api.zookeeper.ZKConnector;
+import com.wuyiccc.tianxuan.api.config.CuratorConfig;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,7 +23,7 @@ import org.springframework.context.annotation.FilterType;
 @EnableDiscoveryClient
 @EnableFeignClients("com.wuyiccc.tianxuan.api.feign")
 @MapperScan(basePackages = "com.wuyiccc.tianxuan.company.mapper")
-@ComponentScan(basePackages = "com.wuyiccc.tianxuan", excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {ZKConnector.class})})
+@ComponentScan(basePackages = "com.wuyiccc.tianxuan", excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {CuratorConfig.class})})
 public class TianxuanCompanyApplication {
     public static void main(String[] args) {
         SpringApplication.run(TianxuanCompanyApplication.class, args);

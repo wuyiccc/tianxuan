@@ -16,5 +16,31 @@ public class TianxuanZookeeperConfig {
 
     private String host;
 
-    private Integer timeout;
+    /**
+     * 链接超时时间 ms
+     */
+    private Integer connectionTimeout;
+
+    /**
+     * 会话超时时间 ms
+     */
+    private Integer sessionTimeout;
+
+    /**
+     * 每次重试的间隔时间 ms
+     */
+    private Integer sleepMsBetweenRetry;
+
+    /**
+     * 最大重试次数 ms
+     */
+    private Integer maxRetries;
+
+
+    /**
+     * 命名空间 ms
+     */
+    private String namespace;
+
+
 }
