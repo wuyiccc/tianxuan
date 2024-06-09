@@ -16,3 +16,5 @@ spring:
             refresh: true
           - data-id: seata.yml
             refresh: true
+          - data-id: zookeeper.yml
+            refresh: true
