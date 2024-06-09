@@ -8,6 +8,8 @@ import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.pojo.SysParam;
 import com.wuyiccc.tianxuan.pojo.vo.SysParamVO;
 import com.wuyiccc.tianxuan.resource.service.SysParamService;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,24 +31,27 @@ public class SysParamsController {
     @Resource
     private SysParamService sysParamService;
 
-    @Resource
-    private CuratorConfig curatorConfig;
 
+    @Resource
+    private CuratorFramework zkClient;
 
     @PostMapping("/modifyMaxResumeRefreshCounts")
-    public CommonResult<Integer> modifyMaxResumeRefreshCounts(@RequestParam Integer maxCounts, @RequestParam(required = false) Integer version) throws InterruptedException {
+    public CommonResult<Integer> modifyMaxResumeRefreshCounts(@RequestParam Integer maxCounts, @RequestParam(required = false) Integer version) throws Exception {
 
-        //ZKLock zKLock = curatorConfig.getLock("tianxuan-lock");
-        //zKLock.getLock();
+        // 可重入分布式锁
+        InterProcessMutex processMutex = new InterProcessMutex(zkClient, "/mute_locks");
+        processMutex.acquire();
 
         if (Objects.isNull(maxCounts) || maxCounts < 1) {
             return CommonResult.errorCustom(ResponseStatusEnum.SYSTEM_PARAMS_SETTINGS_ERROR);
         }
 
-        sysParamService.modifyMaxResumeRefreshCounts(maxCounts, version);
+        try {
+            sysParamService.modifyMaxResumeRefreshCounts(maxCounts, version);
+        } finally {
+            processMutex.release();
+        }
 
-        TimeUnit.SECONDS.sleep(5);
-        //zKLock.releaseLock();
         return CommonResult.ok(0);
     }
 
