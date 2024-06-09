@@ -8,8 +8,10 @@ import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.pojo.SysParam;
 import com.wuyiccc.tianxuan.pojo.vo.SysParamVO;
 import com.wuyiccc.tianxuan.resource.service.SysParamService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.*;
+import org.apache.curator.framework.recipes.shared.SharedCount;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +26,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2024/5/25 23:25
  * admin端
  */
+@Slf4j
 @RestController
 @RequestMapping("/sysParam")
 public class SysParamsController {
@@ -73,6 +76,21 @@ public class SysParamsController {
             //processReadWriteLock.readLock().release();
             semaphoreV2.returnLease(lease);
         }
+    }
+
+
+    @PostMapping("/counts")
+    public CommonResult<Integer> counts() throws Exception {
+
+        SharedCount sharedCount = new SharedCount(zkClient, "/shared_counts", 88);
+
+        sharedCount.start();
+
+        int value = sharedCount.getCount();
+        log.info("当前值: {}", value);
+        sharedCount.setCount(99);
+
+        return CommonResult.ok(sharedCount.getCount());
     }
 
 }
