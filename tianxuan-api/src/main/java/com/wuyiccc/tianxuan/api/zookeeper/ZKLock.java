@@ -22,6 +22,7 @@ import java.util.concurrent.CountDownLatch;
 /**
  * @author wuyiccc
  * @date 2024/6/8 22:20
+ * 仅为demo代码, 有并发问题
  */
 @Slf4j
 public class ZKLock {
@@ -104,7 +105,8 @@ public class ZKLock {
                 } else if (selfIndex > 0) {
                     // 说明当前节点不是第一个节点, 监听上一个节点
                     String preLock = subLocks.get(selfIndex - 1);
-                    // 监听上一个节点, 可能会有并发问题, 监听的时候, 前面一个锁已经被删除了
+                    // 监听上一个节点
+                    // TODO(wuyiccc): 可能会有并发问题, 监听的时候, 前面一个锁已经被删除了
                     zooKeeper.getData(lockSpace + CharPool.SLASH + preLock, event -> {
                         if (event.getType() == Watcher.Event.EventType.NodeDeleted) {
                             // 如果上一个节点被删除, 则继续尝试获得锁
@@ -134,5 +136,10 @@ public class ZKLock {
      */
     public void releaseLock() {
 
+        try {
+            zooKeeper.delete(selfLock, -1);
+        } catch (Exception e) {
+            log.error("释放锁失败", e);
+        }
     }
 }

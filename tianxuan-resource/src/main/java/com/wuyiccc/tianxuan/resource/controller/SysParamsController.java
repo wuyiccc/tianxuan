@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author wuyiccc
@@ -33,7 +34,7 @@ public class SysParamsController {
 
 
     @PostMapping("/modifyMaxResumeRefreshCounts")
-    public CommonResult<Integer> modifyMaxResumeRefreshCounts(@RequestParam Integer maxCounts, @RequestParam(required = false) Integer version) {
+    public CommonResult<Integer> modifyMaxResumeRefreshCounts(@RequestParam Integer maxCounts, @RequestParam(required = false) Integer version) throws InterruptedException {
 
         ZKLock zKLock = zkConnector.getLock("tianxuan-lock");
         zKLock.getLock();
@@ -44,6 +45,7 @@ public class SysParamsController {
 
         sysParamService.modifyMaxResumeRefreshCounts(maxCounts, version);
 
+        TimeUnit.SECONDS.sleep(5);
         zKLock.releaseLock();
         return CommonResult.ok(0);
     }
