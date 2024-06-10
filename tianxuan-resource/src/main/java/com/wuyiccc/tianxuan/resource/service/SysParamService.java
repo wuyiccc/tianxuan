@@ -7,7 +7,7 @@ import com.wuyiccc.tianxuan.pojo.SysParam;
  * @date 2024/5/25 23:29
  */
 public interface SysParamService {
-    void modifyMaxResumeRefreshCounts(Integer maxCounts, Integer version);
+    Integer modifyMaxResumeRefreshCounts(Integer maxCounts, Integer version) throws Exception;
 
     SysParam getSysParam();
 }
