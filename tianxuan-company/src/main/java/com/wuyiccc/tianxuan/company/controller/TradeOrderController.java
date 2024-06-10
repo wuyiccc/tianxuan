@@ -8,6 +8,7 @@ import com.wuyiccc.tianxuan.company.service.OrderService;
 import com.wuyiccc.tianxuan.pojo.User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -40,6 +41,15 @@ public class TradeOrderController {
         return CommonResult.ok(url);
     }
 
-    //@PostMapping("/generatorWXPayQRCode")
+    @PostMapping("/generatorWXPayQRCode")
+    public CommonResult<String> generatorWXPayQRCode(@RequestParam String merchantOrderId) {
+
+
+        String payUrl = "https://%s.merchatOrderId.wuyiccc.com/";
+
+        payUrl = String.format(payUrl, merchantOrderId);
+
+        return CommonResult.ok(payUrl);
+    }
 
 }
