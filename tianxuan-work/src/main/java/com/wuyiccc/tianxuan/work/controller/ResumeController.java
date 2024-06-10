@@ -192,7 +192,14 @@ public class ResumeController {
             return CommonResult.error();
         }
 
-        Integer maxCount = 3;
+        String maxCountStr = redisUtils.get(BaseInfoProperties.REDIS_MAX_RESUME_REFRESH_COUNTS);
+        Integer maxCount = null;
+        if (CharSequenceUtil.isBlank(maxCountStr)) {
+            maxCount = 0;
+        } else {
+            maxCount = Integer.parseInt(maxCountStr);
+        }
+
 
         String today = LocalDateUtils.getLocalDateStr();
         int userAlreadyRefreshCount = 0;
