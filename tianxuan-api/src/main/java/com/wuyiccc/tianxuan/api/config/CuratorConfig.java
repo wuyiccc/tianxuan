@@ -1,17 +1,18 @@
 package com.wuyiccc.tianxuan.api.config;
 
+import com.wuyiccc.tianxuan.api.zookeeper.ZKLock;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.recipes.cache.ChildData;
+import org.apache.curator.framework.recipes.cache.CuratorCache;
+import org.apache.curator.framework.recipes.cache.CuratorCacheListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
-import org.apache.curator.retry.RetryNTimes;
-import org.apache.curator.retry.RetryOneTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author wuyiccc
@@ -45,6 +46,35 @@ public class CuratorConfig {
         // 启动curator客户端
         client.start();
 
+
+        // 注册事件
+        add("/xyz", client);
+
         return client;
     }
+
+    private void add(String path, CuratorFramework client) {
+
+
+        CuratorCache curatorCache = CuratorCache.build(client, path);
+        curatorCache.listenable().addListener(new CuratorCacheListener() {
+            @Override
+            public void event(Type type, ChildData oldData, ChildData data) {
+                // type 当前监听到的事件类型
+                // oldData 节点更新前的数据, 状态
+                // data 节点更新后的数据和状态
+                log.info("type: {}", type);
+                log.info("oldData: {}", oldData);
+                log.info("data: {}", data);
+                //switch (type.name()) {
+                //    case
+                //}
+
+
+
+            }
+        });
+        curatorCache.start();
+    }
+
 }
