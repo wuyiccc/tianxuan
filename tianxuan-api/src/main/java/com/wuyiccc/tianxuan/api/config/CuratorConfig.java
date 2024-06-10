@@ -10,6 +10,7 @@ import org.apache.curator.framework.recipes.cache.CuratorCache;
 import org.apache.curator.framework.recipes.cache.CuratorCacheListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.core.index.PathBasedRedisIndexDefinition;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -63,12 +64,17 @@ public class CuratorConfig {
                 // type 当前监听到的事件类型
                 // oldData 节点更新前的数据, 状态
                 // data 节点更新后的数据和状态
-                log.info("type: {}", type);
-                log.info("oldData: {}", oldData);
-                log.info("data: {}", data);
-                //switch (type.name()) {
-                //    case
-                //}
+                switch (type.name()) {
+                    case "NODE_CREATED":
+                        log.info("节点创建");
+                        break;
+                    case "NODE_CHANGED":
+                        log.info("节点数据变更");
+                        break;
+                    case "NODE_DELETED":
+                        log.info("节点数据删除");
+                        break;
+                }
 
 
 
