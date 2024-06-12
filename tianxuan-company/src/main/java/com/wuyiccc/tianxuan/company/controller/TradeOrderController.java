@@ -4,6 +4,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.common.enumeration.PayMethodEnum;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.company.service.OrderService;
 import com.wuyiccc.tianxuan.pojo.User;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +51,18 @@ public class TradeOrderController {
         payUrl = String.format(payUrl, merchantOrderId);
 
         return CommonResult.ok(payUrl);
+    }
+
+    @PostMapping("/list")
+    public CommonResult<PagedGridResult> list(Integer page, Integer limit) {
+
+
+        User user = JWTCurrentUserInterceptor.currentUser.get();
+        String companyId = user.getHrInWhichCompanyId();
+
+        PagedGridResult pagedGridResult = orderService.pageList(companyId, page, limit);
+
+        return CommonResult.ok(pagedGridResult);
     }
 
 }

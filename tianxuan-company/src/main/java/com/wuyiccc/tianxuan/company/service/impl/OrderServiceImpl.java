@@ -2,8 +2,12 @@ package com.wuyiccc.tianxuan.company.service.impl;
 
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.pagehelper.PageHelper;
 import com.wuyiccc.tianxuan.common.enumeration.PayMethodEnum;
 import com.wuyiccc.tianxuan.common.enumeration.PaymentStatusEnum;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.util.LocalDateUtils;
 import com.wuyiccc.tianxuan.company.mapper.OrderMapper;
 import com.wuyiccc.tianxuan.company.service.OrderService;
@@ -13,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author wuyiccc
@@ -53,6 +58,16 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.insert(order);
 
         return order.getId();
+    }
+
+    @Override
+    public PagedGridResult pageList(String companyId, Integer page, Integer limit) {
+
+        PageHelper.startPage(page, limit);
+        LambdaQueryWrapper<Order> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Order::getCompanyId, companyId);
+        List<Order> orderList = orderMapper.selectList(wrapper);
+        return PagedGridResult.build(orderList, page);
     }
 
 
