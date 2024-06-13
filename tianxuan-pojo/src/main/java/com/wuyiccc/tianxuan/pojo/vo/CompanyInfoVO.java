@@ -56,4 +56,6 @@ public class CompanyInfoVO {
     private String registCapital;
     private String registPlace;
     private String legalRepresentative;
+
+    private LocalDate vipExpireDate;
 }

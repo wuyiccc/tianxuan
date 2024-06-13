@@ -80,7 +80,8 @@
             c.build_date AS buildDate,
 
             c.auth_letter AS authLetter,
-            c.biz_license AS bizLicense
+            c.biz_license AS bizLicense,
+            c.vip_expire_date AS vipExpireDate
         FROM
             tianxuan.company c
                 LEFT JOIN
