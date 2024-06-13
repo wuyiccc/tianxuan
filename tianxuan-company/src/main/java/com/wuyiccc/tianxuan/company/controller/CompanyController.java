@@ -3,6 +3,7 @@ package com.wuyiccc.tianxuan.company.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.wuyiccc.tianxuan.api.feign.UserInfoInnerServiceFeign;
+import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
@@ -155,5 +156,11 @@ public class CompanyController {
         return CommonResult.ok(companyPhoto);
     }
 
+    @PostMapping("isVip")
+    public CommonResult<Boolean> isVip(String companyId) {
 
+
+        boolean flag = companyService.isVip(companyId);
+        return CommonResult.ok(flag);
+    }
 }

@@ -57,6 +57,8 @@ public class OrderServiceImpl implements OrderService {
 
         orderMapper.insert(order);
 
+        // 设置企业为vip用户
+
         return order.getId();
     }
 
