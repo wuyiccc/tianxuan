@@ -4,13 +4,17 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.text.StrPool;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
+import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.enumeration.CompanyReviewStatusEnum;
 import com.wuyiccc.tianxuan.common.enumeration.YesOrNoEnum;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
+import com.wuyiccc.tianxuan.common.util.LocalDateUtils;
+import com.wuyiccc.tianxuan.common.util.RedisUtils;
 import com.wuyiccc.tianxuan.company.mapper.CompanyMapper;
 import com.wuyiccc.tianxuan.company.mapper.CompanyPhotoMapper;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
@@ -24,14 +28,15 @@ import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanySimpleVO;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author wuyiccc
@@ -47,6 +52,9 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Resource
     private CompanyPhotoMapper companyPhotoMapper;
+
+    @Resource
+    private RedisUtils redisUtils;
 
     @Override
     public Company getByFullName(String fullName) {
@@ -217,6 +225,34 @@ public class CompanyServiceImpl implements CompanyService {
         }
 
         return companyMapper.getCompanyInfoList(companyIdList);
+    }
+
+    @Override
+    public boolean isVip(String hrInWhichCompanyId) {
+
+        boolean vipCompany = false;
+
+        String vipStr = redisUtils.get(BaseInfoProperties.REDIS_COMPANY_IS_VIP + StrPool.COLON + hrInWhichCompanyId);
+        if (CharSequenceUtil.isNotBlank(vipStr)) {
+            vipCompany = Boolean.valueOf(vipStr);
+        } else {
+            Company company = companyMapper.selectById(hrInWhichCompanyId);
+            if (Objects.nonNull(company)) {
+                Integer isVip = company.getIsVip();
+                LocalDate vipExpireDate = company.getVipExpireDate();
+
+                if (Objects.nonNull(vipExpireDate)) {
+                    long expireDays = LocalDateUtils.getChronoUnitBetween(LocalDate.now(), vipExpireDate, ChronoUnit.DAYS, false);
+                    if (YesOrNoEnum.YES.type.equals(isVip) && expireDays >= 0) {
+                        // == 0 就是当天
+                        vipCompany = true;
+                    }
+
+                }
+            }
+        }
+        redisUtils.set(BaseInfoProperties.REDIS_COMPANY_IS_VIP + StrPool.COLON + hrInWhichCompanyId, String.valueOf(vipCompany), 1000 * 60 * 60 * 24);
+        return vipCompany;
     }
 
 

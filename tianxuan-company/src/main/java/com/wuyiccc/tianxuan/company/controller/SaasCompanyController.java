@@ -53,4 +53,13 @@ public class SaasCompanyController {
         CompanyPhoto companyPhoto = companyService.getPhotos(companyId);
         return CommonResult.ok(companyPhoto);
     }
+
+    @PostMapping("isVip")
+    public CommonResult<Boolean> isVip() {
+
+        User user = JWTCurrentUserInterceptor.currentUser.get();
+
+        boolean flag = companyService.isVip(user.getHrInWhichCompanyId());
+        return CommonResult.ok(flag);
+    }
 }

@@ -41,4 +41,6 @@ public interface CompanyService {
     CompanyPhoto getPhotos(String companyId);
 
     List<CompanyInfoVO> getList(List<String> companyIdList);
+
+    boolean isVip(String hrInWhichCompanyId);
 }
