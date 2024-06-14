@@ -18,3 +18,5 @@ spring:
             refresh: true
           - data-id: zookeeper.yml
             refresh: true
+          - data-id: sentinel.yml
+            refresh: true

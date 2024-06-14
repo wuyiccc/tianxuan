@@ -14,3 +14,5 @@ spring:
             refresh: true
           - data-id: minio.yml
             refresh: true
+          - data-id: sentinel.yml
+            refresh: true

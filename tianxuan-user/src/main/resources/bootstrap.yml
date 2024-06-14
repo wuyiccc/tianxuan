@@ -16,3 +16,5 @@ spring:
             refresh: true
           - data-id: jwt.yml
             refresh: true
+          - data-id: sentinel.yml
+            refresh: true
