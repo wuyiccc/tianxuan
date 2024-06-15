@@ -55,7 +55,7 @@ public class SentinelConfig {
     private void initRules() {
         Set<GatewayFlowRule> rules = new HashSet<>();
 
-        rules.add(new GatewayFlowRule("ReactiveCompositeDiscoveryClient_tianxuan-work").setCount(1).setIntervalSec(1));
+        rules.add(new GatewayFlowRule("ReactiveCompositeDiscoveryClient_tianxuan-work").setCount(1).setIntervalSec(100));
         GatewayRuleManager.loadRules(rules);
     }
 
