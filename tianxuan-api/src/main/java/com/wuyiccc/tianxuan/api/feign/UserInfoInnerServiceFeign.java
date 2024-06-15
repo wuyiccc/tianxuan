@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.api.feign;
 
+import com.wuyiccc.tianxuan.api.feign.fallback.UserInfoInnerServiceFeignFallback;
 import com.wuyiccc.tianxuan.common.result.CommonResult;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.vo.UserVO;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author wuyiccc
  * @date 2024/1/2 21:43
  */
-@FeignClient("tianxuan-user")
+@FeignClient(value = "tianxuan-user", fallback = UserInfoInnerServiceFeignFallback.class)
 public interface UserInfoInnerServiceFeign {
 
     @PostMapping("/userInfoInner/getCountsByCompanyId")
