@@ -187,7 +187,7 @@ public class ResumeController {
     }
 
 
-    @SentinelResource(value = "test/refresh", blockHandler = "myBlockHandler")
+    @SentinelResource(value = "test/refresh", blockHandler = "myBlockHandler", fallback = "myFallbackHandler")
     @PostMapping("/refresh")
     public CommonResult<String> refresh(@RequestParam String resumeId, @RequestParam String userId) {
 
@@ -235,6 +235,14 @@ public class ResumeController {
     public CommonResult<String> myBlockHandler(String resumeId, String userId, BlockException ex) {
 
         return CommonResult.errorMsg("刷新失败, 请稍后再试");
+    }
+
+    /**
+     * 异常降级兜底 fallback绑定的方法发生异常之后，就会调用该方法
+     */
+    public CommonResult<String> myFallbackHandler(String resumeId, String userId) {
+
+        return CommonResult.errorMsg("myFallbackHandler");
     }
 
     @PostMapping("/searchResumes")
