@@ -187,7 +187,7 @@ public class ResumeController {
     }
 
 
-    @SentinelResource(value = "test/refresh", blockHandler = "myBlockHandler", fallback = "myFallbackHandler")
+    //@SentinelResource(value = "test/refresh", blockHandler = "myBlockHandler", fallback = "myFallbackHandler")
     @PostMapping("/refresh")
     public CommonResult<String> refresh(@RequestParam String resumeId, @RequestParam String userId) {
 
