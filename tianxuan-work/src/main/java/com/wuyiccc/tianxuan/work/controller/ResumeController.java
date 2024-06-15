@@ -2,6 +2,8 @@ package com.wuyiccc.tianxuan.work.controller;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrPool;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.enumeration.ActiveTimeEnum;
 import com.wuyiccc.tianxuan.common.enumeration.EduEnum;
@@ -185,6 +187,7 @@ public class ResumeController {
     }
 
 
+    @SentinelResource(value = "test/refresh", blockHandler = "myBlockHandler")
     @PostMapping("/refresh")
     public CommonResult<String> refresh(@RequestParam String resumeId, @RequestParam String userId) {
 
@@ -227,6 +230,11 @@ public class ResumeController {
         }
 
         return CommonResult.ok();
+    }
+
+    public CommonResult<String> myBlockHandler(String resumeId, String userId, BlockException ex) {
+
+        return CommonResult.errorMsg("刷新失败, 请稍后再试");
     }
 
     @PostMapping("/searchResumes")
