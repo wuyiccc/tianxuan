@@ -22,5 +22,12 @@ public class ResumeEsController {
     private ResumeEsService resumeEsService;
 
 
+    @GetMapping("/test")
+    public R<String> test() {
+
+        resumeEsService.insert();
+        return R.ok();
+    }
+
 
 }
