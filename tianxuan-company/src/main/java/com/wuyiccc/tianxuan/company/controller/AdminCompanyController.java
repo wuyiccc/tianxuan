@@ -1,6 +1,6 @@
 package com.wuyiccc.tianxuan.company.controller;
 
-import com.wuyiccc.tianxuan.api.feign.UserInfoInnerServiceFeign;
+import com.wuyiccc.tianxuan.api.remote.UserInfoRemoteApi;
 import com.wuyiccc.tianxuan.common.enumeration.CompanyReviewStatusEnum;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
@@ -31,7 +31,7 @@ public class AdminCompanyController {
 
 
     @Resource
-    private UserInfoInnerServiceFeign userInfoInnerServiceFeign;
+    private UserInfoRemoteApi userInfoRemoteApi;
 
     @PostMapping("getCompanyList")
     public R<PagedGridResult> getCompanyList(@RequestBody @Valid QueryCompanyBO queryCompanyBO
@@ -64,7 +64,7 @@ public class AdminCompanyController {
         companyService.updateReviewInfo(reviewCompanyBO);
 
         if (CompanyReviewStatusEnum.SUCCESSFUL.type.equals(reviewCompanyBO.getReviewStatus())) {
-            userInfoInnerServiceFeign.changeUserToHR(reviewCompanyBO.getHrUserId());
+            userInfoRemoteApi.changeUserToHR(reviewCompanyBO.getHrUserId());
         }
         return R.ok();
     }

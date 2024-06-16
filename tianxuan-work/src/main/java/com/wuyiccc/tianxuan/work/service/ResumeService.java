@@ -49,4 +49,6 @@ public interface ResumeService {
     void refreshResume(String resumeId, String userId);
 
     PagedGridResult searchResumes(SearchResumeBO searchResumeBO, Integer page, Integer limit);
+
+    void transformAndFlushToEs(String userId);
 }

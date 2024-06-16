@@ -223,6 +223,9 @@ public class ResumeController {
 
             // 自增
             redisUtils.increment(redisKey, 1);
+
+            // 刷入es
+            resumeService.transformAndFlushToEs(userId);
         } else {
 
             return R.errorCustom(ResponseStatusEnum.RESUME_MAX_LIMIT_ERROR);

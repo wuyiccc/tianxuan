@@ -2,7 +2,7 @@ package com.wuyiccc.tianxuan.company.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import com.wuyiccc.tianxuan.api.feign.UserInfoInnerServiceFeign;
+import com.wuyiccc.tianxuan.api.remote.UserInfoRemoteApi;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
@@ -35,7 +35,7 @@ public class CompanyController {
     private CompanyService companyService;
 
     @Resource
-    private UserInfoInnerServiceFeign userInfoInnerServiceFeign;
+    private UserInfoRemoteApi userInfoRemoteApi;
 
     @PostMapping("/getByFullName")
     public R<CompanySimpleVO> getByFullName(String fullName) {
@@ -75,7 +75,7 @@ public class CompanyController {
 
         if (withHRCounts) {
 
-            R<Long> result = userInfoInnerServiceFeign.getCountsByCompanyId(companyId);
+            R<Long> result = userInfoRemoteApi.getCountsByCompanyId(companyId);
             companySimpleVO.setHrCounts(result.getData());
         }
 
@@ -87,7 +87,7 @@ public class CompanyController {
 
 
         // 微服务调用, 绑定HR企业id
-        R<User> userR = userInfoInnerServiceFeign.bindingHRToCompany(reviewCompanyBO.getHrUserId(), reviewCompanyBO.getRealname(), reviewCompanyBO.getCompanyId());
+        R<User> userR = userInfoRemoteApi.bindingHRToCompany(reviewCompanyBO.getHrUserId(), reviewCompanyBO.getRealname(), reviewCompanyBO.getCompanyId());
 
         String hrMobile = userR.getData().getMobile();
         // 保存审核信息, 修改状态为 审核中
@@ -102,7 +102,7 @@ public class CompanyController {
     @PostMapping("information")
     public R<CompanySimpleVO> information(String hrUserId) {
 
-        R<UserVO> userVOR = userInfoInnerServiceFeign.get(hrUserId);
+        R<UserVO> userVOR = userInfoRemoteApi.get(hrUserId);
 
         UserVO userVO = userVOR.getData();
 
@@ -142,7 +142,7 @@ public class CompanyController {
             throw new CustomException("公司信息更新失败");
         }
 
-        UserVO hrUser = userInfoInnerServiceFeign.get(currentUserId).getData();
+        UserVO hrUser = userInfoRemoteApi.get(currentUserId).getData();
         if (Objects.nonNull(hrUser) && !hrUser.getHrInWhichCompanyId().equalsIgnoreCase(companyId)) {
             throw new CustomException("公司信息更新失败");
         }

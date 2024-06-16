@@ -3,7 +3,7 @@ package com.wuyiccc.tianxuan.auth.service.impl;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.wuyiccc.tianxuan.api.feign.WorkMicroServiceFeign;
+import com.wuyiccc.tianxuan.api.remote.WorkRemoteApi;
 import com.wuyiccc.tianxuan.auth.mapper.UserMapper;
 import com.wuyiccc.tianxuan.auth.service.UserService;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
@@ -48,7 +48,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public RedisUtils redisUtils;
 
     @Resource
-    private WorkMicroServiceFeign workMicroServiceFeign;
+    private WorkRemoteApi workRemoteApi;
 
 
     @Resource
@@ -98,7 +98,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         userMapper.insert(user);
 
-        R<String> httpRes = workMicroServiceFeign.init(user.getId());
+        R<String> httpRes = workRemoteApi.init(user.getId());
         //if (httpRes.getStatus() != 200) {
         //    throw new CustomException(ResponseStatusEnum.USER_REGISTER_FAILED);
             // 如果调用状态不是200, 则手动回滚全局事务

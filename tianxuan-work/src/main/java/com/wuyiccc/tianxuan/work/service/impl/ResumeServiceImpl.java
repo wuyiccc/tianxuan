@@ -2,18 +2,24 @@ package com.wuyiccc.tianxuan.work.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
+import com.wuyiccc.tianxuan.api.remote.ResumeSearchRemoteApi;
+import com.wuyiccc.tianxuan.api.remote.UserInfoRemoteApi;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.*;
 import com.wuyiccc.tianxuan.pojo.bo.*;
+import com.wuyiccc.tianxuan.pojo.dto.ResumeEsCreateDTO;
 import com.wuyiccc.tianxuan.pojo.dto.SearchResumeDTO;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
 import com.wuyiccc.tianxuan.pojo.vo.SearchResumeVO;
+import com.wuyiccc.tianxuan.pojo.vo.UserVO;
 import com.wuyiccc.tianxuan.work.mapper.ResumeEducationMapper;
 import com.wuyiccc.tianxuan.work.mapper.ResumeExpectMapper;
 import com.wuyiccc.tianxuan.work.mapper.ResumeMapper;
@@ -27,8 +33,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author wuyiccc
@@ -62,6 +73,11 @@ public class ResumeServiceImpl implements ResumeService {
     private ResumeExpectMapper resumeExpectMapper;
 
 
+    @Resource
+    private UserInfoRemoteApi userInfoRemoteApi;
+
+    @Resource
+    private ResumeSearchRemoteApi resumeSearchRemoteApi;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -347,6 +363,79 @@ public class ResumeServiceImpl implements ResumeService {
         List<SearchResumeVO> voList = resumeMapper.searchResumes(queryDTO);
 
         return PagedGridResult.build(voList, page);
+    }
+
+    @Override
+    public void transformAndFlushToEs(String userId) {
+
+        ResumeEsCreateDTO baseCreateDTO = new ResumeEsCreateDTO();
+        baseCreateDTO.setUserId(userId);
+
+        // 查询用户简历相关信息
+        ResumeVO resumeVO = queryMyResume(userId);
+
+        // 远程调用查询用户信息
+        UserVO userVO = getUserInfoVO(userId);
+
+
+        // 填充信息
+        baseCreateDTO.setResumeId(resumeVO.getId());
+        baseCreateDTO.setNickname(userVO.getNickname());
+        baseCreateDTO.setSex(userVO.getSex());
+        baseCreateDTO.setBirthday(userVO.getBirthday());
+        long age = LocalDateTimeUtil.between(userVO.getBirthday().atStartOfDay(), LocalDateTime.now(), ChronoUnit.YEARS);
+        baseCreateDTO.setAge((int) age);
+
+        // 拿到最近的工作信息
+        List<ResumeWorkExp> workExpList = resumeVO.getWorkExpList();
+        Optional<ResumeWorkExp> lastWorkOpt = workExpList.stream().max(Comparator.comparing(ResumeWorkExp::getBeginDate));
+        ResumeWorkExp lastWork = lastWorkOpt.get();
+        baseCreateDTO.setCompanyName(lastWork.getCompanyName());
+        baseCreateDTO.setPosition(lastWork.getPosition());
+        baseCreateDTO.setIndustry(lastWork.getIndustry());
+
+        // 获取最近一次教育经历
+        List<ResumeEducation> educationList = resumeVO.getEducationList();
+        ResumeEducation lastEducation = educationList.stream().max(Comparator.comparing(ResumeEducation::getBeginDate)).get();
+        baseCreateDTO.setSchool(lastEducation.getSchool());
+        baseCreateDTO.setEducation(lastEducation.getEducation());
+        baseCreateDTO.setMajor(lastEducation.getMajor());
+
+        LocalDate startWorkDate = userVO.getStartWorkDate();
+        long workYears = LocalDateTimeUtil.between(startWorkDate.atStartOfDay(), LocalDateTime.now(), ChronoUnit.YEARS);
+        baseCreateDTO.setWorkYears((int) workYears);
+        baseCreateDTO.setSkills(resumeVO.getSkills());
+        baseCreateDTO.setAdvantage(resumeVO.getAdvantage());
+        baseCreateDTO.setAdvantageHtml(resumeVO.getAdvantageHtml());
+        baseCreateDTO.setCredentials(resumeVO.getCredentials());
+        baseCreateDTO.setJobStatus(resumeVO.getStatus());
+        baseCreateDTO.setRefreshTime(resumeVO.getRefreshTime());
+
+
+        // 每个求职期望对应一份简历信息
+        List<ResumeExpect> expectList = getMyResumeExpectList(resumeVO.getId(), userId);
+
+        List<ResumeEsCreateDTO> createDTOList = new ArrayList<>();
+        for (ResumeExpect resumeExpect : expectList) {
+
+            ResumeEsCreateDTO createDTO = new ResumeEsCreateDTO();
+            BeanUtil.copyProperties(baseCreateDTO, createDTO);
+            createDTO.setId(resumeExpect.getId());
+            createDTO.setJobType(resumeExpect.getJobName());
+            createDTO.setCity(resumeExpect.getCity());
+            createDTO.setBeginSalary(resumeExpect.getBeginSalary());
+            createDTO.setEndSalary(resumeExpect.getEndSalary());
+            createDTOList.add(createDTO);
+        }
+
+        resumeSearchRemoteApi.batchUpdate(createDTOList);
+    }
+
+
+    private UserVO getUserInfoVO(String userId) {
+
+        R<UserVO> userVOR = userInfoRemoteApi.get(userId);
+        return userVOR.getData();
     }
 
 }

@@ -1,4 +1,4 @@
-package com.wuyiccc.tianxuan.api.feign;
+package com.wuyiccc.tianxuan.api.remote;
 
 import com.wuyiccc.tianxuan.common.result.R;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @date 2023/12/18 21:10
  */
 @FeignClient("tianxuan-work")
-public interface WorkMicroServiceFeign {
+public interface WorkRemoteApi {
 
 
     /**

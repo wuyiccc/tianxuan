@@ -1,6 +1,6 @@
-package com.wuyiccc.tianxuan.api.feign;
+package com.wuyiccc.tianxuan.api.remote;
 
-import com.wuyiccc.tianxuan.api.feign.fallback.UserInfoInnerServiceFeignFallback;
+import com.wuyiccc.tianxuan.api.remote.fallback.UserInfoRemoteApiFallback;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.vo.UserVO;
@@ -15,8 +15,8 @@ import java.util.List;
  * @author wuyiccc
  * @date 2024/1/2 21:43
  */
-@FeignClient(value = "tianxuan-user", fallback = UserInfoInnerServiceFeignFallback.class)
-public interface UserInfoInnerServiceFeign {
+@FeignClient(value = "tianxuan-user", fallback = UserInfoRemoteApiFallback.class)
+public interface UserInfoRemoteApi {
 
     @PostMapping("/userInfoInner/getCountsByCompanyId")
     R<Long> getCountsByCompanyId(@RequestParam("companyId") String companyId);

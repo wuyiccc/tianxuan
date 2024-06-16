@@ -18,7 +18,7 @@ import org.springframework.context.annotation.FilterType;
 @EnableDiscoveryClient
 @MapperScan(basePackages = "com.wuyiccc.tianxuan.work.mapper")
 @ComponentScan(basePackages = "com.wuyiccc.tianxuan", excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = {CuratorConfig.class})})
-@EnableFeignClients("com.wuyiccc.tianxuan.api.feign")
+@EnableFeignClients("com.wuyiccc.tianxuan.api.remote")
 public class TianxuanWorkApplication {
 
     public static void main(String[] args) {

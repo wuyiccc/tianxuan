@@ -21,7 +21,7 @@ import org.springframework.context.annotation.FilterType;
 })
 // 开启注册中心的服务注册和发现功能
 @EnableDiscoveryClient
-@EnableFeignClients("com.wuyiccc.tianxuan.api.feign")
+@EnableFeignClients("com.wuyiccc.tianxuan.api.remote")
 @MapperScan(basePackages = "com.wuyiccc.tianxuan.company.mapper")
 @ComponentScan(basePackages = "com.wuyiccc.tianxuan", excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {CuratorConfig.class})})
 public class TianxuanCompanyApplication {

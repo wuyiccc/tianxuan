@@ -8,8 +8,8 @@ import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
-import com.wuyiccc.tianxuan.api.feign.CompanyInnerServiceFeign;
-import com.wuyiccc.tianxuan.api.feign.UserInfoInnerServiceFeign;
+import com.wuyiccc.tianxuan.api.remote.CompanyRemoteApi;
+import com.wuyiccc.tianxuan.api.remote.UserInfoRemoteApi;
 import com.wuyiccc.tianxuan.common.enumeration.JobStatusEnum;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.R;
@@ -44,10 +44,10 @@ public class JobServiceImpl implements JobService {
     private JobMapper jobMapper;
 
     @Resource
-    private UserInfoInnerServiceFeign userInfoInnerServiceFeign;
+    private UserInfoRemoteApi userInfoRemoteApi;
 
     @Resource
-    private CompanyInnerServiceFeign companyInnerServiceFeign;
+    private CompanyRemoteApi companyRemoteApi;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -207,11 +207,11 @@ public class JobServiceImpl implements JobService {
         List<String> hrIdList = jobList.stream().map(Job::getHrId).collect(Collectors.toList());
         List<String> companyIdList = jobList.stream().map(Job::getCompanyId).collect(Collectors.toList());
 
-        R<List<UserVO>> userVOListRes = userInfoInnerServiceFeign.getList(hrIdList);
+        R<List<UserVO>> userVOListRes = userInfoRemoteApi.getList(hrIdList);
         List<UserVO> userVOList = userVOListRes.getData();
         Map<String, UserVO> userCache = CollStreamUtil.toIdentityMap(userVOList, UserVO::getId);
 
-        R<List<CompanyInfoVO>> companyInfoVORes = companyInnerServiceFeign.getList(companyIdList);
+        R<List<CompanyInfoVO>> companyInfoVORes = companyRemoteApi.getList(companyIdList);
         List<CompanyInfoVO> companyInfoVOList = companyInfoVORes.getData();
         Map<String, CompanyInfoVO> companyCache = CollStreamUtil.toIdentityMap(companyInfoVOList, CompanyInfoVO::getCompanyId);
 

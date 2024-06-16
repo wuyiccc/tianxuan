@@ -1,7 +1,7 @@
-package com.wuyiccc.tianxuan.api.feign.fallback;
+package com.wuyiccc.tianxuan.api.remote.fallback;
 
 import cn.hutool.core.collection.ListUtil;
-import com.wuyiccc.tianxuan.api.feign.UserInfoInnerServiceFeign;
+import com.wuyiccc.tianxuan.api.remote.UserInfoRemoteApi;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.vo.UserVO;
@@ -15,7 +15,7 @@ import java.util.List;
  * feign远程服务出现问题的时候进行兜底处理
  */
 @Component
-public class UserInfoInnerServiceFeignFallback implements UserInfoInnerServiceFeign {
+public class UserInfoRemoteApiFallback implements UserInfoRemoteApi {
 
 
     @Override
