@@ -1,6 +1,8 @@
 package com.wuyiccc.tianxuan.search.service;
 
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.dto.ResumeEsCreateDTO;
+import com.wuyiccc.tianxuan.pojo.dto.SearchResumeDTO;
 
 import java.util.List;
 
@@ -11,4 +13,6 @@ import java.util.List;
 public interface ResumeEsService {
 
     void batchUpdate(List<ResumeEsCreateDTO> createDTOList);
+
+    PagedGridResult search(SearchResumeDTO searchResumeDTO);
 }

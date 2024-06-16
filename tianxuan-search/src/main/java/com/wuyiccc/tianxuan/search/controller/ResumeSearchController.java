@@ -1,8 +1,10 @@
 package com.wuyiccc.tianxuan.search.controller;
 
 import com.wuyiccc.tianxuan.api.remote.ResumeSearchRemoteApi;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.dto.ResumeEsCreateDTO;
+import com.wuyiccc.tianxuan.pojo.dto.SearchResumeDTO;
 import com.wuyiccc.tianxuan.search.service.ResumeEsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,13 @@ public class ResumeSearchController implements ResumeSearchRemoteApi {
 
         resumeEsService.batchUpdate(createDTOList);
         return R.ok();
+    }
+
+    @Override
+    public R<PagedGridResult> search(SearchResumeDTO searchResumeDTO) {
+
+        PagedGridResult pagedGridResult = resumeEsService.search(searchResumeDTO);
+        return R.ok(pagedGridResult);
     }
 
 

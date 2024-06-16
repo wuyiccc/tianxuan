@@ -341,28 +341,32 @@ public class ResumeServiceImpl implements ResumeService {
     @Override
     public PagedGridResult searchResumes(SearchResumeBO searchResumeBO, Integer page, Integer limit) {
 
-
-        String basicTitle = searchResumeBO.getBasicTitle();
-        String jobType = searchResumeBO.getJobType();
-        Integer beginAge = searchResumeBO.getBeginAge();
-        Integer endAge = searchResumeBO.getEndAge();
-        Integer sex = searchResumeBO.getSex();
-        Integer activeTimes = searchResumeBO.getActiveTimes();
-        Integer beginWorkExpYears = searchResumeBO.getBeginWorkExpYears();
-        Integer endWorkExpYears = searchResumeBO.getEndWorkExpYears();
-        String edu = searchResumeBO.getEdu();
-        List<String> eduList = searchResumeBO.getEduList();
-        Integer beginSalary = searchResumeBO.getBeginSalary();
-        Integer endSalary = searchResumeBO.getEndSalary();
-        String jobStatus = searchResumeBO.getJobStatus();
-
-
+        //
+        //String basicTitle = searchResumeBO.getBasicTitle();
+        //String jobType = searchResumeBO.getJobType();
+        //Integer beginAge = searchResumeBO.getBeginAge();
+        //Integer endAge = searchResumeBO.getEndAge();
+        //Integer sex = searchResumeBO.getSex();
+        //Integer activeTimes = searchResumeBO.getActiveTimes();
+        //Integer beginWorkExpYears = searchResumeBO.getBeginWorkExpYears();
+        //Integer endWorkExpYears = searchResumeBO.getEndWorkExpYears();
+        //String edu = searchResumeBO.getEdu();
+        //List<String> eduList = searchResumeBO.getEduList();
+        //Integer beginSalary = searchResumeBO.getBeginSalary();
+        //Integer endSalary = searchResumeBO.getEndSalary();
+        //String jobStatus = searchResumeBO.getJobStatus();
+        //
+        //
         SearchResumeDTO queryDTO = BeanUtil.copyProperties(searchResumeBO, SearchResumeDTO.class);
-
-        PageHelper.startPage(page, limit);
-        List<SearchResumeVO> voList = resumeMapper.searchResumes(queryDTO);
-
-        return PagedGridResult.build(voList, page);
+        queryDTO.setPage(page);
+        queryDTO.setLimit(limit);
+        //
+        //PageHelper.startPage(page, limit);
+        //List<SearchResumeVO> voList = resumeMapper.searchResumes(queryDTO);
+        //
+        //return PagedGridResult.build(voList, page);
+        R<PagedGridResult> rSearch = resumeSearchRemoteApi.search(queryDTO);
+        return rSearch.getData();
     }
 
     @Override

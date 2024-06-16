@@ -44,5 +44,8 @@ public class SearchResumeDTO {
 
     private String jobStatus;
 
+    private Integer page;
+
+    private Integer limit;
 
 }
