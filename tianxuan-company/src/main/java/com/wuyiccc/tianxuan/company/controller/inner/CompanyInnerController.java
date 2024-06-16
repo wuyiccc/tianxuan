@@ -1,6 +1,6 @@
 package com.wuyiccc.tianxuan.company.controller.inner;
 
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +21,10 @@ public class CompanyInnerController {
 
 
     @PostMapping("/getList")
-    public CommonResult<List<CompanyInfoVO>> getList(@RequestBody List<String> companyIdList) {
+    public R<List<CompanyInfoVO>> getList(@RequestBody List<String> companyIdList) {
 
         List<CompanyInfoVO> resList = companyService.getList(companyIdList);
 
-        return CommonResult.ok(resList);
+        return R.ok(resList);
     }
 }

@@ -1,6 +1,6 @@
 package com.wuyiccc.tianxuan.work.controller;
 
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.Job;
 import com.wuyiccc.tianxuan.work.service.JobService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class AdminJobController {
     private JobService jobService;
 
     @PostMapping("/jobDetail")
-    public CommonResult<Job> jobDetail(
+    public R<Job> jobDetail(
             @RequestParam String jobId
     ) {
 
@@ -32,7 +32,7 @@ public class AdminJobController {
         Job job = jobService.queryJobDetail(null, null, jobId);
 
 
-        return CommonResult.ok(job);
+        return R.ok(job);
     }
 
 

@@ -1,7 +1,7 @@
 package com.wuyiccc.tianxuan.work.controller;
 
 import com.wuyiccc.tianxuan.common.enumeration.DealStatusEnum;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.util.LocalDateUtils;
 import com.wuyiccc.tianxuan.pojo.bo.SearchReportJobBO;
@@ -29,7 +29,7 @@ public class AdminReportController {
 
 
     @PostMapping("/pagedReportRecordList")
-    public CommonResult<PagedGridResult> pagedReportRecordList(@RequestBody SearchReportJobBO reportJobBO
+    public R<PagedGridResult> pagedReportRecordList(@RequestBody SearchReportJobBO reportJobBO
             , @RequestParam Integer page
             , @RequestParam Integer pageSize) {
 
@@ -65,22 +65,22 @@ public class AdminReportController {
 
         PagedGridResult pagedGridResult = reportService.pagedReportRecordList(reportJobBO, page, pageSize);
 
-        return CommonResult.ok(pagedGridResult);
+        return R.ok(pagedGridResult);
     }
 
 
     @PostMapping("/delete")
-    public CommonResult<Integer> delete(@RequestParam String reportId) {
+    public R<Integer> delete(@RequestParam String reportId) {
 
         reportService.updateReportRecordStatus(reportId, DealStatusEnum.DONE);
-        return CommonResult.ok();
+        return R.ok();
     }
 
 
     @PostMapping("/ignore")
-    public CommonResult<Integer> ignore(@RequestParam String reportId) {
+    public R<Integer> ignore(@RequestParam String reportId) {
 
         reportService.updateReportRecordStatus(reportId, DealStatusEnum.IGNORE);
-        return CommonResult.ok();
+        return R.ok();
     }
 }

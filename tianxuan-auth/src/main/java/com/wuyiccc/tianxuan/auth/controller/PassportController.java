@@ -3,7 +3,7 @@ package com.wuyiccc.tianxuan.auth.controller;
 import cn.hutool.json.JSONUtil;
 import com.wuyiccc.tianxuan.auth.service.UserService;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.common.util.DingDingMsgUtils;
 import com.wuyiccc.tianxuan.common.util.JWTUtils;
@@ -41,20 +41,20 @@ public class PassportController extends BaseInfoProperties {
     private DingDingMsgUtils dingDingMsgUtils;
 
     @PostMapping("/getSMSCode")
-    public CommonResult<String> getSMSCode(String mobile, HttpServletRequest request) {
+    public R<String> getSMSCode(String mobile, HttpServletRequest request) {
 
         if (StringUtils.isBlank(mobile)) {
-            return CommonResult.errorMsg("手机号不可为空");
+            return R.errorMsg("手机号不可为空");
         }
 
         userService.getSMSCode(mobile, request);
 
 
-        return CommonResult.ok("发送短信成功");
+        return R.ok("发送短信成功");
     }
 
     @PostMapping("/login")
-    public CommonResult<UserVO> login(@Valid @RequestBody RegisterLoginBO registerLoginBO
+    public R<UserVO> login(@Valid @RequestBody RegisterLoginBO registerLoginBO
             , HttpServletRequest request) {
         String mobile = registerLoginBO.getMobile();
         String smsCode = registerLoginBO.getSmsCode();
@@ -62,7 +62,7 @@ public class PassportController extends BaseInfoProperties {
         String sendSmsCode = redisUtils.get(MOBILE_SMSCODE + ":" + mobile);
 
         if (!smsCode.equalsIgnoreCase(sendSmsCode)) {
-            return CommonResult.errorCustom(ResponseStatusEnum.SMS_CODE_ERROR);
+            return R.errorCustom(ResponseStatusEnum.SMS_CODE_ERROR);
         }
         redisUtils.del(MOBILE_SMSCODE + ":" + mobile);
 
@@ -77,12 +77,12 @@ public class PassportController extends BaseInfoProperties {
         BeanUtils.copyProperties(user, userVO);
         userVO.setUserToken(uToken);
 
-        return CommonResult.ok(userVO);
+        return R.ok(userVO);
     }
 
     @PostMapping("/logout")
-    public CommonResult<String> logout(@RequestParam String userId) {
+    public R<String> logout(@RequestParam String userId) {
 //        redisUtils.del(REDIS_USER_TOKEN + ":" + userId);
-        return CommonResult.ok();
+        return R.ok();
     }
 }

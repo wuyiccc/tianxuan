@@ -1,6 +1,6 @@
 package com.wuyiccc.tianxuan.work.controller;
 
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.JobType;
 import com.wuyiccc.tianxuan.work.service.JobTypeService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,28 +23,28 @@ public class AdminJobTypeController {
     private JobTypeService jobTypeService;
 
     @GetMapping("/getTopList")
-    public CommonResult<List<JobType>> getTopList() {
+    public R<List<JobType>> getTopList() {
 
         List<JobType> jobTypeList = jobTypeService.initTopList();
-        return CommonResult.ok(jobTypeList);
+        return R.ok(jobTypeList);
     }
 
 
     @GetMapping("/children/{jobTypeId}")
-    public CommonResult<List<JobType>> getChildrenIndustryList(@PathVariable("jobTypeId") String jobTypeId) {
+    public R<List<JobType>> getChildrenIndustryList(@PathVariable("jobTypeId") String jobTypeId) {
 
         List<JobType> resList = jobTypeService.getChildrenList(jobTypeId);
 
-        return CommonResult.ok(resList);
+        return R.ok(resList);
     }
 
     @PostMapping("/createNode")
-    public CommonResult<String> createNode(@RequestBody JobType jobType) {
+    public R<String> createNode(@RequestBody JobType jobType) {
 
         // 判断节点是否已经存在
         jobTypeService.createNode(jobType);
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
 
@@ -55,17 +55,17 @@ public class AdminJobTypeController {
      * @return
      */
     @PostMapping("updateNode")
-    public CommonResult<String> updateNode(@RequestBody JobType jobType) {
+    public R<String> updateNode(@RequestBody JobType jobType) {
         jobTypeService.updateNode(jobType);
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @DeleteMapping("deleteNode/{jobTypeId}")
-    public CommonResult<String> deleteNode(@PathVariable("jobTypeId") String jobTypeId) {
+    public R<String> deleteNode(@PathVariable("jobTypeId") String jobTypeId) {
 
         jobTypeService.deleteNode(jobTypeId);
 
-        return CommonResult.ok();
+        return R.ok();
 
     }
 }

@@ -1,7 +1,7 @@
 package com.wuyiccc.tianxuan.api.feign;
 
 import com.wuyiccc.tianxuan.api.feign.fallback.UserInfoInnerServiceFeignFallback;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.vo.UserVO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -19,23 +19,23 @@ import java.util.List;
 public interface UserInfoInnerServiceFeign {
 
     @PostMapping("/userInfoInner/getCountsByCompanyId")
-    CommonResult<Long> getCountsByCompanyId(@RequestParam("companyId") String companyId);
+    R<Long> getCountsByCompanyId(@RequestParam("companyId") String companyId);
 
 
     @PostMapping("/userInfoInner/bindingHRToCompany")
-    CommonResult<User> bindingHRToCompany(
+    R<User> bindingHRToCompany(
             @RequestParam("hrUserId") String hrUserId,
             @RequestParam("realname") String realname,
             @RequestParam("companyId") String companyId
     );
 
     @PostMapping("/userInfoInner/get")
-    CommonResult<UserVO> get(@RequestParam("userId") String userId);
+    R<UserVO> get(@RequestParam("userId") String userId);
 
     @PostMapping("/userInfoInner/changeUserToHR")
-    CommonResult<String> changeUserToHR(@RequestParam("hrUserId") String hrUserId);
+    R<String> changeUserToHR(@RequestParam("hrUserId") String hrUserId);
 
     @PostMapping("/userInfoInner/getList")
-    CommonResult<List<UserVO>> getList(@RequestBody List<String> userIdList);
+    R<List<UserVO>> getList(@RequestBody List<String> userIdList);
 
 }

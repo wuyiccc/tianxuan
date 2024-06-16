@@ -5,7 +5,7 @@ import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayRuleManager;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.callback.GatewayCallbackManager;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.exception.SentinelGatewayBlockExceptionHandler;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -62,7 +62,7 @@ public class SentinelConfig {
 
     private void initFallback() {
 
-        CommonResult<String> errorMsg = CommonResult.errorMsg("网关限流了");
+        R<String> errorMsg = R.errorMsg("网关限流了");
 
         GatewayCallbackManager.setBlockHandler((exchange, t) -> ServerResponse
                 .status(HttpStatus.OK)

@@ -1,6 +1,6 @@
 package com.wuyiccc.tianxuan.auth.controller;
 
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,7 @@ public class AuthController {
     private String port;
 
     @GetMapping("/hello")
-    public CommonResult<String> hello() {
-        return CommonResult.ok("tianxuan-auth: " + port);
+    public R<String> hello() {
+        return R.ok("tianxuan-auth: " + port);
     }
 }

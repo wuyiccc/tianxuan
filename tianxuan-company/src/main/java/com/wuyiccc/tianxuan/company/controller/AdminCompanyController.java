@@ -2,7 +2,7 @@ package com.wuyiccc.tianxuan.company.controller;
 
 import com.wuyiccc.tianxuan.api.feign.UserInfoInnerServiceFeign;
 import com.wuyiccc.tianxuan.common.enumeration.CompanyReviewStatusEnum;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.bo.QueryCompanyBO;
@@ -34,7 +34,7 @@ public class AdminCompanyController {
     private UserInfoInnerServiceFeign userInfoInnerServiceFeign;
 
     @PostMapping("getCompanyList")
-    public CommonResult<PagedGridResult> getCompanyList(@RequestBody @Valid QueryCompanyBO queryCompanyBO
+    public R<PagedGridResult> getCompanyList(@RequestBody @Valid QueryCompanyBO queryCompanyBO
             , Integer page
             , Integer limit) {
 
@@ -46,18 +46,18 @@ public class AdminCompanyController {
         }
 
         PagedGridResult pagedGridResult = companyService.getCompanyList(queryCompanyBO, page, limit);
-        return CommonResult.ok(pagedGridResult);
+        return R.ok(pagedGridResult);
     }
 
     @PostMapping("getCompanyInfo")
-    public CommonResult<CompanyInfoVO> getCompanyInfo(String companyId) {
+    public R<CompanyInfoVO> getCompanyInfo(String companyId) {
 
         CompanyInfoVO companyInfoVO = companyService.getCompanyInfo(companyId);
-        return CommonResult.ok(companyInfoVO);
+        return R.ok(companyInfoVO);
     }
 
     @PostMapping("doReview")
-    public CommonResult<String> doReview(@RequestBody @Valid ReviewCompanyBO reviewCompanyBO) {
+    public R<String> doReview(@RequestBody @Valid ReviewCompanyBO reviewCompanyBO) {
 
 
         // 1. 审核企业
@@ -66,7 +66,7 @@ public class AdminCompanyController {
         if (CompanyReviewStatusEnum.SUCCESSFUL.type.equals(reviewCompanyBO.getReviewStatus())) {
             userInfoInnerServiceFeign.changeUserToHR(reviewCompanyBO.getHrUserId());
         }
-        return CommonResult.ok();
+        return R.ok();
     }
 
 }

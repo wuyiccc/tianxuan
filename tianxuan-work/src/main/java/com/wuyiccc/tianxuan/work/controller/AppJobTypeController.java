@@ -1,7 +1,6 @@
 package com.wuyiccc.tianxuan.work.controller;
 
-import com.wuyiccc.tianxuan.common.result.CommonResult;
-import com.wuyiccc.tianxuan.pojo.Job;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.JobType;
 import com.wuyiccc.tianxuan.pojo.vo.JobTypeSecondAndThirdVO;
 import com.wuyiccc.tianxuan.work.service.JobTypeService;
@@ -28,25 +27,25 @@ public class AppJobTypeController {
     private JobTypeService jobTypeService;
 
     @GetMapping("/initTopList")
-    public CommonResult<List<JobType>> initTopList() {
+    public R<List<JobType>> initTopList() {
 
         List<JobType> resList = jobTypeService.initTopList();
-        return CommonResult.ok(resList);
+        return R.ok(resList);
     }
 
     @GetMapping("/getThirdListByTop/{topJobTypeId}")
-    public CommonResult<List<JobType>> getThirdListByTop(@PathVariable("topJobTypeId") String topJobTypeId) {
+    public R<List<JobType>> getThirdListByTop(@PathVariable("topJobTypeId") String topJobTypeId) {
 
         List<JobType> resList = jobTypeService.getThirdListByTop(topJobTypeId);
-        return CommonResult.ok(resList);
+        return R.ok(resList);
     }
 
 
     @GetMapping("/getSecondAndThirdListByTop/{topJobTypeId}")
-    public CommonResult<List<JobTypeSecondAndThirdVO>> getSecondAndThirdListByTop(@PathVariable("topJobTypeId") String topJobTypeId) {
+    public R<List<JobTypeSecondAndThirdVO>> getSecondAndThirdListByTop(@PathVariable("topJobTypeId") String topJobTypeId) {
 
         List<JobTypeSecondAndThirdVO> resList = jobTypeService.getSecondAndThirdListByTop(topJobTypeId);
-        return CommonResult.ok(resList);
+        return R.ok(resList);
     }
 
 }

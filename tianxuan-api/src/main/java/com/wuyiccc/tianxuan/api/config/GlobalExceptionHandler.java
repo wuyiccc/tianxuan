@@ -1,7 +1,7 @@
 package com.wuyiccc.tianxuan.api.config;
 
 import com.wuyiccc.tianxuan.common.exception.CustomException;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -30,8 +30,8 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(CustomException.class)
-    public CommonResult<String> returnMyCustomException(CustomException e) {
-        return new CommonResult<>(e.getStatus(), e.getMsg(), false);
+    public R<String> returnMyCustomException(CustomException e) {
+        return new R<>(e.getStatus(), e.getMsg(), false);
     }
 
     @ExceptionHandler({ExpiredJwtException.class
@@ -39,22 +39,22 @@ public class GlobalExceptionHandler {
             , MalformedJwtException.class
             , SignatureException.class
     })
-    public CommonResult<String> returnSignatureException(JwtException e) {
+    public R<String> returnSignatureException(JwtException e) {
         log.error("jwt异常", e);
-        return CommonResult.errorCustom(ResponseStatusEnum.JWT_SIGNATURE_ERROR);
+        return R.errorCustom(ResponseStatusEnum.JWT_SIGNATURE_ERROR);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public CommonResult<Map<String, String>> returnNotValidException(MethodArgumentNotValidException e) {
+    public R<Map<String, String>> returnNotValidException(MethodArgumentNotValidException e) {
         BindingResult result = e.getBindingResult();
         Map<String, String> errors = getErrors(result);
-        return CommonResult.errorData(errors);
+        return R.errorData(errors);
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public CommonResult<String> returnMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
+    public R<String> returnMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
         log.error("文件上传大小超出限制", e);
-        return CommonResult.errorMsg("文件上传大小超出限制 50MB");
+        return R.errorMsg("文件上传大小超出限制 50MB");
     }
 
     private Map<String, String> getErrors(BindingResult result) {

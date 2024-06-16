@@ -12,8 +12,7 @@ import com.wuyiccc.tianxuan.common.enumeration.SexEnum;
 import com.wuyiccc.tianxuan.common.enumeration.ShowWhichNameEnum;
 import com.wuyiccc.tianxuan.common.enumeration.UserRoleEnum;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
-import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.util.*;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.dto.SmsCodeDTO;
@@ -99,7 +98,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         userMapper.insert(user);
 
-        CommonResult<String> httpRes = workMicroServiceFeign.init(user.getId());
+        R<String> httpRes = workMicroServiceFeign.init(user.getId());
         //if (httpRes.getStatus() != 200) {
         //    throw new CustomException(ResponseStatusEnum.USER_REGISTER_FAILED);
             // 如果调用状态不是200, 则手动回滚全局事务

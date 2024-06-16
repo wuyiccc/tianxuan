@@ -1,6 +1,6 @@
 package com.wuyiccc.tianxuan.resource.controller;
 
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.DataDictionary;
 import com.wuyiccc.tianxuan.pojo.bo.QueryDictItemBO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanyPointsVO;
@@ -33,14 +33,14 @@ public class AppDataDictController {
     private DataDictionaryService dataDictionaryService;
 
     @PostMapping("getDataByCode")
-    public CommonResult<List<DataDictionary>> getDataByCode(String typeCode) {
+    public R<List<DataDictionary>> getDataByCode(String typeCode) {
 
         List<DataDictionary> resList = dataDictionaryService.getDataByCode(typeCode);
-        return CommonResult.ok(resList);
+        return R.ok(resList);
     }
 
     @PostMapping("getItemsByKeys")
-    public CommonResult<CompanyPointsVO> getItemsByKeys(@RequestBody QueryDictItemBO queryDictItemBO) throws ExecutionException, InterruptedException {
+    public R<CompanyPointsVO> getItemsByKeys(@RequestBody QueryDictItemBO queryDictItemBO) throws ExecutionException, InterruptedException {
 
         CompanyPointsVO resVO = new CompanyPointsVO();
 
@@ -79,12 +79,12 @@ public class AppDataDictController {
 
         allOfFuture.get();
 
-        return CommonResult.ok(resVO);
+        return R.ok(resVO);
     }
 
 
     @PostMapping("getItemsByKeys2")
-    public CommonResult<CompanyPointsVO> getItemsByKeys2(@RequestBody QueryDictItemBO queryDictItemBO) {
+    public R<CompanyPointsVO> getItemsByKeys2(@RequestBody QueryDictItemBO queryDictItemBO) {
 
         CompanyPointsVO resVO = new CompanyPointsVO();
 
@@ -106,6 +106,6 @@ public class AppDataDictController {
         resVO.setBenefitsList(dataList);
 
 
-        return CommonResult.ok(resVO);
+        return R.ok(resVO);
     }
 }

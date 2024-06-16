@@ -5,7 +5,7 @@ import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.auth.service.UserService;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.common.util.JWTUtils;
 import com.wuyiccc.tianxuan.pojo.User;
@@ -43,7 +43,7 @@ public class SaasPassportController extends BaseInfoProperties {
      * 获得二维码token令牌
      */
     @PostMapping("/getQRToken")
-    public CommonResult<String> getQRToken() {
+    public R<String> getQRToken() {
 
         // 生成扫码登录的token
         String qrToken = UUID.randomUUID().toString();
@@ -53,12 +53,12 @@ public class SaasPassportController extends BaseInfoProperties {
         redisUtils.set(SAAS_PLATFORM_LOGIN_TOKEN_READ + ":" + qrToken, "0", 5 * 60);
 
         // 返回给前端, 让前端下一次请求的时候需要带上qrtoken
-        return CommonResult.ok(qrToken);
+        return R.ok(qrToken);
     }
 
 
     @PostMapping("/scanCode")
-    public CommonResult<String> scanCode(String qrToken, HttpServletRequest request) {
+    public R<String> scanCode(String qrToken, HttpServletRequest request) {
 
         if (StringUtils.isBlank(qrToken)) {
             throw new CustomException(ResponseStatusEnum.FAILED);
@@ -66,7 +66,7 @@ public class SaasPassportController extends BaseInfoProperties {
 
         String redisQRToken = redisUtils.get(SAAS_PLATFORM_LOGIN_TOKEN + ":" + qrToken);
         if (!Objects.equals(redisQRToken, qrToken)) {
-            return CommonResult.errorCustom(ResponseStatusEnum.FAILED);
+            return R.errorCustom(ResponseStatusEnum.FAILED);
         }
 
         // TODO(wuyiccc): 后续变更为headerUserToken, uniapp对应接口一起变更
@@ -91,14 +91,14 @@ public class SaasPassportController extends BaseInfoProperties {
         redisUtils.set(SAAS_PLATFORM_LOGIN_TOKEN_READ + ":" + qrToken, "1," + preToken, 5 * 60);
 
         // 返回给手机端, app下次请求携带preToken
-        return CommonResult.ok(preToken);
+        return R.ok(preToken);
     }
 
     /**
      * saas网页端每隔一段时间(3s)定时查询qrToken是否被读取
      */
     @PostMapping("/codeHasBeenRead")
-    public CommonResult<List<String>> codeHasBeenRead(String qrToken) {
+    public R<List<String>> codeHasBeenRead(String qrToken) {
 
         String readStr = redisUtils.get(SAAS_PLATFORM_LOGIN_TOKEN_READ + ":" + qrToken);
 
@@ -113,14 +113,14 @@ public class SaasPassportController extends BaseInfoProperties {
             list.add(readArr[0]);
             list.add(readArr[1]);
         }
-        return CommonResult.ok(list);
+        return R.ok(list);
     }
 
     /**
      * 手机端点击确认登录
      */
     @PostMapping("/goQRLogin")
-    private CommonResult<String> goQRLogin(String qrToken
+    private R<String> goQRLogin(String qrToken
             , String preToken) {
 
         User tokenUserInfo = JWTCurrentUserInterceptor.currentUser.get();
@@ -140,14 +140,14 @@ public class SaasPassportController extends BaseInfoProperties {
                 redisUtils.set(REDIS_SAAS_USER_INFO + ":temp:" + preToken, JSONUtil.toJsonStr(hrUser), 5 * 60);
             }
         }
-        return CommonResult.ok();
+        return R.ok();
     }
 
     /**
      * 页面登录跳转
      */
     @PostMapping("/checkLogin")
-    public CommonResult<String> checkLogin(String preToken) {
+    public R<String> checkLogin(String preToken) {
 
         if (StringUtils.isBlank(preToken)) {
             throw new CustomException(ResponseStatusEnum.FAILED);
@@ -163,11 +163,11 @@ public class SaasPassportController extends BaseInfoProperties {
         // 存入用户信息, 长期有效
         redisUtils.set(REDIS_SAAS_USER_INFO + ":" + saasUserToken, userJson);
 
-        return CommonResult.ok(saasUserToken);
+        return R.ok(saasUserToken);
     }
 
     @GetMapping("/info")
-    public CommonResult<SaasUserVO> info() {
+    public R<SaasUserVO> info() {
 
         User user = JWTCurrentUserInterceptor.currentUser.get();
 
@@ -176,12 +176,12 @@ public class SaasPassportController extends BaseInfoProperties {
                 .name(user.getNickname())
                 .face(user.getFace())
                 .build();
-        return CommonResult.ok(vo);
+        return R.ok(vo);
     }
 
     @PostMapping("/logout")
-    public CommonResult<String> logout(@RequestParam String userId) {
-        return CommonResult.ok();
+    public R<String> logout(@RequestParam String userId) {
+        return R.ok();
     }
 
 

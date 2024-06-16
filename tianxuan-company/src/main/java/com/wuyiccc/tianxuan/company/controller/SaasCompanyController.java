@@ -1,7 +1,7 @@
 package com.wuyiccc.tianxuan.company.controller;
 
 import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.CompanyPhoto;
 import com.wuyiccc.tianxuan.pojo.User;
@@ -26,40 +26,40 @@ public class SaasCompanyController {
     private CompanyService companyService;
 
     @PostMapping("info")
-    public CommonResult<CompanySimpleVO> info() {
+    public R<CompanySimpleVO> info() {
 
         // 普通用户
         User user = JWTCurrentUserInterceptor.currentUser.get();
 
         CompanySimpleVO company = companyService.getCompany(user.getHrInWhichCompanyId());
 
-        return CommonResult.ok(company);
+        return R.ok(company);
     }
 
     @PostMapping("moreInfo")
-    public CommonResult<CompanyInfoVO> moreInfo() {
+    public R<CompanyInfoVO> moreInfo() {
         // 普通用户
         User user = JWTCurrentUserInterceptor.currentUser.get();
 
         CompanyInfoVO companyInfo = companyService.getCompanyInfo(user.getHrInWhichCompanyId());
-        return CommonResult.ok(companyInfo);
+        return R.ok(companyInfo);
     }
 
     @PostMapping("getPhotos")
-    public CommonResult<CompanyPhoto> getPhotos() {
+    public R<CompanyPhoto> getPhotos() {
 
         User user = JWTCurrentUserInterceptor.currentUser.get();
         String companyId = user.getHrInWhichCompanyId();
         CompanyPhoto companyPhoto = companyService.getPhotos(companyId);
-        return CommonResult.ok(companyPhoto);
+        return R.ok(companyPhoto);
     }
 
     @PostMapping("isVip")
-    public CommonResult<Boolean> isVip() {
+    public R<Boolean> isVip() {
 
         User user = JWTCurrentUserInterceptor.currentUser.get();
 
         boolean flag = companyService.isVip(user.getHrInWhichCompanyId());
-        return CommonResult.ok(flag);
+        return R.ok(flag);
     }
 }

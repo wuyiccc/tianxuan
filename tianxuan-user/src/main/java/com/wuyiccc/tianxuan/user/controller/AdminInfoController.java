@@ -3,7 +3,7 @@ package com.wuyiccc.tianxuan.user.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Admin;
 import com.wuyiccc.tianxuan.pojo.bo.CreateAdminBO;
@@ -33,13 +33,13 @@ public class AdminInfoController extends BaseInfoProperties {
     private AdminService adminService;
 
     @PostMapping("/create")
-    public CommonResult<String> create(@Valid @RequestBody CreateAdminBO createAdminBO) {
+    public R<String> create(@Valid @RequestBody CreateAdminBO createAdminBO) {
         adminService.createAdmin(createAdminBO);
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @PostMapping("/list")
-    public CommonResult<PagedGridResult> list(String accountName
+    public R<PagedGridResult> list(String accountName
             , Integer page
             , Integer limit) {
 
@@ -53,38 +53,38 @@ public class AdminInfoController extends BaseInfoProperties {
 
         PagedGridResult res = adminService.getAdminList(accountName, page, limit);
 
-        return CommonResult.ok(res);
+        return R.ok(res);
     }
 
     @PostMapping("/delete")
-    public CommonResult<String> delete(String username) {
+    public R<String> delete(String username) {
 
 
         adminService.delete(username);
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @PostMapping("/resetPassword")
-    public CommonResult<String> resetPassword(@RequestBody ResetPwdBO resetPwdBO) {
+    public R<String> resetPassword(@RequestBody ResetPwdBO resetPwdBO) {
 
         adminService.resetPassword(resetPwdBO);
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @GetMapping("myInfo")
-    public CommonResult<AdminInfoVO> myInfo() {
+    public R<AdminInfoVO> myInfo() {
 
         Admin admin = JWTCurrentUserInterceptor.adminUser.get();
 
         Admin newAdmin = adminService.getById(admin.getId());
 
         AdminInfoVO adminInfoVO = BeanUtil.copyProperties(newAdmin, AdminInfoVO.class);
-        return CommonResult.ok(adminInfoVO);
+        return R.ok(adminInfoVO);
     }
 
     @PostMapping("updateMyInfo")
-    public CommonResult<String> updateMyInfo(@RequestBody UpdateAdminBO updateAdminBO) {
+    public R<String> updateMyInfo(@RequestBody UpdateAdminBO updateAdminBO) {
 
         Admin admin = JWTCurrentUserInterceptor.adminUser.get();
 
@@ -92,7 +92,7 @@ public class AdminInfoController extends BaseInfoProperties {
         updateAdminBO.setId(admin.getId());
         adminService.updateAdmin(updateAdminBO);
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
 }

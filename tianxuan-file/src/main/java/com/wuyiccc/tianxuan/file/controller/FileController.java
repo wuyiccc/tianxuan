@@ -1,7 +1,7 @@
 package com.wuyiccc.tianxuan.file.controller;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.file.service.FileService;
 import com.wuyiccc.tianxuan.pojo.bo.Base64FileBO;
 import io.minio.errors.*;
@@ -32,49 +32,49 @@ public class FileController {
 
     // app
     @PostMapping("/uploadFace")
-    public CommonResult<String> uploadFace(@RequestParam("file") MultipartFile file, @RequestParam("userId") String userId) throws IOException {
+    public R<String> uploadFace(@RequestParam("file") MultipartFile file, @RequestParam("userId") String userId) throws IOException {
 
         String url = fileService.uploadFile(file, userId);
-        return CommonResult.ok(url);
+        return R.ok(url);
     }
 
 
     // admin
     @PostMapping("/uploadAdminFace")
-    public CommonResult<String> uploadAdminFace(@RequestBody @Valid Base64FileBO base64FileBO) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+    public R<String> uploadAdminFace(@RequestBody @Valid Base64FileBO base64FileBO) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
 
         String url = fileService.uploadAdminFace(base64FileBO);
-        return CommonResult.ok(url);
+        return R.ok(url);
     }
 
     // app
     @PostMapping("/uploadLogo")
-    public CommonResult<String> uploadLogo(@RequestParam("file") MultipartFile file) throws IOException {
+    public R<String> uploadLogo(@RequestParam("file") MultipartFile file) throws IOException {
 
         String url = fileService.uploadLogo(file);
-        return CommonResult.ok(url);
+        return R.ok(url);
     }
 
 
     // app
     @PostMapping("/uploadBizLicense")
-    public CommonResult<String> uploadBizLicense(@RequestParam("file") MultipartFile file) throws IOException {
+    public R<String> uploadBizLicense(@RequestParam("file") MultipartFile file) throws IOException {
 
         String url = fileService.uploadBizLicense(file);
-        return CommonResult.ok(url);
+        return R.ok(url);
     }
 
     // app
     @PostMapping("/uploadAuthLetter")
-    public CommonResult<String> uploadAuthLetter(@RequestParam("file") MultipartFile file) throws IOException {
+    public R<String> uploadAuthLetter(@RequestParam("file") MultipartFile file) throws IOException {
 
         String url = fileService.uploadAuthLetter(file);
-        return CommonResult.ok(url);
+        return R.ok(url);
     }
 
     // app
     @PostMapping("/uploadPhoto")
-    public CommonResult<List<String>> uploadPhoto(@RequestParam("files") List<MultipartFile> files, @RequestParam("companyId") String companyId) throws IOException {
+    public R<List<String>> uploadPhoto(@RequestParam("files") List<MultipartFile> files, @RequestParam("companyId") String companyId) throws IOException {
 
         if (CharSequenceUtil.isBlank(companyId)) {
             companyId = CharSequenceUtil.EMPTY;
@@ -87,7 +87,7 @@ public class FileController {
             imgUrlList.add(url);
         }
 
-        return CommonResult.ok(imgUrlList);
+        return R.ok(imgUrlList);
     }
 
 }

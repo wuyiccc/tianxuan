@@ -2,11 +2,10 @@ package com.wuyiccc.tianxuan.work.controller;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Job;
 import com.wuyiccc.tianxuan.pojo.User;
-import com.wuyiccc.tianxuan.pojo.bo.SearchJobsBO;
 import com.wuyiccc.tianxuan.work.service.JobService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +27,7 @@ public class SaasJobController {
 
 
     @PostMapping("/jobList")
-    public CommonResult<PagedGridResult> jobList(Integer page, Integer limit) {
+    public R<PagedGridResult> jobList(Integer page, Integer limit) {
 
 
         if (Objects.isNull(page)) {
@@ -46,20 +45,20 @@ public class SaasJobController {
 
         PagedGridResult gridResult = jobService.queryJobList(null, companyId, page, limit, null);
 
-        return CommonResult.ok(gridResult);
+        return R.ok(gridResult);
     }
 
 
     @PostMapping("/jobDetail")
-    public CommonResult<Job> jobDetail(@RequestParam String jobId) {
+    public R<Job> jobDetail(@RequestParam String jobId) {
 
         if (CharSequenceUtil.isBlank(jobId)) {
-            return CommonResult.ok();
+            return R.ok();
         }
 
         Job job = jobService.queryJobDetail(null, null, jobId);
 
-        return CommonResult.ok(job);
+        return R.ok(job);
     }
 
 

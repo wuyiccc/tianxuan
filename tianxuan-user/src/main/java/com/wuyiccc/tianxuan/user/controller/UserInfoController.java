@@ -3,7 +3,7 @@ package com.wuyiccc.tianxuan.user.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.util.JWTUtils;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.bo.ModifyUserBO;
@@ -33,7 +33,7 @@ public class UserInfoController {
 
 
     @PostMapping("/modify")
-    public CommonResult<UserVO> modify(@RequestBody ModifyUserBO modifyUserBO) {
+    public R<UserVO> modify(@RequestBody ModifyUserBO modifyUserBO) {
 
         userService.modifyUserInfo(modifyUserBO);
 
@@ -48,30 +48,30 @@ public class UserInfoController {
 
         userVO.setUserToken(uToken);
 
-        return CommonResult.ok(userVO);
+        return R.ok(userVO);
     }
 
     @PostMapping("/freshUserInfo")
-    public CommonResult<UserVO> freshUserInfo(@RequestParam("userId") String userId) {
+    public R<UserVO> freshUserInfo(@RequestParam("userId") String userId) {
 
         User user = userService.getById(userId);
         UserVO userVO = BeanUtil.copyProperties(user, UserVO.class);
 
-        return CommonResult.ok(userVO);
+        return R.ok(userVO);
     }
 
     @PostMapping("/changeUserToCand")
-    public CommonResult<String> changeUserToCand(@RequestParam("hrUserId") String hrUserId) {
+    public R<String> changeUserToCand(@RequestParam("hrUserId") String hrUserId) {
         userService.changeUserToCand(hrUserId);
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @PostMapping("/getInfo")
-    public CommonResult<User> getInfo(@RequestParam String userId) {
+    public R<User> getInfo(@RequestParam String userId) {
 
         User user = userService.getById(userId);
 
-        return CommonResult.ok(user);
+        return R.ok(user);
     }
 
 

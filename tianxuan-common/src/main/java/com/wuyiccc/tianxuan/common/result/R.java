@@ -4,7 +4,7 @@ package com.wuyiccc.tianxuan.common.result;
  * @author wuyiccc
  * @date 2023/6/19 22:59
  */
-public class CommonResult<T> {
+public class R<T> {
 
     // 响应业务状态码
     private Integer status;
@@ -21,16 +21,16 @@ public class CommonResult<T> {
     /**
      * 成功返回，带有数据的，直接往OK方法丢data数据即可
      */
-    public static <T> CommonResult<T> ok(T data) {
-        return new CommonResult<>(data);
+    public static <T> R<T> ok(T data) {
+        return new R<>(data);
     }
     /**
      * 成功返回，不带有数据的，直接调用ok方法，data无须传入（其实就是null）
      */
-    public static <T> CommonResult<T> ok() {
-        return new CommonResult<T>(ResponseStatusEnum.SUCCESS);
+    public static <T> R<T> ok() {
+        return new R<T>(ResponseStatusEnum.SUCCESS);
     }
-    public CommonResult(T data) {
+    public R(T data) {
         this.status = ResponseStatusEnum.SUCCESS.status();
         this.msg = ResponseStatusEnum.SUCCESS.msg();
         this.success = ResponseStatusEnum.SUCCESS.success();
@@ -41,28 +41,28 @@ public class CommonResult<T> {
     /**
      * 错误返回，直接调用error方法即可，当然也可以在ResponseStatusEnum中自定义错误后再返回也都可以
      */
-    public static <T> CommonResult<T> error() {
-        return new CommonResult<>(ResponseStatusEnum.FAILED);
+    public static <T> R<T> error() {
+        return new R<>(ResponseStatusEnum.FAILED);
     }
 
 
     /**
      * 错误返回，直接返回错误的消息
      */
-    public static <T> CommonResult<T> errorMsg(String msg) {
-        return new CommonResult<>(ResponseStatusEnum.FAILED, msg);
+    public static <T> R<T> errorMsg(String msg) {
+        return new R<>(ResponseStatusEnum.FAILED, msg);
     }
 
-    public static <T> CommonResult<T> errorData(T errorData) {
-        return new CommonResult<>(ResponseStatusEnum.FAILED, errorData);
+    public static <T> R<T> errorData(T errorData) {
+        return new R<>(ResponseStatusEnum.FAILED, errorData);
     }
 
     /**
      * 错误返回，token异常，一些通用的可以在这里统一定义
      * @return
      */
-    public static <T> CommonResult<T> errorTicket() {
-        return new CommonResult<>(ResponseStatusEnum.TICKET_INVALID);
+    public static <T> R<T> errorTicket() {
+        return new R<>(ResponseStatusEnum.TICKET_INVALID);
     }
 
     /**
@@ -70,38 +70,38 @@ public class CommonResult<T> {
      * @param responseStatus
      * @return
      */
-    public static <T> CommonResult<T> errorCustom(ResponseStatusEnum responseStatus) {
-        return new CommonResult<>(responseStatus);
+    public static <T> R<T> errorCustom(ResponseStatusEnum responseStatus) {
+        return new R<>(responseStatus);
     }
-    public static <T> CommonResult<T> exception(ResponseStatusEnum responseStatus) {
-        return new CommonResult<>(responseStatus);
+    public static <T> R<T> exception(ResponseStatusEnum responseStatus) {
+        return new R<>(responseStatus);
     }
 
-    public CommonResult(ResponseStatusEnum responseStatus) {
+    public R(ResponseStatusEnum responseStatus) {
         this.status = responseStatus.status();
         this.msg = responseStatus.msg();
         this.success = responseStatus.success();
     }
-    public CommonResult(ResponseStatusEnum responseStatus, T data) {
+    public R(ResponseStatusEnum responseStatus, T data) {
         this.status = responseStatus.status();
         this.msg = responseStatus.msg();
         this.success = responseStatus.success();
         this.data = data;
     }
 
-    public CommonResult(ResponseStatusEnum responseStatus, String msg) {
+    public R(ResponseStatusEnum responseStatus, String msg) {
         this.status = responseStatus.status();
         this.msg = msg;
         this.success = responseStatus.success();
     }
 
-    public CommonResult(Integer status, String msg, Boolean success) {
+    public R(Integer status, String msg, Boolean success) {
         this.status = status;
         this.msg = msg;
         this.success = success;
     }
 
-    public CommonResult() {
+    public R() {
     }
 
     public Integer getStatus() {

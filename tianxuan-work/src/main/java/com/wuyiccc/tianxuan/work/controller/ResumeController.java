@@ -2,14 +2,13 @@ package com.wuyiccc.tianxuan.work.controller;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrPool;
-import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.enumeration.ActiveTimeEnum;
 import com.wuyiccc.tianxuan.common.enumeration.EduEnum;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.exception.RemoteCallCustomException;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.common.util.LocalDateUtils;
@@ -51,7 +50,7 @@ public class ResumeController {
      * 初始化用户简历
      */
     @PostMapping("init")
-    public CommonResult<String> init(@RequestParam("userId") String userId) {
+    public R<String> init(@RequestParam("userId") String userId) {
 
         // 远程调用接口重新try-catch
         try {
@@ -59,140 +58,140 @@ public class ResumeController {
         } catch (Exception e) {
             throw new RemoteCallCustomException(e.getMessage());
         }
-        return CommonResult.ok();
+        return R.ok();
     }
 
 
     @PostMapping("modify")
-    public CommonResult<String> modify(@RequestBody EditResumeBO editResumeBO) {
+    public R<String> modify(@RequestBody EditResumeBO editResumeBO) {
 
         resumeService.modify(editResumeBO);
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @PostMapping("/queryMyResume")
-    public CommonResult<ResumeVO> queryMyResume(String userId) {
+    public R<ResumeVO> queryMyResume(String userId) {
 
         if (CharSequenceUtil.isBlank(userId)) {
             throw new CustomException("用户id不能为空");
         }
 
         ResumeVO resume = resumeService.queryMyResume(userId);
-        return CommonResult.ok(resume);
+        return R.ok(resume);
     }
 
     @PostMapping("/editWorkExp")
-    public CommonResult<String> editWorkExp(@RequestBody EditWorkExpBO editWorkExpBO) {
+    public R<String> editWorkExp(@RequestBody EditWorkExpBO editWorkExpBO) {
 
         resumeService.editWorkExp(editWorkExpBO);
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @PostMapping("/getWorkExp")
-    public CommonResult<ResumeWorkExp> getWorkExp(String workExpId, String userId) {
+    public R<ResumeWorkExp> getWorkExp(String workExpId, String userId) {
 
         ResumeWorkExp resumeWorkExp = resumeService.getWorkExp(workExpId, userId);
-        return CommonResult.ok(resumeWorkExp);
+        return R.ok(resumeWorkExp);
     }
 
     @PostMapping("/deleteWorkExp")
-    public CommonResult<String> deleteWorkExp(String workExpId, String userId) {
+    public R<String> deleteWorkExp(String workExpId, String userId) {
 
 
         resumeService.deleteWorkExp(workExpId, userId);
 
-        return CommonResult.ok("删除成功");
+        return R.ok("删除成功");
     }
 
     @PostMapping("/editProjectExp")
-    public CommonResult<String> editProjectExp(@RequestBody EditProjectExpBO editProjectExpBO) {
+    public R<String> editProjectExp(@RequestBody EditProjectExpBO editProjectExpBO) {
 
         resumeService.editProjectExp(editProjectExpBO);
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @PostMapping("/getProjectExp")
-    public CommonResult<ResumeProjectExp> getProjectExp(@RequestParam String projectExpId, @RequestParam String userId) {
+    public R<ResumeProjectExp> getProjectExp(@RequestParam String projectExpId, @RequestParam String userId) {
 
         ResumeProjectExp resumeProjectExp = resumeService.getProjectExp(projectExpId, userId);
-        return CommonResult.ok(resumeProjectExp);
+        return R.ok(resumeProjectExp);
     }
 
 
     @PostMapping("/deleteProjectExp")
-    public CommonResult<String> deleteProjectExp(@RequestParam String projectExpId, @RequestParam String userId) {
+    public R<String> deleteProjectExp(@RequestParam String projectExpId, @RequestParam String userId) {
 
 
         resumeService.deleteProjectExp(projectExpId, userId);
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
 
     @PostMapping("/editEducation")
-    public CommonResult<String> editEducation(@RequestBody EditEducationBO editEducationBO) {
+    public R<String> editEducation(@RequestBody EditEducationBO editEducationBO) {
 
 
         resumeService.editEducation(editEducationBO);
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @PostMapping("/getEducation")
-    public CommonResult<ResumeEducation> getEducation(@RequestParam String eduId, @RequestParam String userId) {
+    public R<ResumeEducation> getEducation(@RequestParam String eduId, @RequestParam String userId) {
 
 
         ResumeEducation resumeEducation = resumeService.getEducation(eduId, userId);
-        return CommonResult.ok(resumeEducation);
+        return R.ok(resumeEducation);
     }
 
     @PostMapping("/deleteEducation")
-    public CommonResult<String> deleteEducation(@RequestParam String eduId, @RequestParam String userId) {
+    public R<String> deleteEducation(@RequestParam String eduId, @RequestParam String userId) {
 
         resumeService.deleteEducation(eduId, userId);
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @PostMapping("/editJobExpect")
-    public CommonResult<String> editJobExpect(@RequestBody @Valid EditResumeExpectBO editResumeExpectBO) {
+    public R<String> editJobExpect(@RequestBody @Valid EditResumeExpectBO editResumeExpectBO) {
 
         resumeService.editJobExpect(editResumeExpectBO);
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
 
     @PostMapping("/getMyResumeExpectList")
-    public CommonResult<List<ResumeExpect>> getMyResumeExpectList(@RequestParam String resumeId, @RequestParam String userId) {
+    public R<List<ResumeExpect>> getMyResumeExpectList(@RequestParam String resumeId, @RequestParam String userId) {
 
         if (CharSequenceUtil.isBlank(resumeId) || CharSequenceUtil.isBlank(userId)) {
-            return CommonResult.error();
+            return R.error();
         }
 
 
         List<ResumeExpect> expectList = resumeService.getMyResumeExpectList(resumeId, userId);
 
-        return CommonResult.ok(expectList);
+        return R.ok(expectList);
     }
 
 
     @PostMapping("/deleteMyResumeExpect")
-    public CommonResult<String> deleteMyResumeExpect(@RequestParam String resumeExpectId, @RequestParam String userId) {
+    public R<String> deleteMyResumeExpect(@RequestParam String resumeExpectId, @RequestParam String userId) {
 
         resumeService.deleteMyResumeExpect(resumeExpectId, userId);
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
 
     //@SentinelResource(value = "test/refresh", blockHandler = "myBlockHandler", fallback = "myFallbackHandler")
     @PostMapping("/refresh")
-    public CommonResult<String> refresh(@RequestParam String resumeId, @RequestParam String userId) {
+    public R<String> refresh(@RequestParam String resumeId, @RequestParam String userId) {
 
         if (CharSequenceUtil.isBlank(resumeId) || CharSequenceUtil.isBlank(userId)) {
-            return CommonResult.error();
+            return R.error();
         }
 
         String maxCountStr = redisUtils.get(BaseInfoProperties.REDIS_MAX_RESUME_REFRESH_COUNTS);
@@ -226,27 +225,27 @@ public class ResumeController {
             redisUtils.increment(redisKey, 1);
         } else {
 
-            return CommonResult.errorCustom(ResponseStatusEnum.RESUME_MAX_LIMIT_ERROR);
+            return R.errorCustom(ResponseStatusEnum.RESUME_MAX_LIMIT_ERROR);
         }
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
-    public CommonResult<String> myBlockHandler(String resumeId, String userId, BlockException ex) {
+    public R<String> myBlockHandler(String resumeId, String userId, BlockException ex) {
 
-        return CommonResult.errorMsg("刷新失败, 请稍后再试");
+        return R.errorMsg("刷新失败, 请稍后再试");
     }
 
     /**
      * 异常降级兜底 fallback绑定的方法发生异常之后，就会调用该方法
      */
-    public CommonResult<String> myFallbackHandler(String resumeId, String userId) {
+    public R<String> myFallbackHandler(String resumeId, String userId) {
 
-        return CommonResult.errorMsg("myFallbackHandler");
+        return R.errorMsg("myFallbackHandler");
     }
 
     @PostMapping("/searchResumes")
-    public CommonResult<PagedGridResult> searchResumes(@RequestBody SearchResumeBO searchResumeBO
+    public R<PagedGridResult> searchResumes(@RequestBody SearchResumeBO searchResumeBO
             , @RequestParam Integer page
             , @RequestParam Integer limit) {
 
@@ -264,6 +263,6 @@ public class ResumeController {
 
         PagedGridResult pagedGridResult = resumeService.searchResumes(searchResumeBO, page, limit);
 
-        return CommonResult.ok(pagedGridResult);
+        return R.ok(pagedGridResult);
     }
 }

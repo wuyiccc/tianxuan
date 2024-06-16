@@ -2,7 +2,7 @@ package com.wuyiccc.tianxuan.work.controller;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import com.wuyiccc.tianxuan.common.enumeration.JobStatusEnum;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Job;
 import com.wuyiccc.tianxuan.pojo.bo.EditJobBO;
@@ -31,22 +31,22 @@ public class AppJobController {
 
 
     @PostMapping("/modify")
-    public CommonResult<String> modify(@RequestBody @Valid EditJobBO editJobBO) {
+    public R<String> modify(@RequestBody @Valid EditJobBO editJobBO) {
 
         jobService.modifyJobDetail(editJobBO);
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @PostMapping("hr/jobList")
-    public CommonResult<PagedGridResult> jobListHR(String hrId,
-                                                   String companyId,
-                                                   Integer page,
-                                                   Integer limit,
-                                                   Integer status) {
+    public R<PagedGridResult> jobListHR(String hrId,
+                                        String companyId,
+                                        Integer page,
+                                        Integer limit,
+                                        Integer status) {
 
         if (StringUtils.isBlank(hrId)) {
-            return CommonResult.errorMsg("hrId 不能为空");
+            return R.errorMsg("hrId 不能为空");
         }
 
         if (page == null) page = 1;
@@ -58,12 +58,12 @@ public class AppJobController {
                 limit,
                 status);
 
-        return CommonResult.ok(gridResult);
+        return R.ok(gridResult);
     }
 
 
     @PostMapping("/hr/jobDetail")
-    public CommonResult<Job> jobDetail(
+    public R<Job> jobDetail(
             @RequestParam String hrId,
             @RequestParam String companyId,
             @RequestParam String jobId
@@ -71,18 +71,18 @@ public class AppJobController {
 
         if (CharSequenceUtil.isBlank(hrId) || CharSequenceUtil.isBlank(companyId) || CharSequenceUtil.isBlank(jobId)) {
 
-            return CommonResult.error();
+            return R.error();
         }
 
 
         Job job = jobService.queryJobDetail(hrId, companyId, jobId);
 
 
-        return CommonResult.ok(job);
+        return R.ok(job);
     }
 
     @PostMapping("close")
-    public CommonResult<String> close(
+    public R<String> close(
             @RequestParam String hrId
             , @RequestParam String companyId
             , @RequestParam String jobId
@@ -90,15 +90,15 @@ public class AppJobController {
     ) {
 
         if (CharSequenceUtil.isBlank(hrId) || CharSequenceUtil.isBlank(companyId) || CharSequenceUtil.isBlank(jobId)) {
-            return CommonResult.error();
+            return R.error();
         }
 
         jobService.modifyStatus(hrId, companyId, jobId, JobStatusEnum.CLOSE.code);
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @PostMapping("open")
-    public CommonResult<String> open(
+    public R<String> open(
             @RequestParam String hrId
             , @RequestParam String companyId
             , @RequestParam String jobId
@@ -106,16 +106,16 @@ public class AppJobController {
     ) {
 
         if (CharSequenceUtil.isBlank(hrId) || CharSequenceUtil.isBlank(companyId) || CharSequenceUtil.isBlank(jobId)) {
-            return CommonResult.error();
+            return R.error();
         }
 
         jobService.modifyStatus(hrId, companyId, jobId, JobStatusEnum.OPEN.code);
-        return CommonResult.ok();
+        return R.ok();
     }
 
 
     @PostMapping("/searchJobs")
-    public CommonResult<PagedGridResult> searchJobs(@RequestBody SearchJobsBO searchJobsBO
+    public R<PagedGridResult> searchJobs(@RequestBody SearchJobsBO searchJobsBO
             , Integer page
             , Integer limit) {
 
@@ -127,7 +127,7 @@ public class AppJobController {
         }
 
         PagedGridResult gridResult = jobService.searchJobs(searchJobsBO, page, limit);
-        return CommonResult.ok(gridResult);
+        return R.ok(gridResult);
     }
 
 }

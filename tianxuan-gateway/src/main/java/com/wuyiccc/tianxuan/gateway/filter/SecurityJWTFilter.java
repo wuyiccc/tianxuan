@@ -1,7 +1,7 @@
 package com.wuyiccc.tianxuan.gateway.filter;
 
 import com.google.gson.Gson;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.common.util.JWTUtils;
 import com.wuyiccc.tianxuan.gateway.config.TianxuanGatewayExcludeConfig;
@@ -119,7 +119,7 @@ public class SecurityJWTFilter implements GlobalFilter, Ordered {
     private Mono<Void> renderErrorMsg(ServerWebExchange exchange, ResponseStatusEnum responseStatusEnum) {
 
         ServerHttpResponse response = exchange.getResponse();
-        CommonResult<Object> jsonResult = CommonResult.exception(responseStatusEnum);
+        R<Object> jsonResult = R.exception(responseStatusEnum);
 
         response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
 

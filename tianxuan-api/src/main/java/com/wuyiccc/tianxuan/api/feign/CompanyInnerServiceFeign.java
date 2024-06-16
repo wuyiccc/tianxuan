@@ -1,11 +1,10 @@
 package com.wuyiccc.tianxuan.api.feign;
 
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -17,5 +16,5 @@ import java.util.List;
 public interface CompanyInnerServiceFeign {
 
     @PostMapping("/companyInner/getList")
-    CommonResult<List<CompanyInfoVO>> getList(@RequestBody List<String> companyIdList);
+    R<List<CompanyInfoVO>> getList(@RequestBody List<String> companyIdList);
 }

@@ -12,7 +12,7 @@ import com.wuyiccc.tianxuan.api.feign.CompanyInnerServiceFeign;
 import com.wuyiccc.tianxuan.api.feign.UserInfoInnerServiceFeign;
 import com.wuyiccc.tianxuan.common.enumeration.JobStatusEnum;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Job;
 import com.wuyiccc.tianxuan.pojo.bo.EditJobBO;
@@ -207,11 +207,11 @@ public class JobServiceImpl implements JobService {
         List<String> hrIdList = jobList.stream().map(Job::getHrId).collect(Collectors.toList());
         List<String> companyIdList = jobList.stream().map(Job::getCompanyId).collect(Collectors.toList());
 
-        CommonResult<List<UserVO>> userVOListRes = userInfoInnerServiceFeign.getList(hrIdList);
+        R<List<UserVO>> userVOListRes = userInfoInnerServiceFeign.getList(hrIdList);
         List<UserVO> userVOList = userVOListRes.getData();
         Map<String, UserVO> userCache = CollStreamUtil.toIdentityMap(userVOList, UserVO::getId);
 
-        CommonResult<List<CompanyInfoVO>> companyInfoVORes = companyInnerServiceFeign.getList(companyIdList);
+        R<List<CompanyInfoVO>> companyInfoVORes = companyInnerServiceFeign.getList(companyIdList);
         List<CompanyInfoVO> companyInfoVOList = companyInfoVORes.getData();
         Map<String, CompanyInfoVO> companyCache = CollStreamUtil.toIdentityMap(companyInfoVOList, CompanyInfoVO::getCompanyId);
 

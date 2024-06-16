@@ -1,7 +1,7 @@
 package com.wuyiccc.tianxuan.resource.controller;
 
 import com.wuyiccc.tianxuan.common.exception.CustomException;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.DataDictionary;
 import com.wuyiccc.tianxuan.pojo.bo.DataDictionaryBO;
@@ -33,15 +33,15 @@ public class DataDictController {
     private ThreadPoolExecutor threadPoolExecutor;
 
     @PostMapping("create")
-    public CommonResult<String> create(@RequestBody DataDictionaryBO dataDictionaryBO) {
+    public R<String> create(@RequestBody DataDictionaryBO dataDictionaryBO) {
 
         dataDictionaryService.createOrUpdateDataDictionary(dataDictionaryBO);
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @PostMapping("list")
-    public CommonResult<PagedGridResult> list(String typeName, String itemValue, Integer page, Integer limit) {
+    public R<PagedGridResult> list(String typeName, String itemValue, Integer page, Integer limit) {
 
         if (Objects.isNull(page)) {
             page = 1;
@@ -51,37 +51,37 @@ public class DataDictController {
         }
 
         PagedGridResult pagedGridResult = dataDictionaryService.getDataDictListPaged(typeName, itemValue, page, limit);
-        return CommonResult.ok(pagedGridResult);
+        return R.ok(pagedGridResult);
     }
 
     @PostMapping("modify")
-    public CommonResult<String> modify(@RequestBody DataDictionaryBO dataDictionaryBO) {
+    public R<String> modify(@RequestBody DataDictionaryBO dataDictionaryBO) {
 
         if (Objects.isNull(dataDictionaryBO.getId())) {
             throw new CustomException("修改的数据字典id不能为空");
         }
 
         dataDictionaryService.createOrUpdateDataDictionary(dataDictionaryBO);
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @PostMapping("item")
-    public CommonResult<DataDictionary> item(String dictId) {
+    public R<DataDictionary> item(String dictId) {
 
         DataDictionary dataDictionary = dataDictionaryService.getDataDictionary(dictId);
-        return CommonResult.ok(dataDictionary);
+        return R.ok(dataDictionary);
     }
 
 
     @PostMapping("delete")
-    public CommonResult<String> delete(String dictId) {
+    public R<String> delete(String dictId) {
 
         dataDictionaryService.delete(dictId);
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @PostMapping("getItemsByKeys")
-    public CommonResult<CompanyPointsVO> getItemsByKeys(@RequestBody QueryDictItemBO queryDictItemBO) throws ExecutionException, InterruptedException {
+    public R<CompanyPointsVO> getItemsByKeys(@RequestBody QueryDictItemBO queryDictItemBO) throws ExecutionException, InterruptedException {
 
         CompanyPointsVO resVO = new CompanyPointsVO();
 
@@ -120,6 +120,6 @@ public class DataDictController {
 
         allOfFuture.get();
 
-        return CommonResult.ok(resVO);
+        return R.ok(resVO);
     }
 }

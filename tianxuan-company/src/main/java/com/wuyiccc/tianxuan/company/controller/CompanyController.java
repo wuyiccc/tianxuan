@@ -3,9 +3,8 @@ package com.wuyiccc.tianxuan.company.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.wuyiccc.tianxuan.api.feign.UserInfoInnerServiceFeign;
-import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.company.service.CompanyService;
 import com.wuyiccc.tianxuan.pojo.Company;
 import com.wuyiccc.tianxuan.pojo.CompanyPhoto;
@@ -39,23 +38,23 @@ public class CompanyController {
     private UserInfoInnerServiceFeign userInfoInnerServiceFeign;
 
     @PostMapping("/getByFullName")
-    public CommonResult<CompanySimpleVO> getByFullName(String fullName) {
+    public R<CompanySimpleVO> getByFullName(String fullName) {
 
         if (CharSequenceUtil.isBlank(fullName)) {
-            return CommonResult.error();
+            return R.error();
         }
 
         Company company = companyService.getByFullName(fullName);
 
         if (Objects.isNull(company)) {
-            return CommonResult.ok();
+            return R.ok();
         }
 
-        return CommonResult.ok(BeanUtil.copyProperties(company, CompanySimpleVO.class));
+        return R.ok(BeanUtil.copyProperties(company, CompanySimpleVO.class));
     }
 
     @PostMapping("createNewCompany")
-    public CommonResult<String> createNewCompany(@RequestBody CreateCompanyBO createCompanyBO) {
+    public R<String> createNewCompany(@RequestBody CreateCompanyBO createCompanyBO) {
 
         String companyId = createCompanyBO.getCompanyId();
         if (CharSequenceUtil.isBlank(companyId)) {
@@ -66,65 +65,65 @@ public class CompanyController {
             companyId = companyService.resetNewCompany(createCompanyBO);
         }
 
-        return CommonResult.ok(companyId);
+        return R.ok(companyId);
     }
 
     @PostMapping("getInfo")
-    public CommonResult<CompanySimpleVO> getInfo(String companyId, boolean withHRCounts) {
+    public R<CompanySimpleVO> getInfo(String companyId, boolean withHRCounts) {
 
         CompanySimpleVO companySimpleVO = companyService.getCompany(companyId);
 
         if (withHRCounts) {
 
-            CommonResult<Long> result = userInfoInnerServiceFeign.getCountsByCompanyId(companyId);
+            R<Long> result = userInfoInnerServiceFeign.getCountsByCompanyId(companyId);
             companySimpleVO.setHrCounts(result.getData());
         }
 
-        return CommonResult.ok(companySimpleVO);
+        return R.ok(companySimpleVO);
     }
 
     @PostMapping("goReviewCompany")
-    public CommonResult<String> goReviewCompany(@RequestBody @Valid ReviewCompanyBO reviewCompanyBO) {
+    public R<String> goReviewCompany(@RequestBody @Valid ReviewCompanyBO reviewCompanyBO) {
 
 
         // 微服务调用, 绑定HR企业id
-        CommonResult<User> userCommonResult = userInfoInnerServiceFeign.bindingHRToCompany(reviewCompanyBO.getHrUserId(), reviewCompanyBO.getRealname(), reviewCompanyBO.getCompanyId());
+        R<User> userR = userInfoInnerServiceFeign.bindingHRToCompany(reviewCompanyBO.getHrUserId(), reviewCompanyBO.getRealname(), reviewCompanyBO.getCompanyId());
 
-        String hrMobile = userCommonResult.getData().getMobile();
+        String hrMobile = userR.getData().getMobile();
         // 保存审核信息, 修改状态为 审核中
         reviewCompanyBO.setHrMobile(hrMobile);
 
         companyService.commitReviewCompanyInfo(reviewCompanyBO);
 
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @PostMapping("information")
-    public CommonResult<CompanySimpleVO> information(String hrUserId) {
+    public R<CompanySimpleVO> information(String hrUserId) {
 
-        CommonResult<UserVO> userVOCommonResult = userInfoInnerServiceFeign.get(hrUserId);
+        R<UserVO> userVOR = userInfoInnerServiceFeign.get(hrUserId);
 
-        UserVO userVO = userVOCommonResult.getData();
+        UserVO userVO = userVOR.getData();
 
         CompanySimpleVO company = companyService.getCompany(userVO.getHrInWhichCompanyId());
         CompanySimpleVO companySimpleVO = BeanUtil.copyProperties(company, CompanySimpleVO.class);
 
-        return CommonResult.ok(companySimpleVO);
+        return R.ok(companySimpleVO);
     }
 
 
     @PostMapping("moreInfo")
-    public CommonResult<CompanyInfoVO> moreInfo(String companyId) {
+    public R<CompanyInfoVO> moreInfo(String companyId) {
         // 普通用户
 
         CompanyInfoVO companyInfo = companyService.getCompanyInfo(companyId);
-        return CommonResult.ok(companyInfo);
+        return R.ok(companyInfo);
     }
 
 
     @PostMapping("modify")
-    public CommonResult<String> modify(@RequestBody ModifyCompanyInfoBO companyInfoBO) {
+    public R<String> modify(@RequestBody ModifyCompanyInfoBO companyInfoBO) {
 
         checkUser(companyInfoBO.getCurrentUserId(), companyInfoBO.getCompanyId());
 
@@ -134,7 +133,7 @@ public class CompanyController {
             companyService.updateCompanyPhoto(companyInfoBO);
         }
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
     private void checkUser(String currentUserId, String companyId) {
@@ -150,17 +149,17 @@ public class CompanyController {
     }
 
     @PostMapping("getPhotos")
-    public CommonResult<CompanyPhoto> getPhotos(String companyId) {
+    public R<CompanyPhoto> getPhotos(String companyId) {
 
         CompanyPhoto companyPhoto = companyService.getPhotos(companyId);
-        return CommonResult.ok(companyPhoto);
+        return R.ok(companyPhoto);
     }
 
     @PostMapping("isVip")
-    public CommonResult<Boolean> isVip(String companyId) {
+    public R<Boolean> isVip(String companyId) {
 
 
         boolean flag = companyService.isVip(companyId);
-        return CommonResult.ok(flag);
+        return R.ok(flag);
     }
 }

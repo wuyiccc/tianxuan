@@ -1,6 +1,6 @@
 package com.wuyiccc.tianxuan.api.feign;
 
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +17,6 @@ public interface WorkMicroServiceFeign {
      * 初始化用户简历
      */
     @PostMapping("/resume/init")
-    public CommonResult<String> init(@RequestParam("userId") String userId);
+    public R<String> init(@RequestParam("userId") String userId);
 
 }

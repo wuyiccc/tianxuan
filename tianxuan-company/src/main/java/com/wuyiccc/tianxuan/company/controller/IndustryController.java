@@ -3,7 +3,7 @@ package com.wuyiccc.tianxuan.company.controller;
 import cn.hutool.json.JSONUtil;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.util.RedisUtils;
 import com.wuyiccc.tianxuan.company.service.IndustryService;
 import com.wuyiccc.tianxuan.pojo.Industry;
@@ -28,7 +28,7 @@ public class IndustryController {
     private RedisUtils redisUtils;
 
     @PostMapping("/createNode")
-    public CommonResult<String> createNode(@RequestBody Industry industry) {
+    public R<String> createNode(@RequestBody Industry industry) {
 
 
         // 1. 判断节点是否已经存
@@ -42,34 +42,34 @@ public class IndustryController {
 
         resetCache(industry);
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @GetMapping("/getTopList")
-    public CommonResult<List<Industry>> getTopIndustryList() {
+    public R<List<Industry>> getTopIndustryList() {
         List<Industry> resList = industryService.getTopIndustryList();
-        return CommonResult.ok(resList);
+        return R.ok(resList);
     }
 
     @GetMapping("/children/{industryId}")
-    public CommonResult<List<Industry>> children(@PathVariable("industryId") String industryId) {
+    public R<List<Industry>> children(@PathVariable("industryId") String industryId) {
 
         List<Industry> resList = industryService.getChildrenIndustryList(industryId);
 
-        return CommonResult.ok(resList);
+        return R.ok(resList);
     }
 
     @PostMapping("/updateNode")
-    public CommonResult<String> updateNode(@RequestBody Industry industry) {
+    public R<String> updateNode(@RequestBody Industry industry) {
 
         industryService.updateNode(industry);
 
         resetCache(industry);
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @DeleteMapping("/deleteNode/{industryId}")
-    public CommonResult<String> deleteNode(@PathVariable("industryId") String industryId) {
+    public R<String> deleteNode(@PathVariable("industryId") String industryId) {
 
         Industry industry = industryService.getById(industryId);
 
@@ -85,7 +85,7 @@ public class IndustryController {
 
         resetCache(industry);
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
     // 重置缓存必须确保前面的更新事务已经提交

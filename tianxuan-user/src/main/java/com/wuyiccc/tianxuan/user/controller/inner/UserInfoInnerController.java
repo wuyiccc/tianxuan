@@ -3,7 +3,7 @@ package com.wuyiccc.tianxuan.user.controller.inner;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.util.JWTUtils;
 import com.wuyiccc.tianxuan.pojo.User;
 import com.wuyiccc.tianxuan.pojo.vo.UserVO;
@@ -31,14 +31,14 @@ public class UserInfoInnerController {
 
 
     @PostMapping("getCountsByCompanyId")
-    public CommonResult<Long> getCountsByCompanyId(@RequestParam("companyId") String companyId) {
+    public R<Long> getCountsByCompanyId(@RequestParam("companyId") String companyId) {
 
         Long count = userService.getCountsByCompanyId(companyId);
-        return CommonResult.ok(count);
+        return R.ok(count);
     }
 
     @PostMapping("bindingHRToCompany")
-    public CommonResult<User> bindingHRToCompany(
+    public R<User> bindingHRToCompany(
             @RequestParam("hrUserId") String hrUserId,
             @RequestParam("realname") String realname,
             @RequestParam("companyId") String companyId
@@ -48,33 +48,33 @@ public class UserInfoInnerController {
 
         User user = userService.getById(hrUserId);
 
-        return CommonResult.ok(user);
+        return R.ok(user);
     }
 
     @PostMapping("get")
-    public CommonResult<UserVO> get(@RequestParam("userId") String userId) {
+    public R<UserVO> get(@RequestParam("userId") String userId) {
 
         User user = userService.getById(userId);
         UserVO userVO = BeanUtil.copyProperties(user, UserVO.class);
 
         String uToken = jwtUtils.createJWTWithPrefix(JSONUtil.toJsonStr(user), BaseInfoProperties.TOKEN_USER_PREFIX);
         userVO.setUserToken(uToken);
-        return CommonResult.ok(userVO);
+        return R.ok(userVO);
     }
 
     @PostMapping("changeUserToHR")
-    public CommonResult<String> changeUserToHR(@RequestParam("hrUserId") String hrUserId) {
+    public R<String> changeUserToHR(@RequestParam("hrUserId") String hrUserId) {
 
         userService.updateUserToHR(hrUserId);
-        return CommonResult.ok();
+        return R.ok();
     }
 
     @PostMapping("/getList")
-    public CommonResult<List<UserVO>> getList(@RequestBody List<String> userIdList) {
+    public R<List<UserVO>> getList(@RequestBody List<String> userIdList) {
 
         List<User> userList = userService.getByIds(userIdList);
 
         List<UserVO> userVOList = BeanUtil.copyToList(userList, UserVO.class);
-        return CommonResult.ok(userVOList);
+        return R.ok(userVOList);
     }
 }

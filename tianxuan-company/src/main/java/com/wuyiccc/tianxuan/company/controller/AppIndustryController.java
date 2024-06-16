@@ -2,7 +2,7 @@ package com.wuyiccc.tianxuan.company.controller;
 
 import cn.hutool.json.JSONUtil;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.util.RedisUtils;
 import com.wuyiccc.tianxuan.company.service.IndustryService;
 import com.wuyiccc.tianxuan.pojo.Industry;
@@ -32,7 +32,7 @@ public class AppIndustryController {
 
 
     @GetMapping("/getTopList")
-    public CommonResult<List<Industry>> getTopIndustryList() {
+    public R<List<Industry>> getTopIndustryList() {
 
         // 先从redis中查询, 如果没有, 再从db中查询后并放入redis中
         String topIndustryListStr = redisUtils.get(BaseInfoProperties.TOP_INDUSTRY_LIST);
@@ -46,12 +46,12 @@ public class AppIndustryController {
             resList = industryService.getTopIndustryList();
             redisUtils.set(BaseInfoProperties.TOP_INDUSTRY_LIST, JSONUtil.toJsonStr(resList), 10 * 60);
         }
-        return CommonResult.ok(resList);
+        return R.ok(resList);
     }
 
 
     @GetMapping("/getThirdListByTop/{topIndustryId}")
-    public CommonResult<List<Industry>> getThirdIndustryListByTop(@PathVariable("topIndustryId") String topIndustryId) {
+    public R<List<Industry>> getThirdIndustryListByTop(@PathVariable("topIndustryId") String topIndustryId) {
 
         String resListStr = redisUtils.get(BaseInfoProperties.THIRD_INDUSTRY_LIST + ":byTopId:" + topIndustryId);
 
@@ -64,7 +64,7 @@ public class AppIndustryController {
             redisUtils.set(BaseInfoProperties.THIRD_INDUSTRY_LIST + ":byTopId:" + topIndustryId, JSONUtil.toJsonStr(resList), 10 * 60);
         }
 
-        return CommonResult.ok(resList);
+        return R.ok(resList);
     }
 
 

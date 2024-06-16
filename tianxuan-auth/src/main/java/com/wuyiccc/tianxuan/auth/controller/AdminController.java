@@ -4,7 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.auth.service.AdminService;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
-import com.wuyiccc.tianxuan.common.result.CommonResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.util.JWTUtils;
 import com.wuyiccc.tianxuan.pojo.Admin;
 import com.wuyiccc.tianxuan.pojo.bo.AdminBO;
@@ -42,32 +42,32 @@ public class AdminController extends BaseInfoProperties {
     private RedissonClient redissonClient;
 
     @PostMapping("/login")
-    public CommonResult<String> login(@Valid @RequestBody AdminBO adminBO) {
+    public R<String> login(@Valid @RequestBody AdminBO adminBO) {
 
         Admin admin = adminService.adminLogin(adminBO);
         String token = jwtUtils.createJWTWithPrefix(JSONUtil.toJsonStr(admin), TOKEN_ADMIN_PREFIX);
-        return CommonResult.ok(token);
+        return R.ok(token);
     }
 
 
     @GetMapping("/info")
-    public CommonResult<AdminVO> info() {
+    public R<AdminVO> info() {
 
         Admin admin = JWTCurrentUserInterceptor.adminUser.get();
         AdminVO adminVO = new AdminVO();
         BeanUtils.copyProperties(admin, adminVO);
-        return CommonResult.ok(adminVO);
+        return R.ok(adminVO);
     }
 
     @PostMapping("/logout")
-    public CommonResult<String> logout() {
+    public R<String> logout() {
 //        redisUtils.del(REDIS_USER_TOKEN + ":" + userId);
-        return CommonResult.ok();
+        return R.ok();
     }
 
 
     @GetMapping("/hello")
-    public CommonResult<String> hello() throws InterruptedException {
+    public R<String> hello() throws InterruptedException {
 
         RLock lock1 = redissonClient.getLock("lock1");
         RLock lock2 = redissonClient.getLock("lock2");
@@ -80,7 +80,7 @@ public class AdminController extends BaseInfoProperties {
 
         lock.unlock();
 
-        return CommonResult.ok();
+        return R.ok();
     }
 
 }
