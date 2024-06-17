@@ -1,6 +1,9 @@
 package com.wuyiccc.tianxuan.resource.service;
 
+import com.wuyiccc.tianxuan.pojo.Article;
 import com.wuyiccc.tianxuan.pojo.bo.NewArticleBO;
+
+import java.util.List;
 
 /**
  * @author wuyiccc
@@ -8,4 +11,9 @@ import com.wuyiccc.tianxuan.pojo.bo.NewArticleBO;
  */
 public interface ArticleService {
     void save(NewArticleBO newArticleBO);
+
+
+    List<Article> listWaitPublish();
+
+    void publishArticle(String id);
 }

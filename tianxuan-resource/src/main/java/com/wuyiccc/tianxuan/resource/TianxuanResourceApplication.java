@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfigurat
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * @author wuyiccc
@@ -22,6 +23,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @MapperScan(basePackages = "com.wuyiccc.tianxuan.resource.mapper")
 @ComponentScan(basePackages = "com.wuyiccc.tianxuan")
+@EnableScheduling
 public class TianxuanResourceApplication {
     public static void main(String[] args) {
         SpringApplication.run(TianxuanResourceApplication.class, args);

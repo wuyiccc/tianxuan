@@ -1,6 +1,8 @@
 package com.wuyiccc.tianxuan.resource.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.common.enumeration.ArticleStatusEnum;
 import com.wuyiccc.tianxuan.pojo.Admin;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -56,5 +59,26 @@ public class ArticleServiceImpl implements ArticleService {
         article.setUpdateTime(LocalDateTime.now());
 
         articleMapper.insert(article);
+    }
+
+    @Override
+    public List<Article> listWaitPublish() {
+        LambdaQueryWrapper<Article> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Article::getStatus, ArticleStatusEnum.CLOSE.type);
+
+        return articleMapper.selectList(wrapper);
+    }
+
+    @Override
+    public void publishArticle(String id) {
+
+        LambdaQueryWrapper<Article> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Article::getId, id);
+        wrapper.eq(Article::getStatus, ArticleStatusEnum.CLOSE.type);
+
+        Article article = new Article();
+        article.setStatus(ArticleStatusEnum.OPEN.type);
+        article.setUpdateTime(LocalDateTime.now());
+        articleMapper.update(article, wrapper);
     }
 }
