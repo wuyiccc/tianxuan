@@ -97,6 +97,18 @@ public class FileController {
         return R.ok(url);
     }
 
+    @PostMapping("/uploadArticleImages")
+    public R<List<String>> uploadArticleImages(@RequestParam("files") List<MultipartFile> files) throws IOException {
+
+        List<String> imgUrlList = new ArrayList<>();
+        for (MultipartFile file : files) {
+
+            String url = fileService.updateArticleImage(file);
+            imgUrlList.add(url);
+        }
+
+        return R.ok(imgUrlList);
+    }
 
 
 }

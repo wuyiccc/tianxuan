@@ -28,4 +28,6 @@ public interface FileService {
     String uploadPhoto(MultipartFile file, String companyId) throws IOException;
 
     String uploadArticleCover(MultipartFile file) throws IOException;
+
+    String updateArticleImage(MultipartFile file) throws IOException;
 }
