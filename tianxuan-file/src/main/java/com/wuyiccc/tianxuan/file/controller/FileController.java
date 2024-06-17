@@ -90,4 +90,13 @@ public class FileController {
         return R.ok(imgUrlList);
     }
 
+    @PostMapping("/uploadArticleCover")
+    public R<String> uploadArticleCover(@RequestParam("file") MultipartFile file) throws IOException {
+
+        String url = fileService.uploadArticleCover(file);
+        return R.ok(url);
+    }
+
+
+
 }
