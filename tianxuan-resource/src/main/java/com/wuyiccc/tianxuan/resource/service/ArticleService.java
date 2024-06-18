@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.resource.service;
 
+import com.wuyiccc.tianxuan.common.enumeration.ArticleStatusEnum;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Article;
 import com.wuyiccc.tianxuan.pojo.bo.NewArticleBO;
@@ -25,4 +26,6 @@ public interface ArticleService {
     Article getArticleById(String articleId);
 
     void deleteArticle(String articleId);
+
+    void updateStatus(String articleId, ArticleStatusEnum articleStatusEnum);
 }

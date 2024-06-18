@@ -14,6 +14,7 @@ import com.wuyiccc.tianxuan.pojo.bo.NewArticleBO;
 import com.wuyiccc.tianxuan.resource.mapper.ArticleMapper;
 import com.wuyiccc.tianxuan.resource.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -137,5 +138,17 @@ public class ArticleServiceImpl implements ArticleService {
     public void deleteArticle(String articleId) {
 
         articleMapper.deleteById(articleId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateStatus(String articleId, ArticleStatusEnum articleStatusEnum) {
+
+
+        Article newArticle = new Article();
+        newArticle.setStatus(articleStatusEnum.type);
+        newArticle.setId(articleId);
+
+        articleMapper.updateById(newArticle);
     }
 }

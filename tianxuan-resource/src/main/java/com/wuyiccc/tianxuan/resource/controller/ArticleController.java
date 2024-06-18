@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.resource.controller;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import com.wuyiccc.tianxuan.common.enumeration.ArticleStatusEnum;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.Article;
@@ -51,9 +52,23 @@ public class ArticleController {
     }
 
     @PostMapping("/delete")
-    public R<String> delete(@RequestParam  String articleId) {
+    public R<String> delete(@RequestParam String articleId) {
 
         articleService.deleteArticle(articleId);
+        return R.ok();
+    }
+
+    @PostMapping("/open")
+    public R<String> open(@RequestParam String articleId) {
+
+        articleService.updateStatus(articleId, ArticleStatusEnum.OPEN);
+        return R.ok();
+    }
+
+    @PostMapping("/close")
+    public R<String> close(@RequestParam String articleId) {
+
+        articleService.updateStatus(articleId, ArticleStatusEnum.CLOSE);
         return R.ok();
     }
 
