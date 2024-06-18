@@ -317,4 +317,17 @@ public class RedisUtils {
         );
     }
 
+    public Long hyperLogAdd(String key, String value) {
+
+        return stringRedisTemplate.opsForHyperLogLog().add(key, value);
+    }
+
+
+    public Long hyperLogCount(String key) {
+
+        return stringRedisTemplate.opsForHyperLogLog().size(key);
+    }
+
+
+
 }
