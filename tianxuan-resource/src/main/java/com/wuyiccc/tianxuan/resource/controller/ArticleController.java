@@ -1,12 +1,12 @@
 package com.wuyiccc.tianxuan.resource.controller;
 
+import com.dingtalk.api.request.OapiMessageMassSendRequest;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.R;
+import com.wuyiccc.tianxuan.pojo.Article;
 import com.wuyiccc.tianxuan.pojo.bo.NewArticleBO;
 import com.wuyiccc.tianxuan.resource.service.ArticleService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -29,4 +29,12 @@ public class ArticleController {
 
         return R.ok();
     }
+
+    @PostMapping("/list")
+    public R<PagedGridResult> list(@RequestParam Integer page, @RequestParam Integer limit) {
+
+        PagedGridResult pagedGridResult = articleService.list(page, limit);
+        return R.ok(pagedGridResult);
+    }
+
 }

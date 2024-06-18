@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.resource.service;
 
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Article;
 import com.wuyiccc.tianxuan.pojo.bo.NewArticleBO;
 
@@ -16,4 +17,6 @@ public interface ArticleService {
     List<Article> listWaitPublish();
 
     void publishArticle(String id);
+
+    PagedGridResult list(Integer page, Integer limit);
 }

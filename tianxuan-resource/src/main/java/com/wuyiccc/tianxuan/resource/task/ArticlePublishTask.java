@@ -39,7 +39,7 @@ public class ArticlePublishTask {
                 continue;
             }
             long offset = LocalDateTimeUtil.between(publishTime, LocalDateTime.now(), ChronoUnit.SECONDS);
-            if (offset <= 0) {
+            if (offset >= 0) {
                 articleService.publishArticle(article.getId());
             }
         }

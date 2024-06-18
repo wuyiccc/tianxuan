@@ -3,8 +3,10 @@ package com.wuyiccc.tianxuan.resource.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.pagehelper.PageHelper;
 import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.common.enumeration.ArticleStatusEnum;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Admin;
 import com.wuyiccc.tianxuan.pojo.Article;
 import com.wuyiccc.tianxuan.pojo.bo.NewArticleBO;
@@ -80,5 +82,14 @@ public class ArticleServiceImpl implements ArticleService {
         article.setStatus(ArticleStatusEnum.OPEN.type);
         article.setUpdateTime(LocalDateTime.now());
         articleMapper.update(article, wrapper);
+    }
+
+    @Override
+    public PagedGridResult list(Integer page, Integer limit) {
+
+        PageHelper.startPage(page, limit);
+        List<Article> res = articleMapper.selectList(Wrappers.lambdaQuery());
+
+        return PagedGridResult.build(res, page);
     }
 }
