@@ -50,4 +50,11 @@ public class ArticleController {
         return R.ok(article);
     }
 
+    @PostMapping("/delete")
+    public R<String> delete(@RequestParam  String articleId) {
+
+        articleService.deleteArticle(articleId);
+        return R.ok();
+    }
+
 }

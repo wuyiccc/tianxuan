@@ -118,7 +118,10 @@ public class ArticleServiceImpl implements ArticleService {
     public PagedGridResult list(Integer page, Integer limit) {
 
         PageHelper.startPage(page, limit);
-        List<Article> res = articleMapper.selectList(Wrappers.lambdaQuery());
+        LambdaQueryWrapper<Article> wrapper = Wrappers.lambdaQuery();
+        wrapper.orderByDesc(Article::getCreateTime);
+        List<Article> res = articleMapper.selectList(wrapper);
+
 
         return PagedGridResult.build(res, page);
     }
@@ -127,5 +130,12 @@ public class ArticleServiceImpl implements ArticleService {
     public Article getArticleById(String articleId) {
 
         return articleMapper.selectById(articleId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteArticle(String articleId) {
+
+        articleMapper.deleteById(articleId);
     }
 }

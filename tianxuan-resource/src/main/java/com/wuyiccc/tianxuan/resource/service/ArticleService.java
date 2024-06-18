@@ -23,4 +23,6 @@ public interface ArticleService {
     PagedGridResult list(Integer page, Integer limit);
 
     Article getArticleById(String articleId);
+
+    void deleteArticle(String articleId);
 }
