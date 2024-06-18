@@ -92,4 +92,10 @@ public class ArticleServiceImpl implements ArticleService {
 
         return PagedGridResult.build(res, page);
     }
+
+    @Override
+    public Article getArticleById(String articleId) {
+
+        return articleMapper.selectById(articleId);
+    }
 }

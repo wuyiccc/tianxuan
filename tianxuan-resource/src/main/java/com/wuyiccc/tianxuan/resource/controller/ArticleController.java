@@ -1,6 +1,5 @@
 package com.wuyiccc.tianxuan.resource.controller;
 
-import com.dingtalk.api.request.OapiMessageMassSendRequest;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.Article;
@@ -35,6 +34,15 @@ public class ArticleController {
 
         PagedGridResult pagedGridResult = articleService.list(page, limit);
         return R.ok(pagedGridResult);
+    }
+
+    @PostMapping("/detail")
+    public R<Article> detail(@RequestParam String articleId) {
+
+
+        Article article = articleService.getArticleById(articleId);
+
+        return R.ok(article);
     }
 
 }
