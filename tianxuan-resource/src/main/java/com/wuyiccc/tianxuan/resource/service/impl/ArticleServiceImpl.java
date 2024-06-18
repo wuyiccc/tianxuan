@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
 import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
 import com.wuyiccc.tianxuan.common.enumeration.ArticleStatusEnum;
+import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Admin;
 import com.wuyiccc.tianxuan.pojo.Article;
@@ -61,6 +62,35 @@ public class ArticleServiceImpl implements ArticleService {
         article.setUpdateTime(LocalDateTime.now());
 
         articleMapper.insert(article);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void update(NewArticleBO newArticleBO) {
+
+        Article article = BeanUtil.copyProperties(newArticleBO, Article.class);
+        article.setId(newArticleBO.getId());
+
+        Admin admin = JWTCurrentUserInterceptor.adminUser.get();
+        article.setPublishAdminId(admin.getId());
+        article.setPublisher(admin.getUsername());
+        article.setPublisherFace(admin.getFace());
+        if (Objects.isNull(newArticleBO.getPublishTime())) {
+            article.setStatus(ArticleStatusEnum.OPEN.type);
+        } else {
+            article.setStatus(ArticleStatusEnum.CLOSE.type);
+        }
+
+        LambdaQueryWrapper<Article> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Article::getStatus, ArticleStatusEnum.CLOSE.type);
+        wrapper.eq(Article::getId, article.getId());
+
+        int res = articleMapper.update(article, wrapper);
+        if (res != 1) {
+
+            throw new CustomException("文字不存在/状态不符合要求, 无法编辑");
+        }
+
     }
 
     @Override

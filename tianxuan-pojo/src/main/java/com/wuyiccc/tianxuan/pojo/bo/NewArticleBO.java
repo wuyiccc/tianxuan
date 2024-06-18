@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 public class NewArticleBO {
 
-    private String articleId;
+    private String id;
 
 
     private String title;

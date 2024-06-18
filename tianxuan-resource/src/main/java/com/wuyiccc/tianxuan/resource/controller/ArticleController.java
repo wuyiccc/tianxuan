@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.resource.controller;
 
+import cn.hutool.core.text.CharSequenceUtil;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.Article;
@@ -24,7 +25,11 @@ public class ArticleController {
     @PostMapping("/save")
     public R<String> save(@RequestBody @Valid NewArticleBO newArticleBO) {
 
-        articleService.save(newArticleBO);
+        if (CharSequenceUtil.isNotBlank(newArticleBO.getId())) {
+            articleService.update(newArticleBO);
+        } else {
+            articleService.save(newArticleBO);
+        }
 
         return R.ok();
     }

@@ -13,6 +13,8 @@ import java.util.List;
 public interface ArticleService {
     void save(NewArticleBO newArticleBO);
 
+    void update(NewArticleBO newArticleBO);
+
 
     List<Article> listWaitPublish();
 
