@@ -1,16 +1,20 @@
 package com.wuyiccc.tianxuan.resource.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.text.StrPool;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
 import com.wuyiccc.tianxuan.api.interceptor.JWTCurrentUserInterceptor;
+import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.enumeration.ArticleStatusEnum;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
+import com.wuyiccc.tianxuan.common.util.RedisUtils;
 import com.wuyiccc.tianxuan.pojo.Admin;
 import com.wuyiccc.tianxuan.pojo.Article;
 import com.wuyiccc.tianxuan.pojo.bo.NewArticleBO;
+import com.wuyiccc.tianxuan.pojo.vo.ArticleVO;
 import com.wuyiccc.tianxuan.resource.mapper.ArticleMapper;
 import com.wuyiccc.tianxuan.resource.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,6 +37,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Resource
     public ArticleMapper articleMapper;
+
+    @Resource
+    private RedisUtils redisUtils;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -126,7 +134,22 @@ public class ArticleServiceImpl implements ArticleService {
         List<Article> res = articleMapper.selectList(wrapper);
 
 
-        return PagedGridResult.build(res, page);
+        PagedGridResult build = PagedGridResult.build(res, page);
+
+
+        List<ArticleVO> resVOList = new ArrayList<>();
+
+        for (Article article : res) {
+            ArticleVO articleVO = new ArticleVO();
+            BeanUtil.copyProperties(article, articleVO);
+
+
+            Long count = redisUtils.hyperLogCount(BaseInfoProperties.REDIS_ARTICLE_READ_COUNTS + StrPool.COLON + article.getId());
+            articleVO.setReadCounts(count);
+            resVOList.add(articleVO);
+        }
+        build.setRows(resVOList);
+        return build;
     }
 
     @Override
