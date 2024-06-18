@@ -14,7 +14,6 @@ import com.wuyiccc.tianxuan.pojo.bo.NewArticleBO;
 import com.wuyiccc.tianxuan.resource.mapper.ArticleMapper;
 import com.wuyiccc.tianxuan.resource.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -116,10 +115,13 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public PagedGridResult list(Integer page, Integer limit) {
+    public PagedGridResult list(Integer page, Integer limit, ArticleStatusEnum articleStatusEnum) {
 
         PageHelper.startPage(page, limit);
         LambdaQueryWrapper<Article> wrapper = Wrappers.lambdaQuery();
+        if (Objects.nonNull(articleStatusEnum)) {
+            wrapper.eq(Article::getStatus, articleStatusEnum.type);
+        }
         wrapper.orderByDesc(Article::getCreateTime);
         List<Article> res = articleMapper.selectList(wrapper);
 

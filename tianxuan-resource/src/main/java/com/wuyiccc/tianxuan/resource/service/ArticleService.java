@@ -21,7 +21,7 @@ public interface ArticleService {
 
     void publishArticle(String id);
 
-    PagedGridResult list(Integer page, Integer limit);
+    PagedGridResult list(Integer page, Integer limit, ArticleStatusEnum articleStatusEnum);
 
     Article getArticleById(String articleId);
 

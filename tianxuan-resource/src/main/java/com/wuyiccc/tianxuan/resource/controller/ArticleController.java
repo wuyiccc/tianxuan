@@ -38,7 +38,7 @@ public class ArticleController {
     @PostMapping("/list")
     public R<PagedGridResult> list(@RequestParam Integer page, @RequestParam Integer limit) {
 
-        PagedGridResult pagedGridResult = articleService.list(page, limit);
+        PagedGridResult pagedGridResult = articleService.list(page, limit, null);
         return R.ok(pagedGridResult);
     }
 
