@@ -296,4 +296,11 @@ public class ResumeController {
         Boolean flag = resumeCollectService.isHrCollectResume(hrId, resumeExpectId);
         return R.ok(flag);
     }
+
+    @PostMapping("/getCollectResumeCount")
+    public R<Long> getCollectResumeCount(@RequestParam String hrId) {
+
+        Long count = resumeCollectService.getCollectResumeCount(hrId);
+        return R.ok(count);
+    }
 }

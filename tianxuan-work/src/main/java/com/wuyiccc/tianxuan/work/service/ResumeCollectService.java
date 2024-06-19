@@ -10,4 +10,6 @@ public interface ResumeCollectService {
     void removeCollect(String hrId, String resumeExpectId);
 
     Boolean isHrCollectResume(String hrId, String resumeExpectId);
+
+    Long getCollectResumeCount(String hrUserId);
 }

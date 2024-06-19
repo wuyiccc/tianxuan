@@ -68,4 +68,12 @@ public class ResumeCollectServiceImpl implements ResumeCollectService {
         List<ResumeCollect> resumeCollectList = resumeCollectMapper.selectList(wrapper);
         return !CollUtil.isEmpty(resumeCollectList);
     }
+
+    @Override
+    public Long getCollectResumeCount(String hrUserId) {
+
+        LambdaQueryWrapper<ResumeCollect> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(ResumeCollect::getUserId, hrUserId);
+        return resumeCollectMapper.selectCount(wrapper);
+    }
 }
