@@ -425,6 +425,7 @@ public class ResumeServiceImpl implements ResumeService {
             ResumeEsCreateDTO createDTO = new ResumeEsCreateDTO();
             BeanUtil.copyProperties(baseCreateDTO, createDTO);
             createDTO.setId(resumeExpect.getId());
+            createDTO.setResumeExpectId(resumeExpect.getId());
             createDTO.setJobType(resumeExpect.getJobName());
             createDTO.setCity(resumeExpect.getCity());
             createDTO.setBeginSalary(resumeExpect.getBeginSalary());

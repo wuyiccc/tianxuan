@@ -8,7 +8,6 @@ import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.util.RedisUtils;
 import com.wuyiccc.tianxuan.pojo.Article;
 import com.wuyiccc.tianxuan.resource.service.ArticleService;
-import com.wuyiccc.tianxuan.resource.service.ResumeCollectService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,8 +29,7 @@ public class AppArticleController {
     @Resource
     private RedisUtils redisUtils;
 
-    @Resource
-    private ResumeCollectService resumeCollectService;
+
 
     @PostMapping("/list")
     public R<PagedGridResult> list(@RequestParam Integer page, @RequestParam Integer limit) {
@@ -56,29 +54,7 @@ public class AppArticleController {
         return R.ok();
     }
 
-    @PostMapping("/addCollect")
-    public R<String> addCollect(@RequestParam String hrId, @RequestParam String resumeExpectId) {
 
-        // 新增简历收藏
-        resumeCollectService.addCollect(hrId, resumeExpectId);
-
-        return R.ok();
-    }
-
-
-    @PostMapping("/removeCollect")
-    public R<String> removeCollect(@RequestParam String hrId, @RequestParam String resumeExpectId) {
-
-        resumeCollectService.removeCollect(hrId, resumeExpectId);
-        return R.ok();
-    }
-
-    @PostMapping("/isHrCollectResume")
-    public R<Boolean> isHrCollectResume(@RequestParam String hrId, @RequestParam String resumeExpectId) {
-
-        Boolean flag = resumeCollectService.isHrCollectResume(hrId, resumeExpectId);
-        return R.ok(flag);
-    }
 
 
 }

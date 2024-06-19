@@ -1,4 +1,4 @@
-package com.wuyiccc.tianxuan.resource.mapper;
+package com.wuyiccc.tianxuan.work.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wuyiccc.tianxuan.pojo.ResumeCollect;

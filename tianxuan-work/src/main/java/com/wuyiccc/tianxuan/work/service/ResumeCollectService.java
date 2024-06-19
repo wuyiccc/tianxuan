@@ -1,4 +1,4 @@
-package com.wuyiccc.tianxuan.resource.service;
+package com.wuyiccc.tianxuan.work.service;
 
 /**
  * @author wuyiccc

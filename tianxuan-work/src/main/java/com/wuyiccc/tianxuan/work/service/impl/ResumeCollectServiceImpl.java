@@ -1,4 +1,4 @@
-package com.wuyiccc.tianxuan.resource.service.impl;
+package com.wuyiccc.tianxuan.work.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.pojo.Resume;
 import com.wuyiccc.tianxuan.pojo.ResumeCollect;
-import com.wuyiccc.tianxuan.resource.mapper.ResumeCollectMapper;
-import com.wuyiccc.tianxuan.resource.service.ResumeCollectService;
+import com.wuyiccc.tianxuan.work.mapper.ResumeCollectMapper;
+import com.wuyiccc.tianxuan.work.service.ResumeCollectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

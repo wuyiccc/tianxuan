@@ -19,6 +19,7 @@ import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
 import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
 import com.wuyiccc.tianxuan.pojo.bo.*;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
+import com.wuyiccc.tianxuan.work.service.ResumeCollectService;
 import com.wuyiccc.tianxuan.work.service.ResumeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,9 @@ public class ResumeController {
 
     @Resource
     private RedisUtils redisUtils;
+
+    @Resource
+    private ResumeCollectService resumeCollectService;
 
 
     /**
@@ -267,5 +271,29 @@ public class ResumeController {
         PagedGridResult pagedGridResult = resumeService.searchResumes(searchResumeBO, page, limit);
 
         return R.ok(pagedGridResult);
+    }
+
+    @PostMapping("/addCollect")
+    public R<String> addCollect(@RequestParam String hrId, @RequestParam String resumeExpectId) {
+
+        // 新增简历收藏
+        resumeCollectService.addCollect(hrId, resumeExpectId);
+
+        return R.ok();
+    }
+
+
+    @PostMapping("/removeCollect")
+    public R<String> removeCollect(@RequestParam String hrId, @RequestParam String resumeExpectId) {
+
+        resumeCollectService.removeCollect(hrId, resumeExpectId);
+        return R.ok();
+    }
+
+    @PostMapping("/isHrCollectResume")
+    public R<Boolean> isHrCollectResume(@RequestParam String hrId, @RequestParam String resumeExpectId) {
+
+        Boolean flag = resumeCollectService.isHrCollectResume(hrId, resumeExpectId);
+        return R.ok(flag);
     }
 }
