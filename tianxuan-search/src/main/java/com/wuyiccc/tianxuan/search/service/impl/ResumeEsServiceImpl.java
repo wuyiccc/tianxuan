@@ -2,10 +2,12 @@ package com.wuyiccc.tianxuan.search.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.dto.ResumeEsCreateDTO;
 import com.wuyiccc.tianxuan.pojo.dto.SearchResumeDTO;
+import com.wuyiccc.tianxuan.pojo.vo.ResumeEsVO;
 import com.wuyiccc.tianxuan.search.mapper.es.ResumeEsMapper;
 import com.wuyiccc.tianxuan.search.pojo.es.ResumeEsEntity;
 import com.wuyiccc.tianxuan.search.service.ResumeEsService;
@@ -133,6 +135,19 @@ public class ResumeEsServiceImpl implements ResumeEsService {
         pagedGridResult.setRows(resumeEsEntityEsPageInfo.getList());
 
         return pagedGridResult;
+    }
+
+    @Override
+    public List<ResumeEsVO> searchByIds(List<String> resumeExpectIdList) {
+
+        if (CollUtil.isEmpty(resumeExpectIdList)) {
+            return ListUtil.empty();
+        }
+
+
+        List<ResumeEsEntity> entityList = resumeEsMapper.selectBatchIds(resumeExpectIdList);
+
+        return BeanUtil.copyToList(entityList, ResumeEsVO.class);
     }
 
 

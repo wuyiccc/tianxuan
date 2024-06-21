@@ -3,9 +3,14 @@ package com.wuyiccc.tianxuan.work.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.wuyiccc.tianxuan.api.remote.ResumeSearchRemoteApi;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
-import com.wuyiccc.tianxuan.pojo.Resume;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.ResumeCollect;
+import com.wuyiccc.tianxuan.pojo.vo.ResumeEsVO;
 import com.wuyiccc.tianxuan.work.mapper.ResumeCollectMapper;
 import com.wuyiccc.tianxuan.work.service.ResumeCollectService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author wuyiccc
@@ -27,6 +32,9 @@ public class ResumeCollectServiceImpl implements ResumeCollectService {
 
     @Resource
     private ResumeCollectMapper resumeCollectMapper;
+
+    @Resource
+    private ResumeSearchRemoteApi resumeSearchRemoteApi;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -75,5 +83,25 @@ public class ResumeCollectServiceImpl implements ResumeCollectService {
         LambdaQueryWrapper<ResumeCollect> wrapper = Wrappers.lambdaQuery();
         wrapper.eq(ResumeCollect::getUserId, hrUserId);
         return resumeCollectMapper.selectCount(wrapper);
+    }
+
+    @Override
+    public PagedGridResult pagedCollectResumeList(String hrId, Integer page, Integer pageSize) {
+
+        LambdaQueryWrapper<ResumeCollect> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(ResumeCollect::getUserId, hrId);
+
+        PageHelper.startPage(page + 1, pageSize);
+        List<ResumeCollect> rList = resumeCollectMapper.selectList(wrapper);
+        PageInfo<ResumeCollect> midPage = new PageInfo<>(rList);
+
+        // 拿到id
+        List<String> resumeExpectedIdList = midPage.getList().stream().map(ResumeCollect::getResumeExpectId).collect(Collectors.toList());
+
+
+        R<List<ResumeEsVO>> listR = resumeSearchRemoteApi.searchByIds(resumeExpectedIdList);
+
+        return PagedGridResult.build(listR.getData(), page);
+
     }
 }

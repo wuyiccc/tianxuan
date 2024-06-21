@@ -5,7 +5,9 @@ import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.dto.ResumeEsCreateDTO;
 import com.wuyiccc.tianxuan.pojo.dto.SearchResumeDTO;
+import com.wuyiccc.tianxuan.pojo.vo.ResumeEsVO;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -23,4 +25,7 @@ public interface ResumeSearchRemoteApi {
 
     @PostMapping("/search")
     public R<PagedGridResult> search(@RequestBody SearchResumeDTO searchResumeDTO);
+
+    @PostMapping("/searchByIds")
+    public R<List<ResumeEsVO>> searchByIds(@RequestBody List<String> resumeExpectIdList);
 }

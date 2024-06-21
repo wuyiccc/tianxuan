@@ -8,8 +8,8 @@ import com.wuyiccc.tianxuan.common.enumeration.ActiveTimeEnum;
 import com.wuyiccc.tianxuan.common.enumeration.EduEnum;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.exception.RemoteCallCustomException;
-import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.common.util.LocalDateUtils;
 import com.wuyiccc.tianxuan.common.util.RedisUtils;
@@ -302,5 +302,13 @@ public class ResumeController {
 
         Long count = resumeCollectService.getCollectResumeCount(hrId);
         return R.ok(count);
+    }
+
+    @PostMapping("/pagedCollectResumeList")
+    public R<PagedGridResult> pagedCollectResumeList(@RequestParam String hrId, @RequestParam Integer page, @RequestParam Integer pageSize) {
+
+
+        PagedGridResult res = resumeCollectService.pagedCollectResumeList(hrId, page, pageSize);
+        return R.ok(res);
     }
 }

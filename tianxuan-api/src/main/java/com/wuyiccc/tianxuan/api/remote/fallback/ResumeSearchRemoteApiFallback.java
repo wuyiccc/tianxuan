@@ -5,6 +5,7 @@ import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.dto.ResumeEsCreateDTO;
 import com.wuyiccc.tianxuan.pojo.dto.SearchResumeDTO;
+import com.wuyiccc.tianxuan.pojo.vo.ResumeEsVO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,6 +23,11 @@ public class ResumeSearchRemoteApiFallback implements ResumeSearchRemoteApi {
 
     @Override
     public R<PagedGridResult> search(SearchResumeDTO searchResumeDTO) {
+        return null;
+    }
+
+    @Override
+    public R<List<ResumeEsVO>> searchByIds(List<String> resumeExpectIdList) {
         return null;
     }
 }

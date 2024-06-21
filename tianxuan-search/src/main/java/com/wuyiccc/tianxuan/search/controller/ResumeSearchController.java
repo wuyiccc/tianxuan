@@ -5,12 +5,14 @@ import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.dto.ResumeEsCreateDTO;
 import com.wuyiccc.tianxuan.pojo.dto.SearchResumeDTO;
+import com.wuyiccc.tianxuan.pojo.vo.ResumeEsVO;
 import com.wuyiccc.tianxuan.search.service.ResumeEsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +39,12 @@ public class ResumeSearchController implements ResumeSearchRemoteApi {
 
         PagedGridResult pagedGridResult = resumeEsService.search(searchResumeDTO);
         return R.ok(pagedGridResult);
+    }
+
+    @Override
+    public R<List<ResumeEsVO>> searchByIds(List<String> resumeExpectIdList) {
+        List<ResumeEsVO> resList = resumeEsService.searchByIds(resumeExpectIdList);
+        return R.ok(resList);
     }
 
 
