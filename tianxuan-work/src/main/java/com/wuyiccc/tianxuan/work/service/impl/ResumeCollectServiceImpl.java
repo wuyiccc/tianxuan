@@ -10,8 +10,10 @@ import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.ResumeCollect;
+import com.wuyiccc.tianxuan.pojo.ResumeRead;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeEsVO;
 import com.wuyiccc.tianxuan.work.mapper.ResumeCollectMapper;
+import com.wuyiccc.tianxuan.work.mapper.ResumeReadMapper;
 import com.wuyiccc.tianxuan.work.service.ResumeCollectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,9 @@ public class ResumeCollectServiceImpl implements ResumeCollectService {
 
     @Resource
     private ResumeSearchRemoteApi resumeSearchRemoteApi;
+
+    @Resource
+    private ResumeReadMapper resumeReadMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -103,5 +108,19 @@ public class ResumeCollectServiceImpl implements ResumeCollectService {
 
         return PagedGridResult.build(listR.getData(), page);
 
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void saveReadResumeRecord(String hrId, String resumeExpectId) {
+
+
+        ResumeRead resumeRead = new ResumeRead();
+        resumeRead.setUserId(hrId);
+        resumeRead.setResumeExpectId(resumeExpectId);
+        resumeRead.setCreateTime(LocalDateTime.now());
+        resumeRead.setUpdatedTime(LocalDateTime.now());
+
+        resumeReadMapper.insert(resumeRead);
     }
 }

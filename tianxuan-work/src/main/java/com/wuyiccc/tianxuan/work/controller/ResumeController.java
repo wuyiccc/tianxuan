@@ -311,4 +311,13 @@ public class ResumeController {
         PagedGridResult res = resumeCollectService.pagedCollectResumeList(hrId, page, pageSize);
         return R.ok(res);
     }
+
+    @PostMapping("/saveReadResumeRecord")
+    public R<String> saveReadResumeRecord(@RequestParam String hrId, @RequestParam String resumeExpectId) {
+
+        // 新增简历收藏
+        resumeCollectService.saveReadResumeRecord(hrId, resumeExpectId);
+
+        return R.ok();
+    }
 }
