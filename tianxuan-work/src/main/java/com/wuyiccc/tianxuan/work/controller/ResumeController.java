@@ -320,4 +320,13 @@ public class ResumeController {
 
         return R.ok();
     }
+
+    @PostMapping("/getReadResumeRecordCounts")
+    public R<Long> getReadResumeRecordCounts(@RequestParam String hrId) {
+
+        // 新增简历收藏
+        Long count = resumeCollectService.getReadResumeRecordCounts(hrId);
+
+        return R.ok(count);
+    }
 }

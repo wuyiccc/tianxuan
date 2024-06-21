@@ -18,4 +18,6 @@ public interface ResumeCollectService {
     PagedGridResult pagedCollectResumeList(String hrId, Integer page, Integer pageSize);
 
     void saveReadResumeRecord(String hrId, String resumeExpectId);
+
+    Long getReadResumeRecordCounts(String hrId);
 }

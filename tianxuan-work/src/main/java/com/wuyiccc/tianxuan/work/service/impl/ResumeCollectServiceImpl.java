@@ -123,4 +123,11 @@ public class ResumeCollectServiceImpl implements ResumeCollectService {
 
         resumeReadMapper.insert(resumeRead);
     }
+
+    @Override
+    public Long getReadResumeRecordCounts(String hrId) {
+        LambdaQueryWrapper<ResumeRead> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(ResumeRead::getUserId, hrId);
+        return resumeReadMapper.selectCount(wrapper);
+    }
 }
