@@ -21,4 +21,6 @@ public interface JobService {
     PagedGridResult searchJobs(SearchJobsBO searchJobsBO, Integer page, Integer limit);
 
     Long countJob(String hrId);
+
+    Long getCollecJobCount(String candUserId);
 }

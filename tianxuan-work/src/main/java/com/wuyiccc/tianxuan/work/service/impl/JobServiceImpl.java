@@ -15,11 +15,13 @@ import com.wuyiccc.tianxuan.common.exception.CustomException;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Job;
+import com.wuyiccc.tianxuan.pojo.JobCollect;
 import com.wuyiccc.tianxuan.pojo.bo.EditJobBO;
 import com.wuyiccc.tianxuan.pojo.bo.SearchJobsBO;
 import com.wuyiccc.tianxuan.pojo.vo.CompanyInfoVO;
 import com.wuyiccc.tianxuan.pojo.vo.SearchJobsVO;
 import com.wuyiccc.tianxuan.pojo.vo.UserVO;
+import com.wuyiccc.tianxuan.work.mapper.JobCollectMapper;
 import com.wuyiccc.tianxuan.work.mapper.JobMapper;
 import com.wuyiccc.tianxuan.work.service.JobService;
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +50,9 @@ public class JobServiceImpl implements JobService {
 
     @Resource
     private CompanyRemoteApi companyRemoteApi;
+
+    @Resource
+    private JobCollectMapper jobCollectMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -244,6 +249,15 @@ public class JobServiceImpl implements JobService {
         wrapper.eq(Job::getHrId, hrId);
 
         return jobMapper.selectCount(wrapper);
+    }
+
+    @Override
+    public Long getCollecJobCount(String candUserId) {
+
+        LambdaQueryWrapper<JobCollect> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(JobCollect::getCandUserId, candUserId);
+
+        return jobCollectMapper.selectCount(wrapper);
     }
 
 }

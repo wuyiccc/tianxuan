@@ -2,8 +2,8 @@ package com.wuyiccc.tianxuan.work.controller;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import com.wuyiccc.tianxuan.common.enumeration.JobStatusEnum;
-import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.Job;
 import com.wuyiccc.tianxuan.pojo.bo.EditJobBO;
 import com.wuyiccc.tianxuan.pojo.bo.SearchJobsBO;
@@ -134,6 +134,13 @@ public class AppJobController {
     public R<Long> jobCounts(@RequestParam String hrId) {
 
         Long count = jobService.countJob(hrId);
+        return R.ok(count);
+    }
+
+    @PostMapping("/getCollectJobCount")
+    public R<Long> getCollectJobCount(@RequestParam String candUserId) {
+
+        Long count = jobService.getCollecJobCount(candUserId);
         return R.ok(count);
     }
 
