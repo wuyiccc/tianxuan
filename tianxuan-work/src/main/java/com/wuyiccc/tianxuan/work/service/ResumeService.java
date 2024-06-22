@@ -2,10 +2,7 @@ package com.wuyiccc.tianxuan.work.service;
 
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.R;
-import com.wuyiccc.tianxuan.pojo.ResumeEducation;
-import com.wuyiccc.tianxuan.pojo.ResumeExpect;
-import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
-import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
+import com.wuyiccc.tianxuan.pojo.*;
 import com.wuyiccc.tianxuan.pojo.bo.*;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
 
@@ -60,4 +57,10 @@ public interface ResumeService {
     Long getWhoLookMeCount(String candUserId);
 
     PagedGridResult pagedWhoLookMe(String candUserId, Integer page, Integer pageSize);
+
+    void followHr(FollowHr followHr);
+
+    void unfollowHr(String hrId, String candUserId);
+
+    Boolean doesCandFollowHr(String hrId, String candUserId);
 }

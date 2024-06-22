@@ -82,6 +82,9 @@ public class ResumeServiceImpl implements ResumeService {
     @Resource
     private ResumeLookMapper resumeLookMapper;
 
+    @Resource
+    private FollowHrMapper followHrMapper;
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void initResume(String userId) {
@@ -501,6 +504,41 @@ public class ResumeServiceImpl implements ResumeService {
         List<ResumeLook> resumeLooks = resumeLookMapper.selectList(wrapper);
 
         return PagedGridResult.build(resumeLooks, page);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void followHr(FollowHr followHr) {
+
+        followHr.setCreateTime(LocalDateTime.now());
+        followHr.setUpdatedTime(LocalDateTime.now());
+
+        followHrMapper.insert(followHr);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void unfollowHr(String hrId, String candUserId) {
+
+        LambdaQueryWrapper<FollowHr> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(FollowHr::getHrId, hrId);
+        wrapper.eq(FollowHr::getCandUserId, candUserId);
+
+        int res = followHrMapper.delete(wrapper);
+        if (res <= 0) {
+            throw new CustomException("数据不存在");
+        }
+    }
+
+    @Override
+    public Boolean doesCandFollowHr(String hrId, String candUserId) {
+
+        LambdaQueryWrapper<FollowHr> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(FollowHr::getHrId, hrId);
+        wrapper.eq(FollowHr::getCandUserId, candUserId);
+
+        Long res = followHrMapper.selectCount(wrapper);
+        return res >= 1;
     }
 
 

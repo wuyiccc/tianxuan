@@ -13,10 +13,7 @@ import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.result.ResponseStatusEnum;
 import com.wuyiccc.tianxuan.common.util.LocalDateUtils;
 import com.wuyiccc.tianxuan.common.util.RedisUtils;
-import com.wuyiccc.tianxuan.pojo.ResumeEducation;
-import com.wuyiccc.tianxuan.pojo.ResumeExpect;
-import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
-import com.wuyiccc.tianxuan.pojo.ResumeWorkExp;
+import com.wuyiccc.tianxuan.pojo.*;
 import com.wuyiccc.tianxuan.pojo.bo.*;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
 import com.wuyiccc.tianxuan.work.service.ResumeCollectService;
@@ -358,4 +355,28 @@ public class ResumeController {
         PagedGridResult pagedGridResult = resumeService.pagedWhoLookMe(candUserId, page, pageSize);
         return R.ok(pagedGridResult);
     }
+
+    @PostMapping("/followHr")
+    public R<String> followHr(@RequestBody FollowHr followHr) {
+
+        resumeService.followHr(followHr);
+
+        return R.ok();
+    }
+
+    @PostMapping("/unfollowHr")
+    public R<String> unfollowHr(@RequestParam String hrId, @RequestParam String candUserId) {
+
+        resumeService.unfollowHr(hrId, candUserId);
+        return R.ok();
+    }
+
+    @PostMapping("/doesCandFollowHr")
+    public R<Boolean> doesCandFollowHr(@RequestParam String hrId, @RequestParam String candUserId) {
+
+        Boolean flag = resumeService.doesCandFollowHr(hrId, candUserId);
+        return R.ok(flag);
+    }
+
+
 }
