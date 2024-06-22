@@ -541,6 +541,31 @@ public class ResumeServiceImpl implements ResumeService {
         return res >= 1;
     }
 
+    @Override
+    public Long getCandFollowHrCount(String candUserId) {
+
+        LambdaQueryWrapper<FollowHr> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(FollowHr::getCandUserId, candUserId);
+
+        return followHrMapper.selectCount(wrapper);
+    }
+
+    @Override
+    public PagedGridResult pagedCandFollowHr(String candUserId, Integer page, Integer pageSize) {
+
+        if (page == 0) {
+            page = 1;
+        }
+
+        LambdaQueryWrapper<FollowHr> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(FollowHr::getCandUserId, candUserId);
+        PageHelper.startPage(page, pageSize);
+
+        List<FollowHr> list = followHrMapper.selectList(wrapper);
+
+        return PagedGridResult.build(list, page);
+    }
+
 
     private UserVO getUserInfoVO(String userId) {
 

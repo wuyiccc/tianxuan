@@ -63,4 +63,8 @@ public interface ResumeService {
     void unfollowHr(String hrId, String candUserId);
 
     Boolean doesCandFollowHr(String hrId, String candUserId);
+
+    Long getCandFollowHrCount(String candUserId);
+
+    PagedGridResult pagedCandFollowHr(String candUserId, Integer page, Integer pageSize);
 }

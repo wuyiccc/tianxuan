@@ -379,4 +379,20 @@ public class ResumeController {
     }
 
 
+
+    @PostMapping("/getCandFollowHrCount")
+    public R<Long> getCandFollowHrCount(@RequestParam String candUserId) {
+
+        Long count = resumeService.getCandFollowHrCount(candUserId);
+        return R.ok(count);
+    }
+
+    @PostMapping("/pagedCandFollowHr")
+    public R<PagedGridResult> pagedCandFollowHr(@RequestParam String candUserId, @RequestParam Integer page, @RequestParam Integer pageSize) {
+
+       PagedGridResult res = resumeService.pagedCandFollowHr(candUserId, page, pageSize);
+
+       return R.ok(res);
+    }
+
 }
