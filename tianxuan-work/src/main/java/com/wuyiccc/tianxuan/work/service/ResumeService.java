@@ -67,4 +67,10 @@ public interface ResumeService {
     Long getCandFollowHrCount(String candUserId);
 
     PagedGridResult pagedCandFollowHr(String candUserId, Integer page, Integer pageSize);
+
+    void addCollectJob(String candUserId, String jobId);
+
+    void removeCollectJob(String candUserId, String jobId);
+
+    Boolean isCandCollectJob(String candUserId, String jobId);
 }

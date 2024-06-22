@@ -395,4 +395,24 @@ public class ResumeController {
        return R.ok(res);
     }
 
+    @PostMapping("/addCollectJob")
+    public R<String> addCollectJob(@RequestParam String candUserId, @RequestParam String jobId) {
+
+        resumeService.addCollectJob(candUserId, jobId);
+        return R.ok();
+    }
+
+    @PostMapping("/removeCollectJob")
+    public R<String> removeCollectJob(@RequestParam String candUserId, @RequestParam String jobId) {
+
+        resumeService.removeCollectJob(candUserId, jobId);
+        return R.ok();
+    }
+
+    @PostMapping("/isCandCollectJob")
+    public R<Boolean> isCandCollectJob(@RequestParam String candUserId, @RequestParam String jobId) {
+
+        Boolean flag = resumeService.isCandCollectJob(candUserId, jobId);
+        return R.ok(flag);
+    }
 }

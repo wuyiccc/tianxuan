@@ -85,6 +85,9 @@ public class ResumeServiceImpl implements ResumeService {
     @Resource
     private FollowHrMapper followHrMapper;
 
+    @Resource
+    private JobCollectMapper jobCollectMapper;
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void initResume(String userId) {
@@ -564,6 +567,45 @@ public class ResumeServiceImpl implements ResumeService {
         List<FollowHr> list = followHrMapper.selectList(wrapper);
 
         return PagedGridResult.build(list, page);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void addCollectJob(String candUserId, String jobId) {
+
+        JobCollect jobCollect = new JobCollect();
+        jobCollect.setCandUserId(candUserId);
+        jobCollect.setJobId(jobId);
+        jobCollect.setCreateTime(LocalDateTime.now());
+        jobCollect.setUpdatedTime(LocalDateTime.now());
+
+        jobCollectMapper.insert(jobCollect);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void removeCollectJob(String candUserId, String jobId) {
+
+
+        LambdaQueryWrapper<JobCollect> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(JobCollect::getCandUserId, candUserId);
+        wrapper.eq(JobCollect::getJobId, jobId);
+
+        int res = jobCollectMapper.delete(wrapper);
+        if (res <= 0) {
+            throw new CustomException("数据不存在");
+        }
+    }
+
+    @Override
+    public Boolean isCandCollectJob(String candUserId, String jobId) {
+
+        LambdaQueryWrapper<JobCollect> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(JobCollect::getCandUserId, candUserId);
+        wrapper.eq(JobCollect::getJobId, jobId);
+
+        Long count = jobCollectMapper.selectCount(wrapper);
+        return count >= 1;
     }
 
 
