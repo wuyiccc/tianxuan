@@ -79,6 +79,9 @@ public class ResumeServiceImpl implements ResumeService {
     @Resource
     private ResumeReadMapper resumeReadMapper;
 
+    @Resource
+    private ResumeLookMapper resumeLookMapper;
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void initResume(String userId) {
@@ -463,6 +466,41 @@ public class ResumeServiceImpl implements ResumeService {
 
         return PagedGridResult.build(listR.getData(), page);
 
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void hrLookCand(ResumeLookBO resumeLookBO) {
+
+        ResumeLook resumeLook = BeanUtil.copyProperties(resumeLookBO, ResumeLook.class);
+        resumeLook.setCreateTime(LocalDateTime.now());
+        resumeLook.setUpdatedTime(LocalDateTime.now());
+
+        resumeLookMapper.insert(resumeLook);
+    }
+
+    @Override
+    public Long getWhoLookMeCount(String candUserId) {
+
+        LambdaQueryWrapper<ResumeLook> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(ResumeLook::getCandUserId, candUserId);
+        return resumeLookMapper.selectCount(wrapper);
+    }
+
+    @Override
+    public PagedGridResult pagedWhoLookMe(String candUserId, Integer page, Integer pageSize) {
+
+        if (page == 0) {
+            page = 1;
+        }
+
+        PageHelper.startPage(page, pageSize);
+
+        LambdaQueryWrapper<ResumeLook> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(ResumeLook::getCandUserId, candUserId);
+        List<ResumeLook> resumeLooks = resumeLookMapper.selectList(wrapper);
+
+        return PagedGridResult.build(resumeLooks, page);
     }
 
 

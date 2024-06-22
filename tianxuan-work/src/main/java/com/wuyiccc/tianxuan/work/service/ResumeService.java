@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.work.service;
 
 import com.wuyiccc.tianxuan.common.result.PagedGridResult;
+import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.ResumeEducation;
 import com.wuyiccc.tianxuan.pojo.ResumeExpect;
 import com.wuyiccc.tianxuan.pojo.ResumeProjectExp;
@@ -53,4 +54,10 @@ public interface ResumeService {
     void transformAndFlushToEs(String userId);
 
     PagedGridResult pagedReadResumeRecordList(String hrId, Integer page, Integer pageSize);
+
+    void hrLookCand(ResumeLookBO resumeLookBO);
+
+    Long getWhoLookMeCount(String candUserId);
+
+    PagedGridResult pagedWhoLookMe(String candUserId, Integer page, Integer pageSize);
 }
