@@ -237,4 +237,13 @@ public class JobServiceImpl implements JobService {
         return res;
     }
 
+    @Override
+    public Long countJob(String hrId) {
+
+        LambdaQueryWrapper<Job> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Job::getHrId, hrId);
+
+        return jobMapper.selectCount(wrapper);
+    }
+
 }

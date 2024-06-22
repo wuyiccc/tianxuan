@@ -130,4 +130,11 @@ public class AppJobController {
         return R.ok(gridResult);
     }
 
+    @PostMapping("/hr/jobCounts")
+    public R<Long> jobCounts(@RequestParam String hrId) {
+
+        Long count = jobService.countJob(hrId);
+        return R.ok(count);
+    }
+
 }

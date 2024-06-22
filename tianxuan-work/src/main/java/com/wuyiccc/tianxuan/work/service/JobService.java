@@ -19,4 +19,6 @@ public interface JobService {
     void modifyStatus(String hrId, String companyId, String jobId, Integer jobStatus);
 
     PagedGridResult searchJobs(SearchJobsBO searchJobsBO, Integer page, Integer limit);
+
+    Long countJob(String hrId);
 }
