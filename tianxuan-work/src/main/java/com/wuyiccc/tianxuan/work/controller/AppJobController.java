@@ -144,4 +144,15 @@ public class AppJobController {
         return R.ok(count);
     }
 
+    @PostMapping("/pagedCollectJobList")
+    public R<PagedGridResult> pagedCollectJobList(@RequestParam String candUserId, @RequestParam Integer page, @RequestParam Integer pageSize) {
+
+        if (page == null || page == 0) {
+            page = 1;
+        }
+
+        PagedGridResult res = jobService.pagedCollectJobList(candUserId, page, pageSize);
+        return R.ok(res);
+    }
+
 }

@@ -260,4 +260,70 @@ public class JobServiceImpl implements JobService {
         return jobCollectMapper.selectCount(wrapper);
     }
 
+    @Override
+    public PagedGridResult pagedCollectJobList(String candUserId, Integer page, Integer pageSize) {
+
+        LambdaQueryWrapper<JobCollect> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(JobCollect::getCandUserId, candUserId);
+
+        PageHelper.startPage(page, pageSize);
+        List<JobCollect> dataList = jobCollectMapper.selectList(wrapper);
+
+        List<String> jobIdList = dataList.stream().map(JobCollect::getJobId).collect(Collectors.toList());
+
+        if (CollUtil.isEmpty(jobIdList)) {
+            PagedGridResult pagedGridResult = new PagedGridResult();
+            pagedGridResult.setPage(page);
+            pagedGridResult.setTotal(0);
+            pagedGridResult.setRecords(0);
+            pagedGridResult.setRows(ListUtil.empty());
+            return pagedGridResult;
+        }
+
+        List<Job> jobList = jobMapper.selectBatchIds(jobIdList);
+
+        if (CollUtil.isEmpty(jobList)) {
+            PagedGridResult pagedGridResult = new PagedGridResult();
+            pagedGridResult.setPage(page);
+            pagedGridResult.setTotal(0);
+            pagedGridResult.setRecords(0);
+            pagedGridResult.setRows(ListUtil.empty());
+            return pagedGridResult;
+        }
+
+
+        List<String> hrIdList = jobList.stream().map(Job::getHrId).collect(Collectors.toList());
+        List<String> companyIdList = jobList.stream().map(Job::getCompanyId).collect(Collectors.toList());
+
+        R<List<UserVO>> userVOListRes = userInfoRemoteApi.getList(hrIdList);
+        List<UserVO> userVOList = userVOListRes.getData();
+        Map<String, UserVO> userCache = CollStreamUtil.toIdentityMap(userVOList, UserVO::getId);
+
+        R<List<CompanyInfoVO>> companyInfoVORes = companyRemoteApi.getList(companyIdList);
+        List<CompanyInfoVO> companyInfoVOList = companyInfoVORes.getData();
+        Map<String, CompanyInfoVO> companyCache = CollStreamUtil.toIdentityMap(companyInfoVOList, CompanyInfoVO::getCompanyId);
+
+
+        PagedGridResult res = PagedGridResult.build(jobList, page);
+
+        List<SearchJobsVO> voList = new ArrayList<>();
+
+        for (Job job : jobList) {
+
+            SearchJobsVO vo = new SearchJobsVO();
+            BeanUtil.copyProperties(job, vo);
+
+            UserVO userVO = userCache.get(job.getHrId());
+            vo.setUsersVO(userVO);
+
+            CompanyInfoVO companyInfoVO = companyCache.get(job.getCompanyId());
+            vo.setCompanyInfoVO(companyInfoVO);
+
+            voList.add(vo);
+        }
+        res.setRows(voList);
+        return res;
+    }
+
+
 }
