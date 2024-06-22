@@ -3,6 +3,7 @@ package com.wuyiccc.tianxuan.work.controller;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrPool;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
 import com.wuyiccc.tianxuan.common.enumeration.ActiveTimeEnum;
 import com.wuyiccc.tianxuan.common.enumeration.EduEnum;
@@ -328,5 +329,12 @@ public class ResumeController {
         Long count = resumeCollectService.getReadResumeRecordCounts(hrId);
 
         return R.ok(count);
+    }
+
+    @PostMapping("/pagedReadResumeRecordList")
+    public R<PagedGridResult> pagedReadResumeRecordList(@RequestParam String hrId, @RequestParam Integer page, @RequestParam Integer pageSize) {
+
+        PagedGridResult res = resumeService.pagedReadResumeRecordList(hrId, page, pageSize);
+        return R.ok(res);
     }
 }

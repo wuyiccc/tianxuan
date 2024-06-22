@@ -51,4 +51,6 @@ public interface ResumeService {
     PagedGridResult searchResumes(SearchResumeBO searchResumeBO, Integer page, Integer limit);
 
     void transformAndFlushToEs(String userId);
+
+    PagedGridResult pagedReadResumeRecordList(String hrId, Integer page, Integer pageSize);
 }

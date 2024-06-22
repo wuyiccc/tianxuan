@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.work.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollStreamUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.text.CharSequenceUtil;
@@ -8,6 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.wuyiccc.tianxuan.api.remote.ResumeSearchRemoteApi;
 import com.wuyiccc.tianxuan.api.remote.UserInfoRemoteApi;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
@@ -17,13 +19,10 @@ import com.wuyiccc.tianxuan.pojo.*;
 import com.wuyiccc.tianxuan.pojo.bo.*;
 import com.wuyiccc.tianxuan.pojo.dto.ResumeEsCreateDTO;
 import com.wuyiccc.tianxuan.pojo.dto.SearchResumeDTO;
+import com.wuyiccc.tianxuan.pojo.vo.ResumeEsVO;
 import com.wuyiccc.tianxuan.pojo.vo.ResumeVO;
-import com.wuyiccc.tianxuan.pojo.vo.SearchResumeVO;
 import com.wuyiccc.tianxuan.pojo.vo.UserVO;
-import com.wuyiccc.tianxuan.work.mapper.ResumeEducationMapper;
-import com.wuyiccc.tianxuan.work.mapper.ResumeExpectMapper;
-import com.wuyiccc.tianxuan.work.mapper.ResumeMapper;
-import com.wuyiccc.tianxuan.work.mapper.ResumeProjectExpMapper;
+import com.wuyiccc.tianxuan.work.mapper.*;
 import com.wuyiccc.tianxuan.work.service.ResumeEducationService;
 import com.wuyiccc.tianxuan.work.service.ResumeProjectExpService;
 import com.wuyiccc.tianxuan.work.service.ResumeService;
@@ -36,10 +35,8 @@ import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author wuyiccc
@@ -79,6 +76,8 @@ public class ResumeServiceImpl implements ResumeService {
     @Resource
     private ResumeSearchRemoteApi resumeSearchRemoteApi;
 
+    @Resource
+    private ResumeReadMapper resumeReadMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -434,6 +433,36 @@ public class ResumeServiceImpl implements ResumeService {
         }
 
         resumeSearchRemoteApi.batchUpdate(createDTOList);
+    }
+
+    @Override
+    public PagedGridResult pagedReadResumeRecordList(String hrId, Integer page, Integer pageSize) {
+
+
+        LambdaQueryWrapper<ResumeRead> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(ResumeRead::getUserId, hrId);
+
+        PageHelper.startPage(page + 1, pageSize);
+        List<ResumeRead> rList = resumeReadMapper.selectList(wrapper);
+        PageInfo<ResumeRead> midPage = new PageInfo<>(rList);
+
+        // 拿到id
+        List<String> resumeExpectedIdList = midPage.getList().stream().map(ResumeRead::getResumeExpectId).collect(Collectors.toList());
+
+
+        R<List<ResumeEsVO>> listR = resumeSearchRemoteApi.searchByIds(resumeExpectedIdList);
+
+        Map<String, ResumeRead> cache = CollStreamUtil.toIdentityMap(rList, ResumeRead::getResumeExpectId);
+        // 时间匹配
+        listR.getData().forEach(e -> {
+            String key = e.getResumeExpectId();
+            ResumeRead resumeRead = cache.get(key);
+            e.setHrReadResumeTime(resumeRead.getCreateTime());
+        });
+
+
+        return PagedGridResult.build(listR.getData(), page);
+
     }
 
 

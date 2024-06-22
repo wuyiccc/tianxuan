@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.work.service.impl;
 
+import cn.hutool.core.collection.CollStreamUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -105,6 +107,14 @@ public class ResumeCollectServiceImpl implements ResumeCollectService {
 
 
         R<List<ResumeEsVO>> listR = resumeSearchRemoteApi.searchByIds(resumeExpectedIdList);
+
+        Map<String, ResumeCollect> cache = CollStreamUtil.toIdentityMap(rList, ResumeCollect::getResumeExpectId);
+        // 时间匹配
+        listR.getData().forEach(e -> {
+            String key = e.getResumeExpectId();
+            ResumeCollect resumeRead = cache.get(key);
+            e.setHrCollectResumeTime(resumeRead.getCreateTime());
+        });
 
         return PagedGridResult.build(listR.getData(), page);
 
