@@ -30,4 +30,6 @@ public interface FileService {
     String uploadArticleCover(MultipartFile file) throws IOException;
 
     String updateArticleImage(MultipartFile file) throws IOException;
+
+    String uploadChatPhoto(MultipartFile file, String userId) throws IOException;
 }

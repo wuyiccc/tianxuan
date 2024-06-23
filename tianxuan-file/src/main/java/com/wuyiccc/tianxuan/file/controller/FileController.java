@@ -110,5 +110,11 @@ public class FileController {
         return R.ok(imgUrlList);
     }
 
+    @PostMapping("/uploadChatPhoto")
+    public R<String> uploadChatPhoto(@RequestParam("file") MultipartFile file, @RequestParam String userId) throws IOException {
+
+        String url = fileService.uploadChatPhoto(file, userId);
+        return R.ok(url);
+    }
 
 }
