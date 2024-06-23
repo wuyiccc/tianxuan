@@ -32,7 +32,8 @@ public class MqSyncTask implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
 
-        ExecutorService executors = Executors.newFixedThreadPool(1);
+        ExecutorService executors = Executors.newFixedThreadPool(2);
         executors.submit(new SendSmsCodeConsumerTask(tianxuanRocketMQConfig, dingDingMsgUtils));
+        executors.submit(new ChatMsgConsumerTask(tianxuanRocketMQConfig));
     }
 }
