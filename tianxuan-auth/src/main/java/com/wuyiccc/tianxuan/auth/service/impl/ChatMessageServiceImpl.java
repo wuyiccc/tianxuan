@@ -1,8 +1,11 @@
 package com.wuyiccc.tianxuan.auth.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.text.StrPool;
 import com.wuyiccc.tianxuan.auth.mapper.ChatMessageMapper;
 import com.wuyiccc.tianxuan.auth.service.ChatMessageService;
+import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
+import com.wuyiccc.tianxuan.common.util.RedisUtils;
 import com.wuyiccc.tianxuan.pojo.ChatMessage;
 import com.wuyiccc.tianxuan.pojo.netty.ChatMsg;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +25,9 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     @Resource
     private ChatMessageMapper chatMessageMapper;
 
+    @Resource
+    private RedisUtils redisUtils;
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void saveMsg(ChatMsg chatMsg) {
@@ -33,5 +39,6 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
         chatMessageMapper.insert(msg);
 
+        redisUtils.incrementHash(BaseInfoProperties.CHAT_MSG_LIST + StrPool.COLON + chatMsg.getReceiverId(), chatMsg.getSenderId(), 1);
     }
 }
