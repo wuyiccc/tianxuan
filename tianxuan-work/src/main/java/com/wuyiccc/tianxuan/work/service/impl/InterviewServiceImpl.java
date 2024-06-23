@@ -52,4 +52,16 @@ public class InterviewServiceImpl implements InterviewService {
         }
         return interviews.get(0);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateStatus(String interviewId, InterviewStatusEnum interviewStatusEnum) {
+
+
+        Interview interview = new Interview();
+        interview.setId(interviewId);
+        interview.setStatus(interviewStatusEnum.type);
+
+        interviewMapper.updateById(interview);
+    }
 }

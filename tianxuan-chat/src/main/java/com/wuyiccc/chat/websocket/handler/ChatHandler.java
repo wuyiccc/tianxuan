@@ -73,7 +73,10 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
                 || MsgTypeEnum.VIDEO.type.equals(msgType)
                 || MsgTypeEnum.VOICE.type.equals(msgType)
                 || MsgTypeEnum.RESUME.type.equals(msgType)
-                || MsgTypeEnum.INVITE.type.equals(msgType)) {
+                || MsgTypeEnum.INVITE.type.equals(msgType)
+                || MsgTypeEnum.MSG_INTERVIEW_ACCEPT.type.equals(msgType)
+                || MsgTypeEnum.MSG_INTERVIEW_CANCEL.type.equals(msgType)
+                || MsgTypeEnum.MSG_INTERVIEW_REFUSE.type.equals(msgType)) {
             // 发送消息
 
             // 从全局用户关系中获得对方(接受消息方)的channel

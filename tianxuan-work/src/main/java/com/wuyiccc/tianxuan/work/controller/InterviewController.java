@@ -1,9 +1,11 @@
 package com.wuyiccc.tianxuan.work.controller;
 
+import com.wuyiccc.tianxuan.common.enumeration.InterviewStatusEnum;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.Interview;
 import com.wuyiccc.tianxuan.pojo.bo.CreateInterviewBO;
 import com.wuyiccc.tianxuan.work.service.InterviewService;
+import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -34,5 +36,31 @@ public class InterviewController {
 
         Interview interview = interviewService.detail(interviewId, hrUserId, companyId);
         return R.ok(interview);
+    }
+
+    @PostMapping("/cancel")
+    public R<String> cancel(@RequestParam String interviewId) {
+
+
+        interviewService.updateStatus(interviewId, InterviewStatusEnum.CANCEL);
+        return R.ok();
+    }
+
+    @PostMapping("/accept")
+    public R<String> accept(@RequestParam String interviewId) {
+
+
+        interviewService.updateStatus(interviewId, InterviewStatusEnum.ACCEPT);
+
+        return R.ok();
+    }
+
+
+    @PostMapping("/refuse")
+    public R<String> refuse(@RequestParam String interviewId) {
+
+        interviewService.updateStatus(interviewId, InterviewStatusEnum.REFUSE);
+
+        return R.ok();
     }
 }
