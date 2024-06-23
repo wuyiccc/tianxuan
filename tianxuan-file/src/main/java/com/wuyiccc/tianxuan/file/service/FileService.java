@@ -4,6 +4,8 @@ import com.wuyiccc.tianxuan.pojo.bo.Base64FileBO;
 import io.minio.errors.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -32,4 +34,8 @@ public interface FileService {
     String updateArticleImage(MultipartFile file) throws IOException;
 
     String uploadChatPhoto(MultipartFile file, String userId) throws IOException;
+
+    String uploadChatVideo(MultipartFile file, String userId) throws IOException;
+
+    String uploadFile(File file, String fileName) throws FileNotFoundException;
 }

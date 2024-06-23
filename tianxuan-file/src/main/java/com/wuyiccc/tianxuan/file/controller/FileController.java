@@ -1,9 +1,14 @@
 package com.wuyiccc.tianxuan.file.controller;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.text.StrPool;
+import cn.hutool.core.util.IdUtil;
 import com.wuyiccc.tianxuan.common.result.R;
+import com.wuyiccc.tianxuan.file.utils.VideoUtils;
 import com.wuyiccc.tianxuan.file.service.FileService;
 import com.wuyiccc.tianxuan.pojo.bo.Base64FileBO;
+import com.wuyiccc.tianxuan.pojo.vo.VideoMsgVO;
 import io.minio.errors.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.File;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -115,6 +121,41 @@ public class FileController {
 
         String url = fileService.uploadChatPhoto(file, userId);
         return R.ok(url);
+    }
+
+    @PostMapping("/uploadChatVideo")
+    public R<VideoMsgVO> uploadChatVideo(@RequestParam("file") MultipartFile file, @RequestParam String userId) throws IOException {
+
+        String url = fileService.uploadChatVideo(file, userId);
+
+
+        File tempDir = FileUtil.getTmpDir();
+
+        String fileName = IdUtil.simpleUUID() + ".jpg";
+        String tmpFilePath = tempDir.getAbsolutePath() + StrPool.SLASH + fileName;
+        log.info("tmpFile path: {}", tmpFilePath);
+
+        byte[] firstFrame = VideoUtils.getVideoFirstFrame(url);
+
+        log.info("视频截图成功");
+
+        File newFile = FileUtil.writeBytes(firstFrame, tmpFilePath);
+
+        // 上传封面
+        String imgUrl = fileService.uploadFile(newFile, fileName);
+
+        // 删除文件
+        FileUtil.del(newFile);
+
+        log.info("上传封面成功: {}", imgUrl);
+
+        VideoMsgVO vo = new VideoMsgVO();
+        vo.setCover(imgUrl);
+        vo.setVideoPath(url);
+
+
+
+        return R.ok(vo);
     }
 
 }

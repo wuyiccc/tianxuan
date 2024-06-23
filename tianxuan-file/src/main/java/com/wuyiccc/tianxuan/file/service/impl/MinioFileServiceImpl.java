@@ -1,6 +1,5 @@
 package com.wuyiccc.tianxuan.file.service.impl;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.IdUtil;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
@@ -19,8 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
@@ -72,7 +72,7 @@ public class MinioFileServiceImpl implements FileService {
         String suffixName = ".png";
 
         String uuid = IdUtil.simpleUUID();
-        String objectName= uuid + suffixName;
+        String objectName = uuid + suffixName;
 
         String rootPath = "./tmp" + File.separator;
         String filePath = rootPath + File.separator + objectName;
@@ -224,6 +224,44 @@ public class MinioFileServiceImpl implements FileService {
                 .object(fileName)
                 .stream(file.getInputStream(), file.getSize(), -1)
                 .contentType(file.getContentType())
+                .build();
+        try {
+
+            minioClient.putObject(build);
+            return tianxuanMinioConfig.getEndpoint() + "/" + tianxuanMinioConfig.getBucket() + "/" + fileName;
+        } catch (Exception e) {
+            log.error("文件上传失败", e);
+            throw new CustomException("文件上传失败");
+        }
+    }
+
+    @Override
+    public String uploadChatVideo(MultipartFile file, String userId) throws IOException {
+        String fileName = "video/" + userId + StrPool.SLASH + UUID.randomUUID().toString().replace("-", "") + file.getOriginalFilename();
+        PutObjectArgs build = PutObjectArgs.builder()
+                .bucket(tianxuanMinioConfig.getBucket())
+                .object(fileName)
+                .stream(file.getInputStream(), file.getSize(), -1)
+                .contentType(file.getContentType())
+                .build();
+        try {
+
+            minioClient.putObject(build);
+            return tianxuanMinioConfig.getEndpoint() + "/" + tianxuanMinioConfig.getBucket() + "/" + fileName;
+        } catch (Exception e) {
+            log.error("文件上传失败", e);
+            throw new CustomException("文件上传失败");
+        }
+    }
+
+    @Override
+    public String uploadFile(File file, String fileName) throws FileNotFoundException {
+        fileName = "file/" + UUID.randomUUID().toString().replace("-", "") + fileName;
+        PutObjectArgs build = PutObjectArgs.builder()
+                .bucket(tianxuanMinioConfig.getBucket())
+                .object(fileName)
+                .stream(new FileInputStream(file), file.length(), -1)
+                .contentType("image/jpeg")
                 .build();
         try {
 

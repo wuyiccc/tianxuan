@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public R<String> returnMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
         log.error("文件上传大小超出限制", e);
-        return R.errorMsg("文件上传大小超出限制 50MB");
+        return R.errorMsg("文件上传大小超出限制 100MB");
     }
 
     private Map<String, String> getErrors(BindingResult result) {

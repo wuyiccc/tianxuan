@@ -10,6 +10,7 @@ public enum MsgTypeEnum {
     WORDS(1, "文字表情消息"),
     IMAGE(2, "图片"),
     VOICE(3, "语音"),
+    VIDEO(4, "视频"),
     RESUME(5, "简历"),
     JOB_OFFER(6, "录用通知"),
 

@@ -67,7 +67,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
             // 当websocket初次open的时候, 初始化channel会话, 把用户和channel关联起来
             UserChannelSession.putUserChannelIdRelation(currentChannelId, senderId);
             UserChannelSession.putMultiChannels(senderId, currentChannel);
-        } else if (MsgTypeEnum.WORDS.type.equals(msgType) || MsgTypeEnum.IMAGE.type.equals(msgType)) {
+        } else if (MsgTypeEnum.WORDS.type.equals(msgType) || MsgTypeEnum.IMAGE.type.equals(msgType) || MsgTypeEnum.VIDEO.type.equals(msgType)) {
             // 发送消息
 
             // 从全局用户关系中获得对方(接受消息方)的channel
