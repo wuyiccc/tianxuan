@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.auth.service;
 
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.netty.ChatMsg;
 
 /**
@@ -10,4 +11,6 @@ public interface ChatMessageService {
 
 
     public void saveMsg(ChatMsg chatMsg);
+
+    PagedGridResult list(String senderId, String receiverId, Integer page, Integer pageSize);
 }

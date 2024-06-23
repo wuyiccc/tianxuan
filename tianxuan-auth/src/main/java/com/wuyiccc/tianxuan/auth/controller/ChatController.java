@@ -1,17 +1,17 @@
 package com.wuyiccc.tianxuan.auth.controller;
 
 import cn.hutool.core.text.StrPool;
+import com.wuyiccc.tianxuan.auth.service.ChatMessageService;
 import com.wuyiccc.tianxuan.common.base.BaseInfoProperties;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.common.util.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author wuyiccc
@@ -26,6 +26,9 @@ public class ChatController {
     private RedisUtils redisUtils;
 
 
+    @Resource
+    private ChatMessageService chatMessageService;
+
     @PostMapping("/getMyUnReadCount")
     public R<Map<Object, Object>> getMyUnReadCount(@RequestParam String myId) {
 
@@ -39,5 +42,19 @@ public class ChatController {
 
         redisUtils.setHashValue(BaseInfoProperties.CHAT_MSG_LIST + StrPool.COLON + myId, oppositeId, "0");
         return R.ok();
+    }
+
+    @PostMapping("/list/{senderId}/{receiverId}")
+    public R<PagedGridResult> list(@PathVariable("senderId") String senderId
+            , @PathVariable("receiverId") String receiverId
+            , @RequestParam Integer page
+            , @RequestParam Integer pageSize) {
+
+        if (Objects.isNull(page) || page == 0) {
+            page = 1;
+        }
+
+        PagedGridResult res = chatMessageService.list(senderId, receiverId, page, pageSize);
+        return R.ok(res);
     }
 }
