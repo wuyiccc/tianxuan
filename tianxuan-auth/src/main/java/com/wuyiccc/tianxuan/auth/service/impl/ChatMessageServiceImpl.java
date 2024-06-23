@@ -13,6 +13,7 @@ import com.wuyiccc.tianxuan.common.util.RedisUtils;
 import com.wuyiccc.tianxuan.pojo.ChatMessage;
 import com.wuyiccc.tianxuan.pojo.netty.ChatMsg;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,5 +71,15 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         list.sort(Comparator.comparing(ChatMessage::getChatTime));
 
         return PagedGridResult.build(list, page);
+    }
+
+    @Override
+    public void updateMsgSignRead(String msgId) {
+
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setId(msgId);
+        chatMessage.setIsRead(true);
+
+        chatMessageMapper.updateById(chatMessage);
     }
 }

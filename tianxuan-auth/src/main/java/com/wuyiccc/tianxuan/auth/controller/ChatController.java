@@ -57,4 +57,11 @@ public class ChatController {
         PagedGridResult res = chatMessageService.list(senderId, receiverId, page, pageSize);
         return R.ok(res);
     }
+
+    @PostMapping("/signRead/{msgId}")
+    public R<String> signRead(@PathVariable("msgId") String msgId) {
+
+        chatMessageService.updateMsgSignRead(msgId);
+        return R.ok();
+    }
 }

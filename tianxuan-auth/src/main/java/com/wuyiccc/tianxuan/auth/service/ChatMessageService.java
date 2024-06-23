@@ -13,4 +13,6 @@ public interface ChatMessageService {
     public void saveMsg(ChatMsg chatMsg);
 
     PagedGridResult list(String senderId, String receiverId, Integer page, Integer pageSize);
+
+    void updateMsgSignRead(String msgId);
 }
