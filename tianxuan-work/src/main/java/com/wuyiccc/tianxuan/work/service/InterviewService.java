@@ -1,5 +1,6 @@
 package com.wuyiccc.tianxuan.work.service;
 
+import com.wuyiccc.tianxuan.pojo.Interview;
 import com.wuyiccc.tianxuan.pojo.bo.CreateInterviewBO;
 
 /**
@@ -8,4 +9,6 @@ import com.wuyiccc.tianxuan.pojo.bo.CreateInterviewBO;
  */
 public interface InterviewService {
     String create(CreateInterviewBO createInterviewBO);
+
+    Interview detail(String interviewId, String hrUserId, String companyId);
 }

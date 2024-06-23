@@ -1,12 +1,10 @@
 package com.wuyiccc.tianxuan.work.controller;
 
 import com.wuyiccc.tianxuan.common.result.R;
+import com.wuyiccc.tianxuan.pojo.Interview;
 import com.wuyiccc.tianxuan.pojo.bo.CreateInterviewBO;
 import com.wuyiccc.tianxuan.work.service.InterviewService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -28,5 +26,13 @@ public class InterviewController {
         String id = interviewService.create(createInterviewBO);
 
         return R.ok(id);
+    }
+
+    @PostMapping("/detail")
+    public R<Interview> detail(@RequestParam String interviewId, @RequestParam String hrUserId, @RequestParam String companyId) {
+
+
+        Interview interview = interviewService.detail(interviewId, hrUserId, companyId);
+        return R.ok(interview);
     }
 }
