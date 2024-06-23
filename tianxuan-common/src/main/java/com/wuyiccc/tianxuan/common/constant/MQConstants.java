@@ -15,14 +15,20 @@ public class MQConstants {
      */
     public static final String PRODUCER_SMS_CODE = "producer_sms_code";
 
+    public static final String PRODUCER_CHAT = "producer_chat";
+
     /**
      * consumer
      */
     public static final String CONSUMER_SMS_CODE = "consumer_sms_code";
 
+    public static final String CONSUMER_CHAT = "consumer_chat";
 
     /**
      * topic
      */
     public static final String TOPIC_SMS_CODE = "topic_sms_code";
+
+
+    public static final String TOPIC_CHAT = "topic_chat";
 }
