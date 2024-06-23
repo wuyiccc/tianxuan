@@ -33,4 +33,11 @@ public class ChatController {
 
         return R.ok(msgCache);
     }
+
+    @PostMapping("/clearMyUnReadCount")
+    public R<String> clearMyUnReadCount(@RequestParam String myId, @RequestParam String oppositeId) {
+
+        redisUtils.setHashValue(BaseInfoProperties.CHAT_MSG_LIST + StrPool.COLON + myId, oppositeId, "0");
+        return R.ok();
+    }
 }
