@@ -5,8 +5,8 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.IdUtil;
 import com.wuyiccc.tianxuan.common.result.R;
-import com.wuyiccc.tianxuan.file.utils.VideoUtils;
 import com.wuyiccc.tianxuan.file.service.FileService;
+import com.wuyiccc.tianxuan.file.utils.VideoUtils;
 import com.wuyiccc.tianxuan.pojo.bo.Base64FileBO;
 import com.wuyiccc.tianxuan.pojo.vo.VideoMsgVO;
 import io.minio.errors.*;
@@ -154,10 +154,8 @@ public class FileController {
         vo.setVideoPath(url);
 
 
-
         return R.ok(vo);
     }
-
 
 
     @PostMapping("/uploadChatVoice")
@@ -165,6 +163,16 @@ public class FileController {
 
         String url = fileService.uploadChatVoice(file, userId);
         return R.ok(url);
+    }
+
+    /**
+     * 语音转文字, 这里需要调用百度云服务
+     */
+    @PostMapping("/uploadVoice")
+    public R<String> uploadVoice(@RequestParam("file") MultipartFile file) {
+
+
+        return R.ok("语音转文字测试");
     }
 
 }
