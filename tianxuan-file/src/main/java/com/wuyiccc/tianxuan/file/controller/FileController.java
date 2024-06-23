@@ -158,4 +158,13 @@ public class FileController {
         return R.ok(vo);
     }
 
+
+
+    @PostMapping("/uploadChatVoice")
+    public R<String> uploadChatVoice(@RequestParam("file") MultipartFile file, @RequestParam String userId) throws IOException {
+
+        String url = fileService.uploadChatVoice(file, userId);
+        return R.ok(url);
+    }
+
 }

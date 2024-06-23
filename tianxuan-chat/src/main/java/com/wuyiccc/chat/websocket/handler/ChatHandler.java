@@ -15,6 +15,7 @@ import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.validator.Msg;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -67,7 +68,10 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
             // 当websocket初次open的时候, 初始化channel会话, 把用户和channel关联起来
             UserChannelSession.putUserChannelIdRelation(currentChannelId, senderId);
             UserChannelSession.putMultiChannels(senderId, currentChannel);
-        } else if (MsgTypeEnum.WORDS.type.equals(msgType) || MsgTypeEnum.IMAGE.type.equals(msgType) || MsgTypeEnum.VIDEO.type.equals(msgType)) {
+        } else if (MsgTypeEnum.WORDS.type.equals(msgType)
+                || MsgTypeEnum.IMAGE.type.equals(msgType)
+                || MsgTypeEnum.VIDEO.type.equals(msgType)
+                || MsgTypeEnum.VOICE.type.equals(msgType)) {
             // 发送消息
 
             // 从全局用户关系中获得对方(接受消息方)的channel
@@ -81,6 +85,10 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
                 for (Channel c : multiChannels) {
                     Channel findChannel = clients.find(c.id());
                     if (Objects.nonNull(findChannel)) {
+                        if (MsgTypeEnum.VOICE.type.equals(msgType)) {
+
+                            chatMsg.setIsRead(false);
+                        }
                         dataContent.setChatMsg(chatMsg);
                         String chatTimeFormat = LocalDateUtils.format(chatMsg.getChatTime(), LocalDateUtils.DATETIME_PATTERN_2);
                         dataContent.setChatTime(chatTimeFormat);
@@ -97,8 +105,12 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
                 Channel findChannel = clients.find(c.id());
                 log.info("c == findChannel ? : {}", c == findChannel);
                 if (Objects.nonNull(findChannel)) {
-                    dataContent.setChatMsg(chatMsg);
+                    if (MsgTypeEnum.VOICE.type.equals(msgType)) {
 
+                        // 语音发送对消息标记是否已经播放语音
+                        chatMsg.setIsRead(false);
+                    }
+                    dataContent.setChatMsg(chatMsg);
                     String chatTimeFormat = LocalDateUtils.format(chatMsg.getChatTime(), LocalDateUtils.DATETIME_PATTERN_2);
 
                     dataContent.setChatTime(chatTimeFormat);

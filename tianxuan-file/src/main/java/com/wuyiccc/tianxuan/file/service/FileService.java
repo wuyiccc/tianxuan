@@ -38,4 +38,6 @@ public interface FileService {
     String uploadChatVideo(MultipartFile file, String userId) throws IOException;
 
     String uploadFile(File file, String fileName) throws FileNotFoundException;
+
+    String uploadChatVoice(MultipartFile file, String userId) throws IOException;
 }
