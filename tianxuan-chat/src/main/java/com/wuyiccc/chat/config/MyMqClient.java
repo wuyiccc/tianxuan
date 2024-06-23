@@ -13,18 +13,25 @@ import org.apache.rocketmq.common.message.Message;
 @Slf4j
 public class MyMqClient {
 
-    public static void main(String[] args) throws MQClientException {
+    private static DefaultMQProducer producer = null;
 
-        DefaultMQProducer producer = new DefaultMQProducer(MQConstants.PRODUCER_CHAT);
-        producer.setNamesrvAddr("rocketmq.local.wuyiccc.com:12071");
+
+    public static void start(String nameServer) throws MQClientException {
+        producer = new DefaultMQProducer(MQConstants.PRODUCER_CHAT);
+        producer.setNamesrvAddr(nameServer);
         producer.start();
+    }
 
-
+    public static void sendMsg(String msg) {
         try {
-            producer.send(new Message(MQConstants.TOPIC_CHAT, "hello localhost:9876".getBytes()));
+            producer.send(new Message(MQConstants.TOPIC_CHAT, msg.getBytes()));
         } catch (Throwable e) {
             log.error("消息发送失败", e);
         }
+    }
+
+    public static void stop() {
+
         producer.shutdown();
     }
 

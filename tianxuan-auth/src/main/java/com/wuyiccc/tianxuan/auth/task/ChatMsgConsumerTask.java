@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.auth.task;
 
 import com.wuyiccc.tianxuan.api.config.TianxuanRocketMQConfig;
+import com.wuyiccc.tianxuan.auth.service.ChatMessageService;
 import com.wuyiccc.tianxuan.common.constant.MQConstants;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +18,12 @@ public class ChatMsgConsumerTask implements Runnable {
     private TianxuanRocketMQConfig tianxuanRocketMQConfig;
 
 
+    private ChatMessageService chatMessageService;
 
-    public ChatMsgConsumerTask(TianxuanRocketMQConfig tianxuanRocketMQConfig) {
+
+    public ChatMsgConsumerTask(TianxuanRocketMQConfig tianxuanRocketMQConfig, ChatMessageService chatMessageService) {
         this.tianxuanRocketMQConfig = tianxuanRocketMQConfig;
+        this.chatMessageService = chatMessageService;
     }
 
     @Override
@@ -30,7 +34,7 @@ public class ChatMsgConsumerTask implements Runnable {
             consumer.setNamesrvAddr(tianxuanRocketMQConfig.getNameServer());
             consumer.subscribe(MQConstants.TOPIC_CHAT, "*");
             consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
-            consumer.registerMessageListener(new ChatMgsConsumerListener());
+            consumer.registerMessageListener(new ChatMgsConsumerListener(chatMessageService));
             consumer.start();
             log.info("mq消费 {} 开始运行", MQConstants.TOPIC_CHAT);
         } catch (Exception e) {

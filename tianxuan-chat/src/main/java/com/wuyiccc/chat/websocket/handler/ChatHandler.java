@@ -1,7 +1,9 @@
 package com.wuyiccc.chat.websocket.handler;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.json.JSONUtil;
+import com.wuyiccc.chat.config.MyMqClient;
 import com.wuyiccc.chat.websocket.UserChannelSession;
 import com.wuyiccc.tianxuan.common.enumeration.MsgTypeEnum;
 import com.wuyiccc.tianxuan.common.util.LocalDateUtils;
@@ -54,6 +56,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
         // 1. 获取客户端发来的消息 并且解析
         DataContent dataContent = JSONUtil.toBean(content, DataContent.class);
         ChatMsg chatMsg = dataContent.getChatMsg();
+        chatMsg.setMsgId(IdUtil.getSnowflakeNextIdStr());
         String msgText = chatMsg.getMsg();
         String receiverId = chatMsg.getReceiverId();
         String senderId = chatMsg.getSenderId();
@@ -124,6 +127,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 
 
             }
+            MyMqClient.sendMsg(JSONUtil.toJsonStr(chatMsg));
         }
 
 

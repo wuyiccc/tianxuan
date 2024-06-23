@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ChatMsg {
 
+    private String msgId;
+
     // 发送者的用户id
     private String senderId;
 

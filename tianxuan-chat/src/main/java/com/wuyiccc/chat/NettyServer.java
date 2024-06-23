@@ -1,11 +1,13 @@
 package com.wuyiccc.chat;
 
+import com.wuyiccc.chat.config.MyMqClient;
 import com.wuyiccc.chat.websocket.WSInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.apache.rocketmq.client.exception.MQClientException;
 
 /**
  * @author wuyiccc
@@ -13,10 +15,12 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
  */
 public class NettyServer {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, MQClientException {
 
         EventLoopGroup boosGroup = null;
         EventLoopGroup workerGroup = null;
+
+        MyMqClient.start("rocketmq.local.wuyiccc.com:12071");
         try {
             // 定义主从线程组
 
@@ -41,6 +45,7 @@ public class NettyServer {
             // 监听关闭的channel
             channelFuture.channel().closeFuture().sync();
         } finally {
+            MyMqClient.stop();
             boosGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }

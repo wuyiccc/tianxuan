@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.auth.task;
 
 import com.wuyiccc.tianxuan.api.config.TianxuanRocketMQConfig;
+import com.wuyiccc.tianxuan.auth.service.ChatMessageService;
 import com.wuyiccc.tianxuan.common.util.DingDingMsgUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -28,12 +29,15 @@ public class MqSyncTask implements ApplicationRunner {
     @Resource
     private DingDingMsgUtils dingDingMsgUtils;
 
+    @Resource
+    private ChatMessageService chatMessageService;
+
 
     @Override
     public void run(ApplicationArguments args) {
 
         ExecutorService executors = Executors.newFixedThreadPool(2);
         executors.submit(new SendSmsCodeConsumerTask(tianxuanRocketMQConfig, dingDingMsgUtils));
-        executors.submit(new ChatMsgConsumerTask(tianxuanRocketMQConfig));
+        executors.submit(new ChatMsgConsumerTask(tianxuanRocketMQConfig, chatMessageService));
     }
 }
