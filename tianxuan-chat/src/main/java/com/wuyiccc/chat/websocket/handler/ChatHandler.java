@@ -14,6 +14,7 @@ import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.Objects;
  * @date 2023/12/25 21:23
  * 处理消息的handler
  */
+@Slf4j
 public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
 
@@ -86,6 +88,25 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
                         findChannel.writeAndFlush(new TextWebSocketFrame(JSONUtil.toJsonStr(dataContent)));
                     }
                 }
+            }
+
+            // 如果发送方在多个设备登录, 则将自己发送的消息同步到其他设备
+            List<Channel> myOtherChannels = UserChannelSession.getMyOtherChannels(senderId, currentChannelId);
+
+            for (Channel c : myOtherChannels) {
+
+                Channel findChannel = clients.find(c.id());
+                log.info("c == findChannel ? : {}", c == findChannel);
+                if (Objects.nonNull(findChannel)) {
+                    dataContent.setChatMsg(chatMsg);
+
+                    String chatTimeFormat = LocalDateUtils.format(chatMsg.getChatTime(), LocalDateUtils.DATETIME_PATTERN_2);
+
+                    dataContent.setChatTime(chatTimeFormat);
+                    findChannel.writeAndFlush(new TextWebSocketFrame(JSONUtil.toJsonStr(dataContent)));
+                }
+
+
             }
         }
 

@@ -1,6 +1,7 @@
 package com.wuyiccc.chat.websocket;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import io.netty.channel.Channel;
 
 import java.util.*;
@@ -72,6 +73,27 @@ public class UserChannelSession {
         System.out.println("------------------------");
 
 
+    }
+
+    /**
+     * 获得我的设备其他端的channel, 用户在我发送消息的时候，进行同步给其他设备
+     */
+    public static List<Channel> getMyOtherChannels(String userId, String channelId) {
+
+        List<Channel> channels = getMultiChannels(userId);
+
+        if (CollUtil.isEmpty(channels)) {
+            return ListUtil.empty();
+        }
+
+        List<Channel> myOtherChannels = new ArrayList<>();
+        for (Channel tmpChannel : channels) {
+            if (!tmpChannel.id().asLongText().equals(channelId)) {
+                myOtherChannels.add(tmpChannel);
+            }
+        }
+
+        return myOtherChannels;
     }
 
     /**
