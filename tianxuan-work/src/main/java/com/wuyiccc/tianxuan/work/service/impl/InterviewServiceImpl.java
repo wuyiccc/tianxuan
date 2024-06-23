@@ -2,6 +2,7 @@ package com.wuyiccc.tianxuan.work.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.wuyiccc.tianxuan.common.enumeration.InterviewStatusEnum;
@@ -63,5 +64,24 @@ public class InterviewServiceImpl implements InterviewService {
         interview.setStatus(interviewStatusEnum.type);
 
         interviewMapper.updateById(interview);
+    }
+
+    @Override
+    public Long getHrInterviewRecordCount(String hrId) {
+
+        LambdaQueryWrapper<Interview> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Interview::getHrUserId, hrId);
+        wrapper.notIn(Interview::getStatus, ListUtil.toList(InterviewStatusEnum.CANCEL.type, InterviewStatusEnum.REFUSE.type));
+
+        return interviewMapper.selectCount(wrapper);
+    }
+
+    @Override
+    public Long getCandInterviewRecordCount(String candUserId) {
+        LambdaQueryWrapper<Interview> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(Interview::getCandUserId, candUserId);
+        wrapper.notIn(Interview::getStatus, ListUtil.toList(InterviewStatusEnum.CANCEL.type, InterviewStatusEnum.REFUSE.type));
+
+        return interviewMapper.selectCount(wrapper);
     }
 }

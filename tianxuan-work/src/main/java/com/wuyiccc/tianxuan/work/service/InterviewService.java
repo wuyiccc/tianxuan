@@ -14,4 +14,8 @@ public interface InterviewService {
     Interview detail(String interviewId, String hrUserId, String companyId);
 
     void updateStatus(String interviewId, InterviewStatusEnum interviewStatusEnum);
+
+    Long getHrInterviewRecordCount(String hrId);
+
+    Long getCandInterviewRecordCount(String candUserId);
 }

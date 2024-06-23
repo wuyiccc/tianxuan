@@ -5,7 +5,6 @@ import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.Interview;
 import com.wuyiccc.tianxuan.pojo.bo.CreateInterviewBO;
 import com.wuyiccc.tianxuan.work.service.InterviewService;
-import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -63,4 +62,19 @@ public class InterviewController {
 
         return R.ok();
     }
+
+    @PostMapping("/getHrInterviewRecordCount")
+    public R<Long> getHrInterviewRecordCount(@RequestParam String hrId) {
+
+        Long count = interviewService.getHrInterviewRecordCount(hrId);
+        return R.ok(count);
+    }
+
+    @PostMapping("/getCandInterviewRecordCount")
+    public R<Long> getCandInterviewRecordCount(@RequestParam String candUserId) {
+
+        Long count = interviewService.getCandInterviewRecordCount(candUserId);
+        return R.ok(count);
+    }
+
 }
