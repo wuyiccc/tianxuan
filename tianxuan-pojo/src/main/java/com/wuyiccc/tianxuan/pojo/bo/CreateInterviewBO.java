@@ -1,5 +1,8 @@
-package com.wuyiccc.tianxuan.pojo;
+package com.wuyiccc.tianxuan.pojo.bo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wuyiccc.tianxuan.common.util.LocalDateUtils;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -7,18 +10,14 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 
 /**
- * <p>
- * 面试邀约表
- * 本表为次表，可做冗余，可以用mongo或者es替代
- * </p>
- *
  * @author wuyiccc
- * @since 2023-06-22
+ * @date 2024/6/23 13:23
  */
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Interview {
+public class CreateInterviewBO {
 
 
     private String id;
@@ -51,6 +50,7 @@ public class Interview {
     /**
      * 面试时间
      */
+    @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = LocalDateUtils.DATETIME_PATTERN)
     private LocalDateTime interviewTime;
 
     /**
@@ -63,15 +63,6 @@ public class Interview {
      */
     private String remark;
 
-    /**
-     * 面试邀约的状态
-     * 1：等待候选人接受面试
-     * 2：候选人已接受面试
-     * 3：候选人已拒绝面试
-     * 4：HR已取消面试
-     * 5：面试通过
-     */
-    private Integer status;
 
     /**
      * 候选人名称（候选人名称）
