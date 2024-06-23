@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.work.service;
 
 import com.wuyiccc.tianxuan.common.enumeration.InterviewStatusEnum;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Interview;
 import com.wuyiccc.tianxuan.pojo.bo.CreateInterviewBO;
 
@@ -18,4 +19,6 @@ public interface InterviewService {
     Long getHrInterviewRecordCount(String hrId);
 
     Long getCandInterviewRecordCount(String candUserId);
+
+    PagedGridResult pageSearch(String companyId, String hrId, String candUserId, Integer page, Integer limit);
 }

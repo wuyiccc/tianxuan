@@ -1,6 +1,7 @@
 package com.wuyiccc.tianxuan.work.controller;
 
 import com.wuyiccc.tianxuan.common.enumeration.InterviewStatusEnum;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.common.result.R;
 import com.wuyiccc.tianxuan.pojo.Interview;
 import com.wuyiccc.tianxuan.pojo.bo.CreateInterviewBO;
@@ -76,5 +77,20 @@ public class InterviewController {
         Long count = interviewService.getCandInterviewRecordCount(candUserId);
         return R.ok(count);
     }
+
+    @PostMapping("/hrPageSearchInterview")
+    public R<PagedGridResult> hrPageSearchInterview(@RequestParam String hrId, @RequestParam String companyId, @RequestParam Integer page, @RequestParam Integer limit) {
+
+        PagedGridResult pagedGridResult = interviewService.pageSearch(companyId, hrId, null, page, limit);
+        return R.ok(pagedGridResult);
+    }
+
+    @PostMapping("/candPageSearchInterview")
+    public R<PagedGridResult> candPageSearchInterview(@RequestParam String candUserId, @RequestParam Integer page, @RequestParam Integer limit) {
+
+        PagedGridResult pagedGridResult = interviewService.pageSearch(null, null, candUserId, page, limit);
+        return R.ok(pagedGridResult);
+    }
+
 
 }

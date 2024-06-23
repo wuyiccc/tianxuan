@@ -3,10 +3,13 @@ package com.wuyiccc.tianxuan.work.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.github.pagehelper.PageHelper;
 import com.wuyiccc.tianxuan.common.enumeration.InterviewStatusEnum;
 import com.wuyiccc.tianxuan.common.exception.CustomException;
+import com.wuyiccc.tianxuan.common.result.PagedGridResult;
 import com.wuyiccc.tianxuan.pojo.Interview;
 import com.wuyiccc.tianxuan.pojo.bo.CreateInterviewBO;
 import com.wuyiccc.tianxuan.work.mapper.InterviewMapper;
@@ -83,5 +86,24 @@ public class InterviewServiceImpl implements InterviewService {
         wrapper.notIn(Interview::getStatus, ListUtil.toList(InterviewStatusEnum.CANCEL.type, InterviewStatusEnum.REFUSE.type));
 
         return interviewMapper.selectCount(wrapper);
+    }
+
+    @Override
+    public PagedGridResult pageSearch(String companyId, String hrId, String candUserId, Integer page, Integer limit) {
+
+        PageHelper.startPage(page, limit);
+
+        LambdaQueryWrapper<Interview> wrapper = Wrappers.lambdaQuery();
+        if (CharSequenceUtil.isNotBlank(companyId)) {
+            wrapper.eq(Interview::getCompanyId, companyId);
+        }
+        if (CharSequenceUtil.isNotBlank(hrId)) {
+            wrapper.eq(Interview::getHrUserId, hrId);
+        }
+        if (CharSequenceUtil.isNotBlank(candUserId)) {
+            wrapper.eq(Interview::getCandUserId, candUserId);
+        }
+        List<Interview> interviews = interviewMapper.selectList(wrapper);
+        return PagedGridResult.build(interviews, page);
     }
 }
