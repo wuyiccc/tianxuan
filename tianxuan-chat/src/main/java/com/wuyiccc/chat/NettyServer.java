@@ -20,7 +20,7 @@ public class NettyServer {
         EventLoopGroup boosGroup = null;
         EventLoopGroup workerGroup = null;
 
-        MyMqClient.start("rocketmq.local.wuyiccc.com:12071");
+        MyMqClient.start();
         try {
             // 定义主从线程组
 

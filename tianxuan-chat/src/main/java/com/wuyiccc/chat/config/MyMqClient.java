@@ -6,6 +6,10 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.common.message.Message;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
  * @author wuyiccc
  * @date 2024/6/23 16:06
@@ -15,10 +19,26 @@ public class MyMqClient {
 
     private static DefaultMQProducer producer = null;
 
+    private static final String CHAT_CONFIG_FILE_NAME = "chat.properties";
 
-    public static void start(String nameServer) throws MQClientException {
+    private static final String NAME_SERVER_CONFIG_KEY = "tianxuan.rocketmq.nameserver";
+
+
+    public static void start() throws MQClientException {
+
+        Properties properties = new Properties();
+        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(CHAT_CONFIG_FILE_NAME);
+        try {
+            properties.load(in);
+        } catch (Exception e) {
+            log.error("加载chat.properties文件失败", e);
+        }
+
+        String nameserver = properties.getProperty(NAME_SERVER_CONFIG_KEY);
+        log.info("this is nameserver addr: {}", nameserver);
+
         producer = new DefaultMQProducer(MQConstants.PRODUCER_CHAT);
-        producer.setNamesrvAddr(nameServer);
+        producer.setNamesrvAddr(nameserver);
         producer.start();
     }
 
@@ -34,5 +54,6 @@ public class MyMqClient {
 
         producer.shutdown();
     }
+
 
 }
