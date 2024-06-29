@@ -1,6 +1,8 @@
-package com.wuyiccc.chat.demo;
+package com.wuyiccc.chat.demo.server;
 
 import cn.hutool.socket.nio.NioServer;
+import com.wuyiccc.chat.demo.client.handler.FirstClientHandler;
+import com.wuyiccc.chat.demo.server.handler.FirstServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
@@ -26,21 +28,6 @@ public class DemoNettyServer {
 
         NioEventLoopGroup boss = new NioEventLoopGroup();
         NioEventLoopGroup worker = new NioEventLoopGroup();
-        //serverBootstrap
-        //        .group(boss, worker)
-        //        .channel(NioServerSocketChannel.class)
-        //        .childHandler(new ChannelInitializer<NioSocketChannel>() {
-        //            protected void initChannel(NioSocketChannel ch) {
-        //                ch.pipeline().addLast(new StringDecoder());
-        //                ch.pipeline().addLast(new SimpleChannelInboundHandler<String>() {
-        //                    @Override
-        //                    protected void channelRead0(ChannelHandlerContext ctx, String msg) {
-        //                        System.out.println(msg);
-        //                    }
-        //                });
-        //            }
-        //        })
-        //        .bind(8000);
 
         serverBootstrap.group(boss, worker)
                 .channel(NioServerSocketChannel.class)
@@ -66,15 +53,16 @@ public class DemoNettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) throws Exception {
-
-                        ch.pipeline().addLast(new StringDecoder());
-                        ch.pipeline().addLast(new SimpleChannelInboundHandler<String>() {
-                            @Override
-                            protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-
-                                System.out.println(msg);
-                            }
-                        });
+                        //
+                        //ch.pipeline().addLast(new StringDecoder());
+                        //ch.pipeline().addLast(new SimpleChannelInboundHandler<String>() {
+                        //    @Override
+                        //    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+                        //
+                        //        System.out.println(msg);
+                        //    }
+                        //});
+                        ch.pipeline().addLast(new FirstServerHandler());
                     }
                 });
 

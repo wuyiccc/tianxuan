@@ -1,5 +1,6 @@
-package com.wuyiccc.chat.demo;
+package com.wuyiccc.chat.demo.client;
 
+import com.wuyiccc.chat.demo.client.handler.FirstClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -34,30 +35,12 @@ public class DemoNettyClient {
                 .handler(new ChannelInitializer<Channel>() {
                     @Override
                     protected void initChannel(Channel ch) {
-                        ch.pipeline().addLast(new StringEncoder());
+                        //ch.pipeline().addLast(new StringEncoder());
+                        ch.pipeline().addLast(new FirstClientHandler());
                     }
                 });
 
-        // 建立连接
-        //Channel channel = bootstrap.connect("127.0.0.1", 8000)
-        //        .addListener(new ChannelFutureListener() {
-        //            @Override
-        //            public void operationComplete(ChannelFuture future) throws Exception {
-        //                if (future.isSuccess()) {
-        //                    System.out.println("连接建立成功");
-        //                } else {
-        //                    System.out.println("连接建立失败");
-        //                }
-        //            }
-        //        })
-        //        .channel();
-
-        connect(bootstrap, "127.0.0.1", 9000, MAX_RETRY);
-
-        //while (true) {
-        //    channel.writeAndFlush(new Date() + ": hello world!");
-        //    Thread.sleep(2000);
-        //}
+        connect(bootstrap, "127.0.0.1", 11081, MAX_RETRY);
     }
 
 
