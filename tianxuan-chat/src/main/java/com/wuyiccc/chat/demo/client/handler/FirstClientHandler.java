@@ -6,10 +6,11 @@ import com.wuyiccc.chat.demo.protocol.Packet;
 import com.wuyiccc.chat.demo.protocol.PacketCodeC;
 import com.wuyiccc.chat.demo.protocol.request.LoginRequestPacket;
 import com.wuyiccc.chat.demo.protocol.response.LoginResponsePacket;
+import com.wuyiccc.chat.demo.protocol.response.MessageResponsePacket;
+import com.wuyiccc.chat.demo.utils.LoginUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import org.bouncycastle.util.Pack;
 
 /**
  * @author wuyiccc
@@ -32,7 +33,7 @@ public class FirstClientHandler extends ChannelInboundHandlerAdapter {
         login.setPassword("wuyicccpwd");
 
         // 编码
-        ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(login);
+        ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(ctx.alloc(), login);
 
         // 写入数据
         ctx.channel().writeAndFlush(byteBuf);
@@ -55,11 +56,14 @@ public class FirstClientHandler extends ChannelInboundHandlerAdapter {
 
             if (responsePacket.isSuccess()) {
                 System.out.println(DateUtil.date() + ": 客户端登录成功");
+                LoginUtils.markAsLogin(ctx.channel());
             } else {
                 System.out.println(DateUtil.date() + ": 客户端登录失败");
             }
-        } else {
-            System.out.println("未知响应消息");
+        } else if (packet instanceof MessageResponsePacket) {
+
+            MessageResponsePacket messageResponsePacket = (MessageResponsePacket) packet;
+            System.out.println(DateUtil.date() + ": 收到服务端消息: " + messageResponsePacket.getMessage());
         }
 
     }
