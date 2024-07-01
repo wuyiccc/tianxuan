@@ -1,11 +1,13 @@
 package com.wuyiccc.chat.demo.server.handler;
 
 import cn.hutool.core.date.DateUtil;
+import com.wuyiccc.chat.demo.protocol.Packet;
+import com.wuyiccc.chat.demo.protocol.PacketCodeC;
+import com.wuyiccc.chat.demo.protocol.request.LoginRequestPacket;
+import com.wuyiccc.chat.demo.protocol.response.LoginResponsePacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author wuyiccc
@@ -19,24 +21,30 @@ public class FirstServerHandler extends ChannelInboundHandlerAdapter {
 
         ByteBuf buf = (ByteBuf) msg;
 
-        System.out.println(DateUtil.date() + ": 服务端读取到数据 -> " + buf.toString(StandardCharsets.UTF_8));
 
-        // 写数据给客户端
-        ByteBuf out = getByteBuf(ctx);
-        ctx.channel().writeAndFlush(out);
+        // 解码数据
+        Packet requestPacket = PacketCodeC.INSTANCE.decode(buf);
+        if (requestPacket instanceof LoginRequestPacket) {
+
+            LoginRequestPacket loginRequestPacket = (LoginRequestPacket) requestPacket;
+
+            LoginResponsePacket loginResponsePacket = new LoginResponsePacket();
+            loginResponsePacket.setVersion(loginRequestPacket.getVersion());
+            if (valid(loginRequestPacket)) {
+                loginResponsePacket.setSuccess(true);
+                System.out.println(DateUtil.date() + ": 登录成功!");
+            } else {
+                loginResponsePacket.setSuccess(false);
+                loginResponsePacket.setReason("账号或密码错误");
+                System.out.println(DateUtil.date() + ": 登录失败!");
+            }
+            ByteBuf responseBuf = PacketCodeC.INSTANCE.encode(loginResponsePacket);
+            ctx.channel().writeAndFlush(responseBuf);
+        }
     }
 
-
-    private ByteBuf getByteBuf(ChannelHandlerContext ctx) {
-
-        // 1. 获取二进制抽象ByteBuf
-        ByteBuf buffer = ctx.alloc().buffer();
-
-        byte[] bytes = "你好, 我是服务端".getBytes(StandardCharsets.UTF_8);
-
-        // 填充数据到ByteBuf
-        buffer.writeBytes(bytes);
-
-        return buffer;
+    private boolean valid(LoginRequestPacket loginRequestPacket) {
+        return true;
     }
+
 }

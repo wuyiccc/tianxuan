@@ -1,5 +1,6 @@
-package com.wuyiccc.chat.demo.protocol;
+package com.wuyiccc.chat.demo.protocol.request;
 
+import com.wuyiccc.chat.demo.protocol.Packet;
 import lombok.Data;
 
 import static com.wuyiccc.chat.demo.protocol.Command.LOGIN_REQUEST;
@@ -12,7 +13,7 @@ import static com.wuyiccc.chat.demo.protocol.Command.LOGIN_REQUEST;
 public class LoginRequestPacket extends Packet {
 
 
-    private Integer userId;
+    private String userId;
 
     private String username;
 

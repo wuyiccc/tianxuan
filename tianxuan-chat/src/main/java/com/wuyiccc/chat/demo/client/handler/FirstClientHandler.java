@@ -1,11 +1,15 @@
 package com.wuyiccc.chat.demo.client.handler;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
+import com.wuyiccc.chat.demo.protocol.Packet;
+import com.wuyiccc.chat.demo.protocol.PacketCodeC;
+import com.wuyiccc.chat.demo.protocol.request.LoginRequestPacket;
+import com.wuyiccc.chat.demo.protocol.response.LoginResponsePacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-
-import java.nio.charset.StandardCharsets;
+import org.bouncycastle.util.Pack;
 
 /**
  * @author wuyiccc
@@ -20,31 +24,44 @@ public class FirstClientHandler extends ChannelInboundHandlerAdapter {
 
         System.out.println(DateUtil.date() + "客户端写出数据");
 
-        // 1. 获取数据
-        ByteBuf buffer = getByteBuf(ctx);
 
-        // 写数据
-        ctx.channel().writeAndFlush(buffer);
-    }
+        // 创建登录对象
+        LoginRequestPacket login = new LoginRequestPacket();
+        login.setUserId(IdUtil.simpleUUID());
+        login.setUsername("wuyiccc");
+        login.setPassword("wuyicccpwd");
 
-    private ByteBuf getByteBuf(ChannelHandlerContext ctx) {
+        // 编码
+        ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(login);
 
-        // 1. 获取二进制抽象ByteBuf
-        ByteBuf buffer = ctx.alloc().buffer();
-
-        byte[] bytes = "你好, wuyiccc".getBytes(StandardCharsets.UTF_8);
-
-        // 填充数据到ByteBuf
-        buffer.writeBytes(bytes);
-
-        return buffer;
+        // 写入数据
+        ctx.channel().writeAndFlush(byteBuf);
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
+        // 读取登录响应消息
         ByteBuf byteBuf = (ByteBuf) msg;
 
-        System.out.println(DateUtil.date() + ": 客户端读取到数据 -> " + byteBuf.toString(StandardCharsets.UTF_8));
+        // 解码数据
+        Packet packet = PacketCodeC.INSTANCE.decode(byteBuf);
+
+        // 转为响应体对象
+        if (packet instanceof LoginResponsePacket) {
+
+            // 检查是否登录成功
+            LoginResponsePacket responsePacket = (LoginResponsePacket) packet;
+
+            if (responsePacket.isSuccess()) {
+                System.out.println(DateUtil.date() + ": 客户端登录成功");
+            } else {
+                System.out.println(DateUtil.date() + ": 客户端登录失败");
+            }
+        } else {
+            System.out.println("未知响应消息");
+        }
+
     }
+
 }

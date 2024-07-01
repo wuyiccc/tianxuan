@@ -1,9 +1,9 @@
 package com.wuyiccc.chat.demo.protocol;
 
-import cn.hutool.json.JSON;
+import com.wuyiccc.chat.demo.protocol.request.LoginRequestPacket;
+import com.wuyiccc.chat.demo.protocol.response.LoginResponsePacket;
 import com.wuyiccc.chat.demo.serializer.Serializer;
 import com.wuyiccc.chat.demo.serializer.impl.JSONSerializer;
-import io.lettuce.core.StrAlgoArgs;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.wuyiccc.chat.demo.protocol.Command.LOGIN_REQUEST;
+import static com.wuyiccc.chat.demo.protocol.Command.LOGIN_RESPONSE;
 
 /**
  * @author wuyiccc
@@ -21,15 +22,22 @@ public class PacketCodeC {
 
     private static final int MAGIC_NUMBER = 0x12345678;
 
+    // command : Packet
     private static final Map<Byte, Class<? extends Packet>> packetTypeMap;
 
 
+    // algType: AlgClass
     private static final Map<Byte, Serializer> serializerMap;
+
+
+
+    public static final PacketCodeC INSTANCE = new PacketCodeC();
 
     static {
 
         packetTypeMap = new HashMap<>();
         packetTypeMap.put(LOGIN_REQUEST, LoginRequestPacket.class);
+        packetTypeMap.put(LOGIN_RESPONSE, LoginResponsePacket.class);
 
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();
