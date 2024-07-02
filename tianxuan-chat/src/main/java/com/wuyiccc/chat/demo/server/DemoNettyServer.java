@@ -3,6 +3,12 @@ package com.wuyiccc.chat.demo.server;
 import cn.hutool.socket.nio.NioServer;
 import com.wuyiccc.chat.demo.client.handler.FirstClientHandler;
 import com.wuyiccc.chat.demo.server.handler.FirstServerHandler;
+import com.wuyiccc.chat.demo.server.handler.inbound.InBoundHandlerA;
+import com.wuyiccc.chat.demo.server.handler.inbound.InBoundHandlerB;
+import com.wuyiccc.chat.demo.server.handler.inbound.InBoundHandlerC;
+import com.wuyiccc.chat.demo.server.handler.outbound.OutBoundHandlerA;
+import com.wuyiccc.chat.demo.server.handler.outbound.OutBoundHandlerB;
+import com.wuyiccc.chat.demo.server.handler.outbound.OutBoundHandlerC;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
@@ -62,7 +68,26 @@ public class DemoNettyServer {
                         //        System.out.println(msg);
                         //    }
                         //});
-                        ch.pipeline().addLast(new FirstServerHandler());
+                        //ch.pipeline().addLast(new FirstServerHandler());
+
+                        // inbound链的尾端链接outbound链表的尾端
+                        ch.pipeline().addLast(new InBoundHandlerA());
+                        ch.pipeline().addLast(new InBoundHandlerB());
+                        ch.pipeline().addLast(new InBoundHandlerC());
+
+                        ch.pipeline().addLast(new OutBoundHandlerA());
+                        ch.pipeline().addLast(new OutBoundHandlerB());
+                        ch.pipeline().addLast(new OutBoundHandlerC());
+
+                        // ia -> ib -> ic -> oc -> ob -> oa
+                        /**
+                         * InBoundHandlerA: PooledUnsafeDirectByteBuf(ridx: 0, widx: 113, cap: 2048)
+                         * InBoundHandlerB: PooledUnsafeDirectByteBuf(ridx: 0, widx: 113, cap: 2048)
+                         * InBoundHandlerC: PooledUnsafeDirectByteBuf(ridx: 0, widx: 113, cap: 2048)
+                         * OutBoundHandlerC: PooledUnsafeDirectByteBuf(ridx: 0, widx: 113, cap: 2048)
+                         * OutBoundHandlerB: PooledUnsafeDirectByteBuf(ridx: 0, widx: 113, cap: 2048)
+                         * OutBoundHandlerA: PooledUnsafeDirectByteBuf(ridx: 0, widx: 113, cap: 2048)
+                         */
                     }
                 });
 
