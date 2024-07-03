@@ -8,6 +8,7 @@ import com.wuyiccc.chat.demo.serializer.Serializer;
 import com.wuyiccc.chat.demo.serializer.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import org.bouncycastle.util.Pack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +49,23 @@ public class PacketCodeC {
 
     }
 
+    public void encode(ByteBuf byteBuf, Packet packet) {
+
+        // 1. 序列化java对象
+        byte[] bytes = Serializer.DEFAULT.serialize(packet);
+
+        // 编码写入ByteBuf
+        byteBuf.writeInt(MAGIC_NUMBER);
+        byteBuf.writeByte(packet.getVersion());
+        byteBuf.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());
+        byteBuf.writeByte(packet.getCommand());
+        byteBuf.writeInt(bytes.length);
+        byteBuf.writeBytes(bytes);
+    }
+
+    /**
+     * 该方法ByteBuf有内存泄露的问题
+     */
     public ByteBuf encode(ByteBufAllocator byteBufAllocator, Packet packet) {
 
         // 1. 创建ByteBuf对象

@@ -1,6 +1,10 @@
 package com.wuyiccc.chat.demo.client;
 
 import com.wuyiccc.chat.demo.client.handler.FirstClientHandler;
+import com.wuyiccc.chat.demo.client.handler.LoginResponseHandler;
+import com.wuyiccc.chat.demo.client.handler.MessageResponseHandler;
+import com.wuyiccc.chat.demo.codec.PacketDecoder;
+import com.wuyiccc.chat.demo.codec.PacketEncoder;
 import com.wuyiccc.chat.demo.protocol.PacketCodeC;
 import com.wuyiccc.chat.demo.protocol.request.MessageRequestPacket;
 import com.wuyiccc.chat.demo.utils.LoginUtils;
@@ -40,7 +44,11 @@ public class DemoNettyClient {
                     @Override
                     protected void initChannel(Channel ch) {
                         //ch.pipeline().addLast(new StringEncoder());
-                        ch.pipeline().addLast(new FirstClientHandler());
+                        //ch.pipeline().addLast(new FirstClientHandler());
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginResponseHandler());
+                        ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
 

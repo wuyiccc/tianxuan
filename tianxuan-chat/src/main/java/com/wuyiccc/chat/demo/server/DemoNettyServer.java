@@ -1,23 +1,15 @@
 package com.wuyiccc.chat.demo.server;
 
-import cn.hutool.socket.nio.NioServer;
-import com.wuyiccc.chat.demo.client.handler.FirstClientHandler;
-import com.wuyiccc.chat.demo.server.handler.FirstServerHandler;
-import com.wuyiccc.chat.demo.server.handler.inbound.InBoundHandlerA;
-import com.wuyiccc.chat.demo.server.handler.inbound.InBoundHandlerB;
-import com.wuyiccc.chat.demo.server.handler.inbound.InBoundHandlerC;
-import com.wuyiccc.chat.demo.server.handler.outbound.OutBoundHandlerA;
-import com.wuyiccc.chat.demo.server.handler.outbound.OutBoundHandlerB;
-import com.wuyiccc.chat.demo.server.handler.outbound.OutBoundHandlerC;
+import com.wuyiccc.chat.demo.codec.PacketDecoder;
+import com.wuyiccc.chat.demo.codec.PacketEncoder;
+import com.wuyiccc.chat.demo.server.handler.LoginRequestHandler;
+import com.wuyiccc.chat.demo.server.handler.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
@@ -71,13 +63,13 @@ public class DemoNettyServer {
                         //ch.pipeline().addLast(new FirstServerHandler());
 
                         // inbound链的尾端链接outbound链表的尾端
-                        ch.pipeline().addLast(new InBoundHandlerA());
-                        ch.pipeline().addLast(new InBoundHandlerB());
-                        ch.pipeline().addLast(new InBoundHandlerC());
-
-                        ch.pipeline().addLast(new OutBoundHandlerA());
-                        ch.pipeline().addLast(new OutBoundHandlerB());
-                        ch.pipeline().addLast(new OutBoundHandlerC());
+                        //ch.pipeline().addLast(new InBoundHandlerA());
+                        //ch.pipeline().addLast(new InBoundHandlerB());
+                        //ch.pipeline().addLast(new InBoundHandlerC());
+                        //
+                        //ch.pipeline().addLast(new OutBoundHandlerA());
+                        //ch.pipeline().addLast(new OutBoundHandlerB());
+                        //ch.pipeline().addLast(new OutBoundHandlerC());
 
                         // ia -> ib -> ic -> oc -> ob -> oa
                         /**
@@ -88,6 +80,12 @@ public class DemoNettyServer {
                          * OutBoundHandlerB: PooledUnsafeDirectByteBuf(ridx: 0, widx: 113, cap: 2048)
                          * OutBoundHandlerA: PooledUnsafeDirectByteBuf(ridx: 0, widx: 113, cap: 2048)
                          */
+
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new MessageRequestHandler());
+
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
 
