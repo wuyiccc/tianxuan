@@ -6,6 +6,7 @@ import com.wuyiccc.chat.demo.client.handler.MessageResponseHandler;
 import com.wuyiccc.chat.demo.client.handler.TestPackageHandler;
 import com.wuyiccc.chat.demo.codec.PacketDecoder;
 import com.wuyiccc.chat.demo.codec.PacketEncoder;
+import com.wuyiccc.chat.demo.codec.Splitter;
 import com.wuyiccc.chat.demo.protocol.PacketCodeC;
 import com.wuyiccc.chat.demo.protocol.request.MessageRequestPacket;
 import com.wuyiccc.chat.demo.utils.LoginUtils;
@@ -49,6 +50,7 @@ public class DemoNettyClient {
                         //ch.pipeline().addLast(new StringEncoder());
                         //ch.pipeline().addLast(new FirstClientHandler());
                         ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
+                        ch.pipeline().addLast(new Splitter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
