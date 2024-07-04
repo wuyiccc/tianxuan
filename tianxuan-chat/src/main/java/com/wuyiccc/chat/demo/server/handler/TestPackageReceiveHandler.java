@@ -17,6 +17,8 @@ public class TestPackageReceiveHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
         ByteBuf byteBuf = (ByteBuf) msg;
+        // 跳过长度域
+        ((ByteBuf) msg).skipBytes(4);
 
         System.out.println(DateUtil.date() + ": 服务端接收到数据 -> " + byteBuf.toString(StandardCharsets.UTF_8));
     }

@@ -11,6 +11,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
@@ -87,7 +88,8 @@ public class DemoNettyServer {
                         //ch.pipeline().addLast(new MessageRequestHandler());
                         //ch.pipeline().addLast(new PacketEncoder());
 
-
+                        // 根据长度域进行拆包, 长度域的偏移量为0，长度域占4byte
+                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4));
                         ch.pipeline().addLast(new TestPackageReceiveHandler());
                     }
                 });

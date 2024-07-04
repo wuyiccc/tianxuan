@@ -28,6 +28,8 @@ public class TestPackageHandler extends ChannelInboundHandlerAdapter {
 
         byte[] bytes = "你好，岂曰无衣，与子同袍~".getBytes(StandardCharsets.UTF_8);
         ByteBuf buf = ctx.alloc().buffer();
+        // 写入长度域, 占位4byte, 偏移量为0
+        buf.writeInt(bytes.length);
         buf.writeBytes(bytes);
 
         return buf;
