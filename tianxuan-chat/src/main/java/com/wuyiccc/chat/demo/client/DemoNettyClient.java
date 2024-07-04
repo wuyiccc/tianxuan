@@ -3,6 +3,7 @@ package com.wuyiccc.chat.demo.client;
 import com.wuyiccc.chat.demo.client.handler.FirstClientHandler;
 import com.wuyiccc.chat.demo.client.handler.LoginResponseHandler;
 import com.wuyiccc.chat.demo.client.handler.MessageResponseHandler;
+import com.wuyiccc.chat.demo.client.handler.TestPackageHandler;
 import com.wuyiccc.chat.demo.codec.PacketDecoder;
 import com.wuyiccc.chat.demo.codec.PacketEncoder;
 import com.wuyiccc.chat.demo.protocol.PacketCodeC;
@@ -16,6 +17,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -45,11 +47,13 @@ public class DemoNettyClient {
                     protected void initChannel(Channel ch) {
                         //ch.pipeline().addLast(new StringEncoder());
                         //ch.pipeline().addLast(new FirstClientHandler());
-                        ch.pipeline().addLast(new PacketDecoder());
-                        ch.pipeline().addLast(new LoginResponseHandler());
-                        ch.pipeline().addLast(new MessageResponseHandler());
-                        ch.pipeline().addLast(new PacketEncoder());
+                        //ch.pipeline().addLast(new PacketDecoder());
+                        //ch.pipeline().addLast(new LoginResponseHandler());
+                        //ch.pipeline().addLast(new MessageResponseHandler());
+                        //ch.pipeline().addLast(new PacketEncoder());
+                        ch.pipeline().addLast(new TestPackageHandler());
                     }
+
                 });
 
         connect(bootstrap, "127.0.0.1", 11081, MAX_RETRY);

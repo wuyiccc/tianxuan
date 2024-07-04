@@ -4,6 +4,7 @@ import com.wuyiccc.chat.demo.codec.PacketDecoder;
 import com.wuyiccc.chat.demo.codec.PacketEncoder;
 import com.wuyiccc.chat.demo.server.handler.LoginRequestHandler;
 import com.wuyiccc.chat.demo.server.handler.MessageRequestHandler;
+import com.wuyiccc.chat.demo.server.handler.TestPackageReceiveHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -81,11 +82,13 @@ public class DemoNettyServer {
                          * OutBoundHandlerA: PooledUnsafeDirectByteBuf(ridx: 0, widx: 113, cap: 2048)
                          */
 
-                        ch.pipeline().addLast(new PacketDecoder());
-                        ch.pipeline().addLast(new LoginRequestHandler());
-                        ch.pipeline().addLast(new MessageRequestHandler());
+                        //ch.pipeline().addLast(new PacketDecoder());
+                        //ch.pipeline().addLast(new LoginRequestHandler());
+                        //ch.pipeline().addLast(new MessageRequestHandler());
+                        //ch.pipeline().addLast(new PacketEncoder());
 
-                        ch.pipeline().addLast(new PacketEncoder());
+
+                        ch.pipeline().addLast(new TestPackageReceiveHandler());
                     }
                 });
 
