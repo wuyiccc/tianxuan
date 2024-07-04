@@ -17,6 +17,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -47,11 +48,12 @@ public class DemoNettyClient {
                     protected void initChannel(Channel ch) {
                         //ch.pipeline().addLast(new StringEncoder());
                         //ch.pipeline().addLast(new FirstClientHandler());
-                        //ch.pipeline().addLast(new PacketDecoder());
-                        //ch.pipeline().addLast(new LoginResponseHandler());
-                        //ch.pipeline().addLast(new MessageResponseHandler());
-                        //ch.pipeline().addLast(new PacketEncoder());
-                        ch.pipeline().addLast(new TestPackageHandler());
+                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginResponseHandler());
+                        ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
+                        //ch.pipeline().addLast(new TestPackageHandler());
                     }
 
                 });

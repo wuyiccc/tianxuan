@@ -82,15 +82,15 @@ public class DemoNettyServer {
                          * OutBoundHandlerB: PooledUnsafeDirectByteBuf(ridx: 0, widx: 113, cap: 2048)
                          * OutBoundHandlerA: PooledUnsafeDirectByteBuf(ridx: 0, widx: 113, cap: 2048)
                          */
-
-                        //ch.pipeline().addLast(new PacketDecoder());
-                        //ch.pipeline().addLast(new LoginRequestHandler());
-                        //ch.pipeline().addLast(new MessageRequestHandler());
-                        //ch.pipeline().addLast(new PacketEncoder());
+                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
 
                         // 根据长度域进行拆包, 长度域的偏移量为0，长度域占4byte
-                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4));
-                        ch.pipeline().addLast(new TestPackageReceiveHandler());
+                        //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4));
+                        //ch.pipeline().addLast(new TestPackageReceiveHandler());
                     }
                 });
 
