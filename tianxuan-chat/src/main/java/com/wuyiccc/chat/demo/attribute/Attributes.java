@@ -1,5 +1,6 @@
 package com.wuyiccc.chat.demo.attribute;
 
+import com.wuyiccc.chat.demo.session.Session;
 import io.netty.util.AttributeKey;
 
 /**
@@ -8,5 +9,5 @@ import io.netty.util.AttributeKey;
  */
 public class Attributes {
 
-    public static AttributeKey<Boolean> LOGIN = AttributeKey.newInstance("login");
+    public static AttributeKey<Session> SESSION = AttributeKey.newInstance("session");
 }

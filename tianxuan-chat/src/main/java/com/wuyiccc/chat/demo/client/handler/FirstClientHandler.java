@@ -7,7 +7,7 @@ import com.wuyiccc.chat.demo.protocol.PacketCodeC;
 import com.wuyiccc.chat.demo.protocol.request.LoginRequestPacket;
 import com.wuyiccc.chat.demo.protocol.response.LoginResponsePacket;
 import com.wuyiccc.chat.demo.protocol.response.MessageResponsePacket;
-import com.wuyiccc.chat.demo.utils.LoginUtils;
+import com.wuyiccc.chat.demo.utils.SessionUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -30,7 +30,6 @@ public class FirstClientHandler extends ChannelInboundHandlerAdapter {
         LoginRequestPacket login = new LoginRequestPacket();
         login.setUserId(IdUtil.simpleUUID());
         login.setUsername("wuyiccc");
-        login.setPassword("wuyicccpwd");
 
         // 编码
         ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(ctx.alloc(), login);
@@ -56,7 +55,7 @@ public class FirstClientHandler extends ChannelInboundHandlerAdapter {
 
             if (responsePacket.isSuccess()) {
                 System.out.println(DateUtil.date() + ": 客户端登录成功");
-                LoginUtils.markAsLogin(ctx.channel());
+                //SessionUtils.markAsLogin(ctx.channel());
             } else {
                 System.out.println(DateUtil.date() + ": 客户端登录失败");
             }

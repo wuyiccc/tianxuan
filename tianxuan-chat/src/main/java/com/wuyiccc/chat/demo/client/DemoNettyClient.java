@@ -1,15 +1,14 @@
 package com.wuyiccc.chat.demo.client;
 
-import com.wuyiccc.chat.demo.client.handler.FirstClientHandler;
 import com.wuyiccc.chat.demo.client.handler.LoginResponseHandler;
 import com.wuyiccc.chat.demo.client.handler.MessageResponseHandler;
-import com.wuyiccc.chat.demo.client.handler.TestPackageHandler;
 import com.wuyiccc.chat.demo.codec.PacketDecoder;
 import com.wuyiccc.chat.demo.codec.PacketEncoder;
 import com.wuyiccc.chat.demo.codec.Splitter;
 import com.wuyiccc.chat.demo.protocol.PacketCodeC;
+import com.wuyiccc.chat.demo.protocol.request.LoginRequestPacket;
 import com.wuyiccc.chat.demo.protocol.request.MessageRequestPacket;
-import com.wuyiccc.chat.demo.utils.LoginUtils;
+import com.wuyiccc.chat.demo.utils.SessionUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -18,8 +17,6 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -103,20 +100,32 @@ public class DemoNettyClient {
 
     private static void startConsoleThread(Channel channel) {
 
+
+        Scanner sc = new Scanner(System.in);
+        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+
         new Thread(() -> {
             while (!Thread.interrupted()) {
+                if (!SessionUtils.hasLogin(channel)) {
 
-                //if (LoginUtils.hasLogin(channel)) {
-                    System.out.println("输入消息发送至服务端: ");
-                    Scanner sc = new Scanner(System.in);
+                    System.out.println("输入用户名登录: ");
+                    String userName = sc.nextLine();
+                    loginRequestPacket.setUsername(userName);
 
-                    String line = sc.nextLine();
+                    // 发送登录数据表
+                    channel.writeAndFlush(loginRequestPacket);
 
-                    MessageRequestPacket packet = new MessageRequestPacket();
-                    packet.setMessage(line);
-                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc(), packet);
-                    channel.writeAndFlush(byteBuf);
-                //}
+                    try {
+                        TimeUnit.SECONDS.sleep(3);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                } else {
+                    String toUserId = sc.next();
+                    String message = sc.next();
+                    channel.writeAndFlush(new MessageRequestPacket(toUserId, message));
+                }
             }
         }).start();
     }
