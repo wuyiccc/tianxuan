@@ -4,6 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import com.dingtalk.api.request.OapiImpaasGroupCreateRequest;
 import com.wuyiccc.chat.demo.protocol.request.CreateGroupRequestPacket;
 import com.wuyiccc.chat.demo.protocol.response.CreateGroupResponsePacket;
+import com.wuyiccc.chat.demo.session.Session;
 import com.wuyiccc.chat.demo.utils.SessionUtils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -52,5 +53,8 @@ public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<Creat
 
         System.out.println("群创建成功, id 为[" + createGroupResponsePacket.getGroupId() + "], ");
         System.out.println("群里面有: " + createGroupResponsePacket.getUserNameList());
+
+        // 保存群组相关信息
+        SessionUtils.bindChannelGroup(createGroupResponsePacket.getGroupId(), channelGroup);
     }
 }

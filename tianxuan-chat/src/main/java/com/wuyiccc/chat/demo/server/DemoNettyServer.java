@@ -1,5 +1,6 @@
 package com.wuyiccc.chat.demo.server;
 
+import com.wuyiccc.chat.demo.client.handler.JoinGroupResponseHandler;
 import com.wuyiccc.chat.demo.codec.PacketDecoder;
 import com.wuyiccc.chat.demo.codec.PacketEncoder;
 import com.wuyiccc.chat.demo.codec.Splitter;
@@ -90,6 +91,7 @@ public class DemoNettyServer {
                         ch.pipeline().addLast(new MessageRequestHandler());
                         ch.pipeline().addLast(new CreateGroupRequestHandler());
                         ch.pipeline().addLast(new LogoutRequestHandler());
+                        ch.pipeline().addLast(new JoinGroupRequestHandler());
                         ch.pipeline().addLast(new PacketEncoder());
 
                         // 根据长度域进行拆包, 长度域的偏移量为0，长度域占4byte

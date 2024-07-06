@@ -1,9 +1,6 @@
 package com.wuyiccc.chat.demo.client;
 
-import com.wuyiccc.chat.demo.client.handler.CreateGroupResponseHandler;
-import com.wuyiccc.chat.demo.client.handler.LoginResponseHandler;
-import com.wuyiccc.chat.demo.client.handler.LogoutResponseHandler;
-import com.wuyiccc.chat.demo.client.handler.MessageResponseHandler;
+import com.wuyiccc.chat.demo.client.handler.*;
 import com.wuyiccc.chat.demo.codec.PacketDecoder;
 import com.wuyiccc.chat.demo.codec.PacketEncoder;
 import com.wuyiccc.chat.demo.codec.Splitter;
@@ -58,6 +55,7 @@ public class DemoNettyClient {
                         ch.pipeline().addLast(new LogoutResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
                         ch.pipeline().addLast(new CreateGroupResponseHandler());
+                        ch.pipeline().addLast(new JoinGroupResponseHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                         //ch.pipeline().addLast(new TestPackageHandler());
                     }

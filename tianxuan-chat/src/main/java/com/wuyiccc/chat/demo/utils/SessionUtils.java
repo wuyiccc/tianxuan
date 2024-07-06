@@ -3,6 +3,7 @@ package com.wuyiccc.chat.demo.utils;
 import com.wuyiccc.chat.demo.attribute.Attributes;
 import com.wuyiccc.chat.demo.session.Session;
 import io.netty.channel.Channel;
+import io.netty.channel.group.ChannelGroup;
 import io.netty.util.Attribute;
 
 import java.util.Map;
@@ -16,6 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionUtils {
 
     private static final Map<String, Channel> userIdChannelMap = new ConcurrentHashMap<>();
+
+    private static final Map<String, ChannelGroup> groupCache = new ConcurrentHashMap<>();
 
 
     public static void bindSession(Session session, Channel channel) {
@@ -46,5 +49,15 @@ public class SessionUtils {
     public static Channel getChannel(String userId) {
 
         return userIdChannelMap.get(userId);
+    }
+
+    public static void bindChannelGroup(String groupId, ChannelGroup channelGroup) {
+
+        groupCache.put(groupId, channelGroup);
+    }
+
+    public static ChannelGroup getChannelGroup(String groupId) {
+
+        return groupCache.get(groupId);
     }
 }

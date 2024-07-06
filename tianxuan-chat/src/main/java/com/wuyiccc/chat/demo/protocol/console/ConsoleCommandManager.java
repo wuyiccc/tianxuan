@@ -1,6 +1,7 @@
 package com.wuyiccc.chat.demo.protocol.console;
 
 import com.wuyiccc.chat.demo.protocol.console.impl.CreateGroupConsoleCommand;
+import com.wuyiccc.chat.demo.protocol.console.impl.JoinGroupConsoleCommand;
 import com.wuyiccc.chat.demo.protocol.console.impl.LogoutConsoleCommand;
 import com.wuyiccc.chat.demo.protocol.console.impl.SendToUserConsoleCommand;
 import com.wuyiccc.chat.demo.utils.SessionUtils;
@@ -23,6 +24,7 @@ public class ConsoleCommandManager implements ConsoleCommand {
         commandCache.put("sendToUser", new SendToUserConsoleCommand());
         commandCache.put("logout", new LogoutConsoleCommand());
         commandCache.put("createGroup", new CreateGroupConsoleCommand());
+        commandCache.put("joinGroup", new JoinGroupConsoleCommand());
     }
 
     @Override
