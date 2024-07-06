@@ -3,10 +3,7 @@ package com.wuyiccc.chat.demo.server;
 import com.wuyiccc.chat.demo.codec.PacketDecoder;
 import com.wuyiccc.chat.demo.codec.PacketEncoder;
 import com.wuyiccc.chat.demo.codec.Splitter;
-import com.wuyiccc.chat.demo.server.handler.LifeCycleTestHandler;
-import com.wuyiccc.chat.demo.server.handler.LoginRequestHandler;
-import com.wuyiccc.chat.demo.server.handler.MessageRequestHandler;
-import com.wuyiccc.chat.demo.server.handler.TestPackageReceiveHandler;
+import com.wuyiccc.chat.demo.server.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -84,11 +81,15 @@ public class DemoNettyServer {
                          * OutBoundHandlerB: PooledUnsafeDirectByteBuf(ridx: 0, widx: 113, cap: 2048)
                          * OutBoundHandlerA: PooledUnsafeDirectByteBuf(ridx: 0, widx: 113, cap: 2048)
                          */
-                        ch.pipeline().addLast(new LifeCycleTestHandler());
-                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
+                        //ch.pipeline().addLast(new LifeCycleTestHandler());
+                        //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
                         ch.pipeline().addLast(new Splitter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginRequestHandler());
+
+                        ch.pipeline().addLast(new AuthHandler());
+
+
                         ch.pipeline().addLast(new MessageRequestHandler());
                         ch.pipeline().addLast(new PacketEncoder());
 

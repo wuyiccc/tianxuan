@@ -3,6 +3,7 @@ package com.wuyiccc.chat.demo.server.handler;
 import cn.hutool.core.date.DateUtil;
 import com.wuyiccc.chat.demo.protocol.request.LoginRequestPacket;
 import com.wuyiccc.chat.demo.protocol.response.LoginResponsePacket;
+import com.wuyiccc.chat.demo.utils.LoginUtils;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -22,6 +23,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         if (valid(msg)) {
             loginResponsePacket.setSuccess(true);
             System.out.println(DateUtil.date() + ": 登录成功!");
+            LoginUtils.markAsLogin(ctx.channel());
         } else {
             loginResponsePacket.setReason("账号密码校验失败");
             loginResponsePacket.setSuccess(false);

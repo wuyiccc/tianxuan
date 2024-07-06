@@ -49,7 +49,7 @@ public class DemoNettyClient {
                     protected void initChannel(Channel ch) {
                         //ch.pipeline().addLast(new StringEncoder());
                         //ch.pipeline().addLast(new FirstClientHandler());
-                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
+                        //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
                         ch.pipeline().addLast(new Splitter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
@@ -106,7 +106,7 @@ public class DemoNettyClient {
         new Thread(() -> {
             while (!Thread.interrupted()) {
 
-                if (LoginUtils.hasLogin(channel)) {
+                //if (LoginUtils.hasLogin(channel)) {
                     System.out.println("输入消息发送至服务端: ");
                     Scanner sc = new Scanner(System.in);
 
@@ -116,9 +116,9 @@ public class DemoNettyClient {
                     packet.setMessage(line);
                     ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc(), packet);
                     channel.writeAndFlush(byteBuf);
-                }
+                //}
             }
-        }).start();;
+        }).start();
     }
 }
 
