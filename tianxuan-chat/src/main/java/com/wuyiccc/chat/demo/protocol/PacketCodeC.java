@@ -1,7 +1,10 @@
 package com.wuyiccc.chat.demo.protocol;
 
+import com.wuyiccc.chat.demo.protocol.request.CreateGroupRequestPacket;
 import com.wuyiccc.chat.demo.protocol.request.LoginRequestPacket;
+import com.wuyiccc.chat.demo.protocol.request.LogoutRequestPacket;
 import com.wuyiccc.chat.demo.protocol.request.MessageRequestPacket;
+import com.wuyiccc.chat.demo.protocol.response.CreateGroupResponsePacket;
 import com.wuyiccc.chat.demo.protocol.response.LoginResponsePacket;
 import com.wuyiccc.chat.demo.protocol.response.MessageResponsePacket;
 import com.wuyiccc.chat.demo.serializer.Serializer;
@@ -42,6 +45,10 @@ public class PacketCodeC {
         packetTypeMap.put(LOGIN_RESPONSE, LoginResponsePacket.class);
         packetTypeMap.put(MESSAGE_REQUEST, MessageRequestPacket.class);
         packetTypeMap.put(MESSAGE_RESPONSE, MessageResponsePacket.class);
+        packetTypeMap.put(LOGOUT_REQUEST, LogoutRequestPacket.class);
+        packetTypeMap.put(LOGOUT_RESPONSE, LogoutRequestPacket.class);
+        packetTypeMap.put(CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
+        packetTypeMap.put(CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
 
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();

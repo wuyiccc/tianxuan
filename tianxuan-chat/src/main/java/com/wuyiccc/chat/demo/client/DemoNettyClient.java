@@ -1,13 +1,18 @@
 package com.wuyiccc.chat.demo.client;
 
+import com.wuyiccc.chat.demo.client.handler.CreateGroupResponseHandler;
 import com.wuyiccc.chat.demo.client.handler.LoginResponseHandler;
+import com.wuyiccc.chat.demo.client.handler.LogoutResponseHandler;
 import com.wuyiccc.chat.demo.client.handler.MessageResponseHandler;
 import com.wuyiccc.chat.demo.codec.PacketDecoder;
 import com.wuyiccc.chat.demo.codec.PacketEncoder;
 import com.wuyiccc.chat.demo.codec.Splitter;
 import com.wuyiccc.chat.demo.protocol.PacketCodeC;
+import com.wuyiccc.chat.demo.protocol.console.ConsoleCommandManager;
+import com.wuyiccc.chat.demo.protocol.console.impl.LoginConsoleCommand;
 import com.wuyiccc.chat.demo.protocol.request.LoginRequestPacket;
 import com.wuyiccc.chat.demo.protocol.request.MessageRequestPacket;
+import com.wuyiccc.chat.demo.protocol.response.LogoutResponsePacket;
 import com.wuyiccc.chat.demo.utils.SessionUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -50,7 +55,9 @@ public class DemoNettyClient {
                         ch.pipeline().addLast(new Splitter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
+                        ch.pipeline().addLast(new LogoutResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new CreateGroupResponseHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                         //ch.pipeline().addLast(new TestPackageHandler());
                     }
@@ -100,31 +107,17 @@ public class DemoNettyClient {
 
     private static void startConsoleThread(Channel channel) {
 
-
-        Scanner sc = new Scanner(System.in);
-        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+        ConsoleCommandManager consoleCommandManager = new ConsoleCommandManager();
+        LoginConsoleCommand loginConsoleCommand = new LoginConsoleCommand();
+        Scanner scanner = new Scanner(System.in);
 
         new Thread(() -> {
+
             while (!Thread.interrupted()) {
                 if (!SessionUtils.hasLogin(channel)) {
-
-                    System.out.println("输入用户名登录: ");
-                    String userName = sc.nextLine();
-                    loginRequestPacket.setUsername(userName);
-
-                    // 发送登录数据表
-                    channel.writeAndFlush(loginRequestPacket);
-
-                    try {
-                        TimeUnit.SECONDS.sleep(3);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-
+                    loginConsoleCommand.exec(scanner, channel);
                 } else {
-                    String toUserId = sc.next();
-                    String message = sc.next();
-                    channel.writeAndFlush(new MessageRequestPacket(toUserId, message));
+                    consoleCommandManager.exec(scanner, channel);
                 }
             }
         }).start();

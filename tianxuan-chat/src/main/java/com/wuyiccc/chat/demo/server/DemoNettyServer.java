@@ -86,11 +86,10 @@ public class DemoNettyServer {
                         ch.pipeline().addLast(new Splitter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginRequestHandler());
-
                         ch.pipeline().addLast(new AuthHandler());
-
-
                         ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new CreateGroupRequestHandler());
+                        ch.pipeline().addLast(new LogoutRequestHandler());
                         ch.pipeline().addLast(new PacketEncoder());
 
                         // 根据长度域进行拆包, 长度域的偏移量为0，长度域占4byte
