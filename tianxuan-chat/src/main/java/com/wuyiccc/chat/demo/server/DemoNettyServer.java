@@ -16,6 +16,9 @@ import io.netty.util.concurrent.GenericFutureListener;
 /**
  * @author wuyiccc
  * @date 2024/6/26 21:59
+ *
+ * ctx.channel().writeAndFlush()的传播路径是从pipeline链表中最后一个out开始向前输出,
+ * ctx.writeAndFlush() 事件传播路径是从pipeline的当前节点向前输出
  */
 public class DemoNettyServer {
 
