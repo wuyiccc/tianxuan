@@ -1,10 +1,7 @@
 package com.wuyiccc.chat.demo.protocol;
 
 import com.wuyiccc.chat.demo.protocol.request.*;
-import com.wuyiccc.chat.demo.protocol.response.CreateGroupResponsePacket;
-import com.wuyiccc.chat.demo.protocol.response.JoinGroupResponsePacket;
-import com.wuyiccc.chat.demo.protocol.response.LoginResponsePacket;
-import com.wuyiccc.chat.demo.protocol.response.MessageResponsePacket;
+import com.wuyiccc.chat.demo.protocol.response.*;
 import com.wuyiccc.chat.demo.serializer.Serializer;
 import com.wuyiccc.chat.demo.serializer.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
@@ -49,6 +46,8 @@ public class PacketCodeC {
         packetTypeMap.put(CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
         packetTypeMap.put(JOIN_GROUP_REQUEST, JoinGroupRequestPacket.class);
         packetTypeMap.put(JOIN_GROUP_RESPONSE, JoinGroupResponsePacket.class);
+        packetTypeMap.put(QUIT_GROUP_REQUEST, QuitGroupRequestPacket.class);
+        packetTypeMap.put(QUIT_GROUP_RESPONSE, QuitGroupResponsePacket.class);
 
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();

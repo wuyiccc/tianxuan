@@ -56,6 +56,7 @@ public class DemoNettyClient {
                         ch.pipeline().addLast(new MessageResponseHandler());
                         ch.pipeline().addLast(new CreateGroupResponseHandler());
                         ch.pipeline().addLast(new JoinGroupResponseHandler());
+                        ch.pipeline().addLast(new QuitGroupResponseHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                         //ch.pipeline().addLast(new TestPackageHandler());
                     }
