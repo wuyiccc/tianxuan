@@ -23,6 +23,7 @@ public class ConsoleCommandManager implements ConsoleCommand {
         commandCache.put("createGroup", new CreateGroupConsoleCommand());
         commandCache.put("joinGroup", new JoinGroupConsoleCommand());
         commandCache.put("quitGroup", new QuitGroupConsoleCommand());
+        commandCache.put("listGroupMembers", new ListGroupMembersConsoleCommand());
     }
 
     @Override

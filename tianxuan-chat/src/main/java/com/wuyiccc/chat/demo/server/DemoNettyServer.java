@@ -93,6 +93,7 @@ public class DemoNettyServer {
                         ch.pipeline().addLast(new LogoutRequestHandler());
                         ch.pipeline().addLast(new JoinGroupRequestHandler());
                         ch.pipeline().addLast(new QuitGroupRequestHandler());
+                        ch.pipeline().addLast(new ListGroupMembersRequestHandler());
                         ch.pipeline().addLast(new PacketEncoder());
 
                         // 根据长度域进行拆包, 长度域的偏移量为0，长度域占4byte
