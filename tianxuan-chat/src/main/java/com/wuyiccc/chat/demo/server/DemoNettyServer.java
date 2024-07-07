@@ -86,13 +86,14 @@ public class DemoNettyServer {
                          */
                         //ch.pipeline().addLast(new LifeCycleTestHandler());
                         //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
+                        ch.pipeline().addLast(new IMIdleStateHandler());
                         ch.pipeline().addLast(new Splitter());
-                        //ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
-                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
+                        // 心跳检测不需要auth认证
+                        ch.pipeline().addLast(HeartBeatRequestHandler.INSTANCE);
                         ch.pipeline().addLast(LoginRequestHandler.INSTANCE);
                         ch.pipeline().addLast(AuthHandler.INSTANCE);
                         ch.pipeline().addLast(IMHandler.INSTANCE);
-                        ch.pipeline().addLast(new PacketEncoder());
                         //ch.pipeline().addLast(MessageRequestHandler.INSTANCE);
                         //ch.pipeline().addLast(CreateGroupRequestHandler.INSTANCE);
                         //ch.pipeline().addLast(LogoutRequestHandler.INSTANCE);

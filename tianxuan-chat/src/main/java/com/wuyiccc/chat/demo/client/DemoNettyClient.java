@@ -10,6 +10,7 @@ import com.wuyiccc.chat.demo.protocol.console.impl.LoginConsoleCommand;
 import com.wuyiccc.chat.demo.protocol.request.LoginRequestPacket;
 import com.wuyiccc.chat.demo.protocol.request.MessageRequestPacket;
 import com.wuyiccc.chat.demo.protocol.response.LogoutResponsePacket;
+import com.wuyiccc.chat.demo.server.handler.IMIdleStateHandler;
 import com.wuyiccc.chat.demo.utils.SessionUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -49,6 +50,7 @@ public class DemoNettyClient {
                         //ch.pipeline().addLast(new StringEncoder());
                         //ch.pipeline().addLast(new FirstClientHandler());
                         //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
+                        ch.pipeline().addLast(new IMIdleStateHandler());
                         ch.pipeline().addLast(new Splitter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
@@ -60,6 +62,7 @@ public class DemoNettyClient {
                         ch.pipeline().addLast(new ListGroupMembersResponseHandler());
                         ch.pipeline().addLast(new GroupMessageResponseHandler());
                         ch.pipeline().addLast(new PacketEncoder());
+                        ch.pipeline().addLast(new HeartBeatTimerHandler());
                         //ch.pipeline().addLast(new TestPackageHandler());
                     }
 
