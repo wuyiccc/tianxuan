@@ -39,8 +39,10 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
 
             System.out.println(DateUtil.date() + ": 登录失败");
         }
-        // 登录响应
+        // 登录响应, 这种方式会从最后一个out-handler开始向前寻找, 即使解码器排在当前节点的后面
         ctx.channel().writeAndFlush(loginResponsePacket);
+        // 如果解码器在LoginHandler后面, 那么这种方式直接在当前节点向前寻找out-handler, 不会走解码器
+        //ctx.writeAndFlush(loginRequestPacket);
     }
 
     @Override

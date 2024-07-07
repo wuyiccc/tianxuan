@@ -1,6 +1,8 @@
 package com.wuyiccc.chat.demo.server;
 
 import com.wuyiccc.chat.demo.codec.PacketCodecHandler;
+import com.wuyiccc.chat.demo.codec.PacketDecoder;
+import com.wuyiccc.chat.demo.codec.PacketEncoder;
 import com.wuyiccc.chat.demo.codec.Splitter;
 import com.wuyiccc.chat.demo.server.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
@@ -85,10 +87,12 @@ public class DemoNettyServer {
                         //ch.pipeline().addLast(new LifeCycleTestHandler());
                         //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
                         ch.pipeline().addLast(new Splitter());
-                        ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
+                        //ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
+                        ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(LoginRequestHandler.INSTANCE);
                         ch.pipeline().addLast(AuthHandler.INSTANCE);
                         ch.pipeline().addLast(IMHandler.INSTANCE);
+                        ch.pipeline().addLast(new PacketEncoder());
                         //ch.pipeline().addLast(MessageRequestHandler.INSTANCE);
                         //ch.pipeline().addLast(CreateGroupRequestHandler.INSTANCE);
                         //ch.pipeline().addLast(LogoutRequestHandler.INSTANCE);
