@@ -85,14 +85,15 @@ public class DemoNettyServer {
                         ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
                         ch.pipeline().addLast(LoginRequestHandler.INSTANCE);
                         ch.pipeline().addLast(AuthHandler.INSTANCE);
-                        ch.pipeline().addLast(MessageRequestHandler.INSTANCE);
-                        ch.pipeline().addLast(CreateGroupRequestHandler.INSTANCE);
-                        ch.pipeline().addLast(LogoutRequestHandler.INSTANCE);
-                        ch.pipeline().addLast(JoinGroupRequestHandler.INSTANCE);
-                        ch.pipeline().addLast(QuitGroupRequestHandler.INSTANCE);
-                        ch.pipeline().addLast(ListGroupMembersRequestHandler.INSTANCE);
-                        ch.pipeline().addLast(GroupMessageRequestHandler.INSTANCE);
-
+                        ch.pipeline().addLast(IMHandler.INSTANCE);
+                        //ch.pipeline().addLast(MessageRequestHandler.INSTANCE);
+                        //ch.pipeline().addLast(CreateGroupRequestHandler.INSTANCE);
+                        //ch.pipeline().addLast(LogoutRequestHandler.INSTANCE);
+                        //ch.pipeline().addLast(JoinGroupRequestHandler.INSTANCE);
+                        //ch.pipeline().addLast(QuitGroupRequestHandler.INSTANCE);
+                        //ch.pipeline().addLast(ListGroupMembersRequestHandler.INSTANCE);
+                        //ch.pipeline().addLast(GroupMessageRequestHandler.INSTANCE);
+                        //
                         // 根据长度域进行拆包, 长度域的偏移量为0，长度域占4byte
                         //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4));
                         //ch.pipeline().addLast(new TestPackageReceiveHandler());
