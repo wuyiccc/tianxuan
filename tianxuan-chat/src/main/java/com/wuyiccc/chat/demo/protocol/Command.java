@@ -1,7 +1,5 @@
 package com.wuyiccc.chat.demo.protocol;
 
-import io.lettuce.core.StrAlgoArgs;
-
 /**
  * @author wuyiccc
  * @date 2024/6/29 17:19
@@ -38,5 +36,10 @@ public interface Command {
     Byte QUIT_GROUP_REQUEST = 13;
 
     Byte QUIT_GROUP_RESPONSE = 14;
+
+
+    Byte GROUP_MESSAGE_REQUEST = 15;
+
+    Byte GROUP_MESSAGE_RESPONSE = 16;
 
 }
