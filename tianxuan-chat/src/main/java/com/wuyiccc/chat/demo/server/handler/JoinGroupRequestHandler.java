@@ -1,9 +1,9 @@
 package com.wuyiccc.chat.demo.server.handler;
 
-import com.wuyiccc.chat.demo.client.handler.JoinGroupResponseHandler;
 import com.wuyiccc.chat.demo.protocol.request.JoinGroupRequestPacket;
 import com.wuyiccc.chat.demo.protocol.response.JoinGroupResponsePacket;
 import com.wuyiccc.chat.demo.utils.SessionUtils;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -12,7 +12,10 @@ import io.netty.channel.group.ChannelGroup;
  * @author wuyiccc
  * @date 2024/7/7 00:39
  */
+@ChannelHandler.Sharable
 public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGroupRequestPacket> {
+
+    public static final JoinGroupRequestHandler INSTANCE = new JoinGroupRequestHandler();
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, JoinGroupRequestPacket requestPacket) throws Exception {

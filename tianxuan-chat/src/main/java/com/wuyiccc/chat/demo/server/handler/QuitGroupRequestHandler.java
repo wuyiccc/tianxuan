@@ -3,6 +3,7 @@ package com.wuyiccc.chat.demo.server.handler;
 import com.wuyiccc.chat.demo.protocol.request.QuitGroupRequestPacket;
 import com.wuyiccc.chat.demo.protocol.response.QuitGroupResponsePacket;
 import com.wuyiccc.chat.demo.utils.SessionUtils;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -11,7 +12,10 @@ import io.netty.channel.group.ChannelGroup;
  * @author wuyiccc
  * @date 2024/7/7 08:34
  */
+@ChannelHandler.Sharable
 public class QuitGroupRequestHandler extends SimpleChannelInboundHandler<QuitGroupRequestPacket> {
+
+    public static final QuitGroupRequestHandler INSTANCE = new QuitGroupRequestHandler();
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, QuitGroupRequestPacket requestPacket) throws Exception {

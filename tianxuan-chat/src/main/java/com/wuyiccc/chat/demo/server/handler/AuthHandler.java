@@ -1,6 +1,7 @@
 package com.wuyiccc.chat.demo.server.handler;
 
 import com.wuyiccc.chat.demo.utils.SessionUtils;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -8,7 +9,10 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
  * @author wuyiccc
  * @date 2024/7/6 11:34
  */
+@ChannelHandler.Sharable
 public class AuthHandler extends ChannelInboundHandlerAdapter {
+
+    public static final AuthHandler INSTANCE = new AuthHandler();
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {

@@ -7,6 +7,7 @@ import com.wuyiccc.chat.demo.protocol.response.CreateGroupResponsePacket;
 import com.wuyiccc.chat.demo.session.Session;
 import com.wuyiccc.chat.demo.utils.SessionUtils;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -21,7 +22,10 @@ import java.util.Objects;
  * @author wuyiccc
  * @date 2024/7/6 22:09
  */
+@ChannelHandler.Sharable
 public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<CreateGroupRequestPacket> {
+
+    public static final CreateGroupRequestHandler INSTANCE = new CreateGroupRequestHandler();
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, CreateGroupRequestPacket createGroupRequestPacket) throws Exception {

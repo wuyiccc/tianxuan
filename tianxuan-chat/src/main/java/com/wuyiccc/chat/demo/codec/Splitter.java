@@ -8,6 +8,7 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 /**
  * @author wuyiccc
  * @date 2024/7/4 20:53
+ * 该handler不能共享，因为需要维护每个channel的数据分片内容
  */
 public class Splitter extends LengthFieldBasedFrameDecoder {
 

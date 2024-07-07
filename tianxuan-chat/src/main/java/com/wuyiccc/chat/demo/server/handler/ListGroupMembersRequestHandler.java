@@ -5,6 +5,7 @@ import com.wuyiccc.chat.demo.protocol.response.ListGroupMembersResponsePacket;
 import com.wuyiccc.chat.demo.session.Session;
 import com.wuyiccc.chat.demo.utils.SessionUtils;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
@@ -16,7 +17,10 @@ import java.util.List;
  * @author wuyiccc
  * @date 2024/7/7 09:57
  */
+@ChannelHandler.Sharable
 public class ListGroupMembersRequestHandler extends SimpleChannelInboundHandler<ListGroupMembersRequestPacket> {
+
+    public static final ListGroupMembersRequestHandler INSTANCE = new ListGroupMembersRequestHandler();
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ListGroupMembersRequestPacket listGroupMembersRequestPacket) throws Exception {

@@ -1,8 +1,6 @@
 package com.wuyiccc.chat.demo.server;
 
-import com.wuyiccc.chat.demo.client.handler.JoinGroupResponseHandler;
-import com.wuyiccc.chat.demo.codec.PacketDecoder;
-import com.wuyiccc.chat.demo.codec.PacketEncoder;
+import com.wuyiccc.chat.demo.codec.PacketCodecHandler;
 import com.wuyiccc.chat.demo.codec.Splitter;
 import com.wuyiccc.chat.demo.server.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
@@ -11,7 +9,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
@@ -85,17 +82,16 @@ public class DemoNettyServer {
                         //ch.pipeline().addLast(new LifeCycleTestHandler());
                         //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4));
                         ch.pipeline().addLast(new Splitter());
-                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
                         ch.pipeline().addLast(LoginRequestHandler.INSTANCE);
-                        ch.pipeline().addLast(new AuthHandler());
-                        ch.pipeline().addLast(new MessageRequestHandler());
-                        ch.pipeline().addLast(new CreateGroupRequestHandler());
-                        ch.pipeline().addLast(new LogoutRequestHandler());
-                        ch.pipeline().addLast(new JoinGroupRequestHandler());
-                        ch.pipeline().addLast(new QuitGroupRequestHandler());
-                        ch.pipeline().addLast(new ListGroupMembersRequestHandler());
-                        ch.pipeline().addLast(new GroupMessageRequestHandler());
-                        ch.pipeline().addLast(new PacketEncoder());
+                        ch.pipeline().addLast(AuthHandler.INSTANCE);
+                        ch.pipeline().addLast(MessageRequestHandler.INSTANCE);
+                        ch.pipeline().addLast(CreateGroupRequestHandler.INSTANCE);
+                        ch.pipeline().addLast(LogoutRequestHandler.INSTANCE);
+                        ch.pipeline().addLast(JoinGroupRequestHandler.INSTANCE);
+                        ch.pipeline().addLast(QuitGroupRequestHandler.INSTANCE);
+                        ch.pipeline().addLast(ListGroupMembersRequestHandler.INSTANCE);
+                        ch.pipeline().addLast(GroupMessageRequestHandler.INSTANCE);
 
                         // 根据长度域进行拆包, 长度域的偏移量为0，长度域占4byte
                         //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4));
