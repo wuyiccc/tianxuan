@@ -23,7 +23,7 @@ public class HeartBeatRequestHandler extends SimpleChannelInboundHandler<HeartBe
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, HeartBeatRequestPacket msg) throws Exception {
 
-        System.out.println("检测到客户端心跳");
+        System.out.println("检测到客户端心跳: " + Thread.currentThread().getName());
         ctx.writeAndFlush(msg);
     }
 

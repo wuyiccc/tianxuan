@@ -12,8 +12,12 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author wuyiccc
@@ -30,6 +34,18 @@ public class DemoNettyServer {
 
         NioEventLoopGroup boss = new NioEventLoopGroup();
         NioEventLoopGroup worker = new NioEventLoopGroup();
+
+        DefaultEventExecutorGroup businessGroup = new DefaultEventExecutorGroup(
+                8,
+                new ThreadFactory() {
+
+                    private AtomicInteger threadIndex = new AtomicInteger(0);
+
+                    @Override
+                    public Thread newThread(Runnable r) {
+                        return new Thread(r, "NettyServerCodecThread_" + this.threadIndex.incrementAndGet());
+                    }
+                });
 
         serverBootstrap.group(boss, worker)
                 .channel(NioServerSocketChannel.class)
@@ -90,7 +106,7 @@ public class DemoNettyServer {
                         ch.pipeline().addLast(new Splitter());
                         ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
                         // 心跳检测不需要auth认证
-                        ch.pipeline().addLast(HeartBeatRequestHandler.INSTANCE);
+                        ch.pipeline().addLast(businessGroup, HeartBeatRequestHandler.INSTANCE);
                         ch.pipeline().addLast(LoginRequestHandler.INSTANCE);
                         ch.pipeline().addLast(AuthHandler.INSTANCE);
                         ch.pipeline().addLast(IMHandler.INSTANCE);
